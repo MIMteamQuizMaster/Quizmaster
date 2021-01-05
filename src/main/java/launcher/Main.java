@@ -15,6 +15,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        // test comment first push
         Main.primaryStage = primaryStage;
         primaryStage.setTitle("Make IT Work - Project 1");
         getSceneManager().setWindowTool();
