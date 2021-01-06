@@ -39,7 +39,7 @@
                         <PasswordField fx:id="loginMaskedPassword" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="166.0" promptText="Password" />
                      </children>
                   </AnchorPane>
-                  <Button fx:id="passShowBtn" mnemonicParsing="false" onMousePressed="#showPassword" onMouseReleased="#unShowPassword" text="Show" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                  <Button fx:id="passShowBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMousePressed="#showPassword" onMouseReleased="#unShowPassword" text="Show" textAlignment="CENTER" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
