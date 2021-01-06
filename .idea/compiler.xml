@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Quizmaster" />
+        <module name="Quizmaster v2.1" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Quizmaster" target="11" />
+      <module name="Quizmaster v2.1" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
