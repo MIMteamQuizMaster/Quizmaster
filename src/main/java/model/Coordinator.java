@@ -7,4 +7,9 @@ public class Coordinator extends Teacher implements Login {
         super(name, password, role);
     }
 
+    public boolean addQuiz(Course c,Quiz q){
+        return c.addQuiz(this,q);
+    }
+
+
 }
