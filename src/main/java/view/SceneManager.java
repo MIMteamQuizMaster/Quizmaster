@@ -25,6 +25,7 @@ public class SceneManager {
             Parent root = loader.load();
             scene = new Scene(root);
             primaryStage.setScene(scene);
+            primaryStage.centerOnScreen();
             return loader;
         } catch (IOException ioException) {
             ioException.printStackTrace();
@@ -45,6 +46,7 @@ public class SceneManager {
 
     public void showLoginScene() {
         getScene("/view/fxml/login.fxml");
+
     }
 
 
