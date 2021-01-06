@@ -17,4 +17,12 @@ public class Group {
     public void addStudentToGroup(Student s){
         this.students.add(s);
     }
+
+    public void setCoordinator(Coordinator coordinator) {
+        this.coordinator = coordinator;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
 }

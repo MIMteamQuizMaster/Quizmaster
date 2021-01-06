@@ -8,6 +8,10 @@ public class Course {
     private List<Quiz> quizzes;
     private List<Group> groups;
 
+    public void setCoordinator(Coordinator coordinator) {
+        this.coordinator = coordinator;
+    }
+
     public Course(String name, Coordinator coordinator) {
         this.name = name;
         this.coordinator = coordinator;
