@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.studentSignInOutController"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.studentSignInOutController">
+   <children>
+      <Pane layoutX="74.0" layoutY="49.0" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <ListView fx:id="courseListAdd" prefHeight="200.0" prefWidth="200.0" />
+         </children>
+      </Pane>
+      <Pane layoutX="357.0" layoutY="49.0" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <ListView fx:id="courseListRemove" prefHeight="200.0" prefWidth="200.0" />
+         </children>
+      </Pane>
+      <Button fx:id="addCourse" layoutX="74.0" layoutY="268.0" mnemonicParsing="false" onAction="#addCoursesToList" text="Inschrijven" />
+      <Button fx:id="removeCourse" layoutX="357.0" layoutY="268.0" mnemonicParsing="false" onAction="#removeCoursesFromList" text="Uitschrijven" />
+   </children>
 </AnchorPane>
