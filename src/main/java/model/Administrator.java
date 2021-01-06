@@ -8,12 +8,12 @@ public class Administrator extends User  {
         super(name, password, role);
     }
 
-    public Course makeCourse(String name,Coordinator coordinator) {
-        return new Course(name,coordinator);
+    public boolean makeCourse() {
+        return true;
     }
 
-    public Group makeGroup(String name,Teacher teacher,Coordinator coordinator,List<Student> student) {
-        return new Group(name,teacher,coordinator, student);
+    public boolean makeGroup() {
+        return true;
     }
 
     public void setTeacherToGroup(Teacher t, Group g) {
@@ -24,7 +24,7 @@ public class Administrator extends User  {
         g.setCoordinator(t);
     }
 
-    public void addStudentToGroup(Student t, Group g) {
+    public void setStudentToGroup(Student t, Group g) {
         g.addStudentToGroup(t);
     }
 
