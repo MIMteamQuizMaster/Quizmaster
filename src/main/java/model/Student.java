@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Student extends User {
 
-    private List<Group> groeps = new ArrayList<Group>();
+    private List<Group> groups = new ArrayList<Group>();
 
     public Student(String name, String password, List<Role> role) {
         super(name, password, role);
@@ -16,8 +16,8 @@ public class Student extends User {
         return false;
     }
 
-    public List<Group> getGroeps() {
-        return groeps;
+    public List<Group> getGroups() {
+        return groups;
     }
 
 }
