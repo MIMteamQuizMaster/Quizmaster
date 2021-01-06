@@ -3,7 +3,7 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import launcher.Main;
+import launcher.*;
 import view.SceneManager;
 
 import java.io.File;
