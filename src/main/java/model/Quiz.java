@@ -15,5 +15,8 @@ public class Quiz {
     public Question showQuestion(int i){
         return questions.get(i);
     }
+    public int getTotal(){
+        return questions.size();
+    }
 
 }
