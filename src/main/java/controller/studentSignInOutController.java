@@ -5,10 +5,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
 public class studentSignInOutController {
-    public Button addCourse;
-    public Button removeCourse;
-    public ListView courseListAdd;
-    public ListView courseListRemove;
+    private Button addCourse;
+    private Button removeCourse;
+    private ListView courseListAdd;
+    private ListView courseListRemove;
 
     public void addCoursesToList(ActionEvent actionEvent) {
     }
