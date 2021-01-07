@@ -2,6 +2,7 @@ package model;
 
 public class Question {
     private int questionId;
+    private int quizId;
     private String question;
     private String correctAnswer;
     private String wrongAnswer1;
@@ -40,6 +41,10 @@ public class Question {
 
     public void setQuestionId(int questionId) {
         this.questionId = questionId;
+    }
+
+    public void setQuizId(int quizId) {
+        this.quizId = quizId;
     }
 
     public boolean answerQuestion(String g){

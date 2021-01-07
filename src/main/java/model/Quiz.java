@@ -1,14 +1,20 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
-    private List<Question> questions;
+    private List<Question> questions = new ArrayList<>();
     private double succsesDefinition;
+    private String name;
+    private int idquiz;
+    private int idcourse;
 
-    public Quiz(double succsesDefinition) {
+    public Quiz(double succsesDefinition, String name) {
         this.succsesDefinition = succsesDefinition;
+        this.name = name;
     }
+
     public void addQuestion(Question q){
         questions.add(q);
     }
