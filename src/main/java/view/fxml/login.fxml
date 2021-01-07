@@ -35,7 +35,7 @@
                <children>
                   <AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                      <children>
-                        <TextField fx:id="loginUnMaskedPassword" accessibleRole="PASSWORD_FIELD" alignment="CENTER" maxWidth="1.7976931348623157E308" prefWidth="166.0" promptText="Password" />
+                        <TextField fx:id="loginUnMaskedPassword" accessibleRole="PASSWORD_FIELD" alignment="CENTER" disable="true" maxWidth="1.7976931348623157E308" prefWidth="166.0" promptText="Password" visible="false" />
                         <PasswordField fx:id="loginMaskedPassword" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="166.0" promptText="Password" />
                      </children>
                   </AnchorPane>

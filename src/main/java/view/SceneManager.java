@@ -4,14 +4,19 @@ import controller.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import launcher.Main;
 import model.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 
 public class SceneManager {
 
     private Stage primaryStage;
+    private Pane view;
 
     public SceneManager(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -31,6 +36,20 @@ public class SceneManager {
             ioException.printStackTrace();
             return null;
         }
+    }
+
+    public Pane getPage(String fileName){
+        try{
+            URL fileUrl = Main.class.getResource("/view/fxml/" + fileName + ".fxml");
+            if(fileUrl ==null){
+                throw new FileNotFoundException("FXML file not found.");
+            }
+            view = FXMLLoader.load(fileUrl);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return view;
     }
 
     public void setWindowTool() {
