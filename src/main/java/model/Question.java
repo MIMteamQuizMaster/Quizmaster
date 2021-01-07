@@ -17,10 +17,31 @@ public class Question {
         this.wrongAnswer3 = wrongAnswer3;
     }
 
+    public String getQuestion() {
+        return question;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public String getWrongAnswer1() {
+        return wrongAnswer1;
+    }
+
+    public String getWrongAnswer2() {
+        return wrongAnswer2;
+    }
+
+    public String getWrongAnswer3() {
+        return wrongAnswer3;
+    }
+
     public boolean answerQuestion(String g){
         this.givenAnswer = g;
         return givenAnswer.equals(this.correctAnswer);
     }
+
 
     @Override
     public String toString() {
