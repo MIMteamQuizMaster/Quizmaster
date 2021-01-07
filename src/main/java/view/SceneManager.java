@@ -49,5 +49,17 @@ public class SceneManager {
 
     }
 
+    public void showEnterQuestionScene() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/fxml/createUpdateQuestion.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

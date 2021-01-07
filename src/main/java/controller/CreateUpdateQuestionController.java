@@ -30,6 +30,8 @@ public class CreateUpdateQuestionController {
     private Button saveQuestion;
     @FXML
     private Button cancelQuestion;
+    @FXML
+    private Button nextQuestion;
 
     public CreateUpdateQuestionController() {
         super();
@@ -65,5 +67,11 @@ public class CreateUpdateQuestionController {
         dBaccess.closeConnection();
         System.out.println("Connection closed");
         Main.getSceneManager().setWindowTool();
+    }
+
+    public void nextQuestionAction(ActionEvent actionEvent) {
+        dBaccess.closeConnection();
+        System.out.println("Connection closed");
+        Main.getSceneManager().showEnterQuestionScene();
     }
 }

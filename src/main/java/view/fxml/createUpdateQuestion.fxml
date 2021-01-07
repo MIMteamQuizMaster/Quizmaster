@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateUpdateQuestionController">
    <children>
       <Label layoutX="244.0" layoutY="64.0" text="Nieuwe Vraag">
@@ -43,6 +42,7 @@
          </children>
       </GridPane>
       <Button fx:id="saveQuestion" layoutX="300.0" layoutY="318.0" mnemonicParsing="false" onAction="#saveQuestionAction" text="Save" />
-      <Button fx:id="cancelQuestion" layoutX="387.0" layoutY="318.0" mnemonicParsing="false" onAction="#cancelQuestionAction" text="Annuleer" />
+      <Button fx:id="cancelQuestion" layoutX="502.0" layoutY="318.0" mnemonicParsing="false" onAction="#cancelQuestionAction" text="Annuleer" />
+      <Button fx:id="nextQuestion" layoutX="387.0" layoutY="318.0" mnemonicParsing="false" onAction="#nextQuestionAction" text="Volgende" />
    </children>
 </AnchorPane>
