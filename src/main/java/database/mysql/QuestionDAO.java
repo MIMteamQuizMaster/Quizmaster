@@ -12,9 +12,10 @@ public class QuestionDAO extends AbstractDAO {
     }
 
     public void storeCustomer(Question question) {
-        String sql = "Insert into questioninprogress VALUES(?,?,?,?,?) ;";
+        String sql = "Insert into questioninprogress VALUES(?,?,?,?,?,?) ;";
         try {
             PreparedStatement preparedStatement = getStatementWithKey(sql);
+            preparedStatement.setInt(1, 0);
             preparedStatement.setString(2, question.getQuestion());
             preparedStatement.setString(3, question.getCorrectAnswer());
             preparedStatement.setString(4, question.getWrongAnswer1());
