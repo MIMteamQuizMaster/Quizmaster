@@ -35,7 +35,7 @@
             <Label text="Incorrect antwoord" GridPane.rowIndex="2" />
             <Label text="incorrect antwoord" GridPane.rowIndex="3" />
             <Label text="Incorrect antwoord" GridPane.rowIndex="4" />
-            <TextArea fx:id="question" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+            <TextArea fx:id="questionText" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
             <TextArea fx:id="correctAnswer" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextArea fx:id="wrongAnswer1" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextArea fx:id="wrongAnswer2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
