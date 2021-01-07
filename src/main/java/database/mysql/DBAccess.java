@@ -57,7 +57,18 @@ public class DBAccess {
         }
     }
 
-    public Connection getConnection()  {
+    public Connection getConnection() {
+        if (connection == null) {
+            this.openConnection();
+        }
+        try {
+            if (connection.isClosed()) {
+                this.openConnection();
+            }
+        }
+        catch (SQLException sqlFout) {
+            System.out.println("connection fout");
+        }
         return connection;
     }
 }

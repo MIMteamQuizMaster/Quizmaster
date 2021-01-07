@@ -1,6 +1,7 @@
 package model;
 
 public class Question {
+    private int questionId;
     private String question;
     private String correctAnswer;
     private String wrongAnswer1;
@@ -35,6 +36,10 @@ public class Question {
 
     public String getWrongAnswer3() {
         return wrongAnswer3;
+    }
+
+    public void setQuestionId(int questionId) {
+        this.questionId = questionId;
     }
 
     public boolean answerQuestion(String g){

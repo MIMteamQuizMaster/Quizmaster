@@ -1,5 +1,6 @@
 package launcher;
 
+import database.mysql.DBAccess;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import view.SceneManager;
@@ -8,6 +9,15 @@ public class Main extends Application {
 
     private static SceneManager sceneManager = null;
     private static Stage primaryStage = null;
+    private static DBAccess db = null;
+
+    public static DBAccess getDBaccess() {
+        if (db == null) {
+            db = new DBAccess("QuizMasterProto", "userQuizMasterProto",
+                    "pwQuizMasterProto");
+        }
+        return db;
+    }
 
     public static void main(String[] args) {
         launch(args);
