@@ -43,7 +43,8 @@ public class LoginDAO extends AbstractDAO {
                 String lname = resultSet.getString("lastname");
                 String role = resultSet.getString("role");
                 try {
-                    Role r = Role.getEnum(role);
+                    Role r = Role.getRole(role);
+                    System.out.println(r);
                     return makeUserObject(uid,fname,lname,r);
                 }catch (Exception e){
                     System.out.println("Something is wrong with user role.");
