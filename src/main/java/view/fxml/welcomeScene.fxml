@@ -6,15 +6,15 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.WelcomeSceneController">
+<AnchorPane prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.WelcomeSceneController">
    <children>
       <BorderPane fx:id="mainPanel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <left>
-            <VBox maxHeight="1.7976931348623157E308" prefHeight="400.0" prefWidth="150.0" BorderPane.alignment="CENTER">
+            <VBox maxHeight="1.7976931348623157E308" prefHeight="400.0" prefWidth="150.0" style="-fx-background-color: #cce2ef; -fx-border-color: black; -fx-border-width: 1;" BorderPane.alignment="CENTER">
                <children>
-                  <Label fx:id="welcomeLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Welcome User!" textAlignment="CENTER">
+                  <Label fx:id="welcomeLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" text="Welcome User!" textAlignment="CENTER" textFill="#b55353e3">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="Impact" size="18.0" />
                      </font>
                      <opaqueInsets>
                         <Insets />
@@ -23,7 +23,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Label>
-                  <ImageView fitHeight="150.0" fitWidth="166.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                   <Pane maxHeight="1.7976931348623157E308">
                      <children>
                         <GridPane prefHeight="150.0" prefWidth="164.0">
@@ -43,7 +43,7 @@
                               <Label layoutX="10.0" layoutY="17.0" text="Achternaam:" GridPane.rowIndex="1" />
                               <Label layoutX="10.0" layoutY="17.0" text="ID nummer:" GridPane.rowIndex="2" />
                               <Label layoutX="10.0" layoutY="77.0" text="Richting:" GridPane.rowIndex="3" />
-                              <Button mnemonicParsing="false" onAction="#s2click" text="bijwerken" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Button mnemonicParsing="false" onAction="#editUserInfo" text="bijwerken" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <Label fx:id="fnameLabel" layoutX="10.0" layoutY="17.0" text="Label" GridPane.columnIndex="1" />
                               <Label fx:id="lnameLabel" layoutX="10.0" layoutY="47.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Label fx:id="uidLabel" layoutX="10.0" layoutY="77.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />

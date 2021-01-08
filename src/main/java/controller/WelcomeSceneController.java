@@ -7,6 +7,8 @@ import javafx.scene.layout.BorderPane;
 
 import javafx.scene.layout.Pane;
 import launcher.Main;
+import model.Student;
+import model.TechnicalAdministrator;
 import model.User;
 import view.SceneManager;
 
@@ -25,19 +27,7 @@ public class WelcomeSceneController {
         sceneManager = Main.getSceneManager();
     }
 
-    public void s1click(ActionEvent actionEvent) {
-        System.out.println(" s1 gekeuzen");
 
-        view = sceneManager.getPage("s1");
-        mainPanel.setCenter(view);
-    }
-
-    public void s2click(ActionEvent actionEvent) {
-        System.out.println(" s2 gekeuzen");
-
-        view = sceneManager.getPage("s2");
-        mainPanel.setCenter(view);
-    }
     public void logOutClick(ActionEvent actionEvent) {
         System.out.println(logedIn);
     }
@@ -45,10 +35,25 @@ public class WelcomeSceneController {
     public void setClient(User client) {
         // Setting the client-object in WelcomeSceneController
         this.logedIn = client;
+        setPane();
         this.fnameLabel.setText(logedIn.getFirstname());
         this.welcomeLabel.setText(String.format("Welcome %s!",logedIn.getFirstname().toUpperCase()));
         this.lnameLabel.setText(logedIn.getLastname());
         this.uidLabel.setText(String.valueOf(logedIn.getUserId()));
         this.richtingLabel.setText(logedIn.getStudierichting());
+    }
+    private void setPane(){
+        if(this.logedIn instanceof TechnicalAdministrator){
+            view = sceneManager.getPage("TechnicalAdministrator");
+
+            mainPanel.setCenter(view);
+        }else if (this.logedIn instanceof Student){
+            view = sceneManager.getPage("studentSignInOut");
+
+            mainPanel.setCenter(view);
+        }
+    }
+
+    public void editUserInfo(ActionEvent actionEvent) {
     }
 }

@@ -45,6 +45,7 @@ public class SceneManager {
                 throw new FileNotFoundException("FXML file not found.");
             }
             view = FXMLLoader.load(fileUrl);
+
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -54,13 +55,13 @@ public class SceneManager {
 
     public void setWindowTool() {
         FXMLLoader loader = getScene("/view/fxml/windowTool.fxml");
-        if (loader != null) {
-            WindowToolController controller = loader.getController();
-            controller.populateScreenMenu();
-        } else {
-            System.out.println("set windowTool: Loader is not initialized");
-            System.out.flush();
-        }
+//        if (loader != null) {
+//            WindowToolController controller = loader.getController();
+//            controller.populateScreenMenu();
+//        } else {
+//            System.out.println("set windowTool: Loader is not initialized");
+//            System.out.flush();
+//        }
     }
 
     public void showLoginScene() {
@@ -75,6 +76,7 @@ public class SceneManager {
 
             WelcomeSceneController wsc = loader.getController();
             wsc.setClient(logedIn); // Passing the client-object to the ClientViewController
+
 
             primaryStage.setScene(scene);
             primaryStage.show();

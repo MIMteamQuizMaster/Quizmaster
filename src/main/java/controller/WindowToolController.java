@@ -15,6 +15,12 @@ public class WindowToolController {
     @FXML
     private MenuButton screenMenuButton;
 
+
+    public void initialize() {
+        populateScreenMenu();
+        // Initialization code can go here.
+        // The parameters url and resources can be omitted if they are not needed
+    }
     public void doStart() {
         sceneManager.showLoginScene();
     }
