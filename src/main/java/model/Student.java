@@ -7,8 +7,8 @@ public class Student extends User {
 
     private List<Group> groups = new ArrayList<Group>();
 
-    public Student(String name, String password, List<Role> role) {
-        super(name, password, role);
+    public Student(int userId, String firstname, String lastname) {
+        super(userId, firstname, lastname);
     }
 
     @Override

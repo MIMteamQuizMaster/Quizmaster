@@ -3,13 +3,22 @@ package model;
 import java.util.List;
 
 public abstract class User implements Login {
-    private String name;
-    private String password;
+    private int userId;
+    private String firstname;
+    private String lastname;
+    private String studierichting;
     private List<Role> role;
 
-    public User(String name, String password, List<Role> role) {
-        this.name = name;
-        this.password = password;
-        this.role = role;
+
+    public User(int userId, String firstname, String lastname) {
+        this.userId = userId;
+        this.firstname = firstname;
+        this.lastname = lastname;
+
     }
+
+    public void setStudierichting(String studierichting) {
+        this.studierichting = studierichting;
+    }
+
 }

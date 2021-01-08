@@ -65,7 +65,18 @@ public class SceneManager {
 
     public void showLoginScene() {
         getScene("/view/fxml/login.fxml");
+    }
 
+    public void showWelcome() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/fxml/welcomeScene.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showEnterQuestionScene() {

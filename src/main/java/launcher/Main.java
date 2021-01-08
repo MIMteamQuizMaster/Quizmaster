@@ -1,6 +1,7 @@
 package launcher;
 
 import database.mysql.DBAccess;
+import database.mysql.DbInfo;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import view.SceneManager;
@@ -13,8 +14,8 @@ public class Main extends Application {
 
     public static DBAccess getDBaccess() {
         if (db == null) {
-            db = new DBAccess("QuizMasterProto", "userQuizMasterProto",
-                    "pwQuizMasterProto");
+            db = new DBAccess(DbInfo.DATABASE_NAAM, DbInfo.DB_USERNAME,
+                    DbInfo.DB_USER_PASSWORD);
         }
         return db;
     }
@@ -26,6 +27,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         // test comment first push
+        DBAccess dbAccess = getDBaccess();
+        dbAccess.openConnection();
         Main.primaryStage = primaryStage;
         primaryStage.setTitle("Make IT Work - Project 1");
         getSceneManager().setWindowTool();

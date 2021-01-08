@@ -29,4 +29,7 @@ public class WelcomeScene {
         view = sceneManager.getPage("s2");
         mainPanel.setCenter(view);
     }
+
+    public void logOutClick(ActionEvent actionEvent) {
+    }
 }

@@ -4,11 +4,11 @@ import java.util.List;
 
 public class Administrator extends User  {
 
-    public Administrator(String name, String password, List<Role> role) {
-        super(name, password, role);
+    public Administrator(int userId, String firstname, String lastname) {
+        super(userId, firstname, lastname);
     }
 
-    public Course makeCourse(String name,Coordinator coordinator) {
+    public Course makeCourse(String name, Coordinator coordinator) {
         return new Course(name,coordinator);
     }
 

@@ -2,13 +2,14 @@ package controller;
 
 import database.mysql.DBAccess;
 import database.mysql.LoginDAO;
-import database.mysql.QuestionDAO;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import launcher.Main;
+import model.Role;
+
 
 public class LoginController {
     private final DBAccess dBaccess;
@@ -19,6 +20,7 @@ public class LoginController {
     public Button passShowBtn;
     public Button loginbtn;
     public Button cancelBtn;
+
 
     public LoginController() {
         this.dBaccess = Main.getDBaccess();
@@ -33,9 +35,11 @@ public class LoginController {
         loginUnMaskedPassword.setVisible(true);
 
         loginMaskedPassword.setVisible(false);
+
     }
 
     public void unShowPassword(MouseEvent mouseEvent) {
+
         loginMaskedPassword.setVisible(true);
 
         loginUnMaskedPassword.setVisible(false);
@@ -44,9 +48,14 @@ public class LoginController {
     }
 
     public void userLogin(ActionEvent actionEvent) {
-        String username = loginUsername.getText();
+        int username = Integer.parseInt(loginUsername.getText());
         String password = loginMaskedPassword.getText();
-        boolean result = dao.getUser(username,password);
+        boolean result = dao.isValidUser(username,password);
+        if(result){
+            dao.getUser(username);
+//            Main.getSceneManager().showWelcome();
+        }
+
         System.out.println(result);
     }
 
