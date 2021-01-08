@@ -72,6 +72,7 @@ public class LoginController {
         catch (Exception e){
             warningLabel.setVisible(true);
             warningLabel.setText("Gebruikers-ID-formaat is onjuist.");
+            System.out.println(e.getMessage());
         }
 
     }
