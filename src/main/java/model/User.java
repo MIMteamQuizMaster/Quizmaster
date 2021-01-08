@@ -9,7 +9,6 @@ public abstract class User implements Login {
     private String studierichting;
     private List<Role> role;
 
-
     public User(int userId, String firstname, String lastname) {
         this.userId = userId;
         this.firstname = firstname;
@@ -21,4 +20,24 @@ public abstract class User implements Login {
         this.studierichting = studierichting;
     }
 
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getStudierichting() {
+        return studierichting;
+    }
+
+    public List<Role> getRole() {
+        return role;
+    }
 }

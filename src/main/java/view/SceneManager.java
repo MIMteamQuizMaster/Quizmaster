@@ -67,11 +67,15 @@ public class SceneManager {
         getScene("/view/fxml/login.fxml");
     }
 
-    public void showWelcome() {
+    public void showWelcome(User logedIn) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/fxml/welcomeScene.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
+
+            WelcomeSceneController wsc = loader.getController();
+            wsc.setClient(logedIn); // Passing the client-object to the ClientViewController
+
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {

@@ -17,9 +17,9 @@ public enum Role{
         this.roleName = roleName;
     }
 
-    public static Role getEnum(String value) {
+    public static Role getRole(String value) {
         for(Role r: Role.values()) {
-            if(r.roleName == value) {
+            if(r.roleName.equals(value)) {
                 return r;
             }
         }

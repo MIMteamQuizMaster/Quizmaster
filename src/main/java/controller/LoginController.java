@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import launcher.Main;
 import model.Role;
+import model.User;
 
 
 public class LoginController {
@@ -48,12 +49,11 @@ public class LoginController {
     }
 
     public void userLogin(ActionEvent actionEvent) {
-        int username = Integer.parseInt(loginUsername.getText());
+        int userid = Integer.parseInt(loginUsername.getText());
         String password = loginMaskedPassword.getText();
-        boolean result = dao.isValidUser(username,password);
+        boolean result = dao.isValidUser(userid,password);
         if(result){
-            dao.getUser(username);
-//            Main.getSceneManager().showWelcome();
+            Main.getSceneManager().showWelcome(passUser(userid));
         }
 
         System.out.println(result);
@@ -63,5 +63,9 @@ public class LoginController {
         dBaccess.closeConnection();
         Main.getSceneManager().setWindowTool();
 
+    }
+    public User passUser(int userId) {
+        // get appropriate user object
+        return dao.getUser(userId);
     }
 }
