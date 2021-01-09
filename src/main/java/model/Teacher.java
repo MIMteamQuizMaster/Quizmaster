@@ -2,7 +2,7 @@ package model;
 
 import java.util.List;
 
-public class Teacher extends User implements Login{
+public class Teacher extends User {
     public Teacher(int userId, String firstname, String lastname) {
         super(userId, firstname, lastname);
     }
@@ -11,8 +11,4 @@ public class Teacher extends User implements Login{
 
     }
 
-    @Override
-    public boolean loginUser(String username, String password) {
-        return false;
-    }
 }
