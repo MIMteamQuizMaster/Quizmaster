@@ -40,8 +40,4 @@ public class Administrator extends User  {
         return true;
     }
 
-    @Override
-    public boolean loginUser(String username, String password) {
-        return false;
-    }
 }
