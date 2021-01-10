@@ -184,6 +184,7 @@ public class TechnischBeheerderDAO extends AbstractDAO {
             ps.setString(3,u.getStudieRichting());
             ps.setInt(4,u.getUserId());
             executeManipulatePreparedStatement(ps);
+// TODO: update role or add new role function
 
 //            setRoleToUser(u.getUserId(),u.getRole().toString());
         } catch (SQLException throwables) {
