@@ -10,6 +10,7 @@ public class User {
     private final ObjectProperty<Role> role;
 
 
+
     public User(int userId, String firstName, String lastName) {
         this(userId, firstName, lastName,"Onbekend",null);
     }
@@ -54,11 +55,42 @@ public class User {
         return studieRichting;
     }
 
+    public void setStudieRichting(String studieRichting) {
+        this.studieRichting.set(studieRichting);
+    }
+
     public Role getRole() {
         return role.get();
     }
 
     public ObjectProperty<Role> roleProperty() {
         return role;
+    }
+
+    public void setUserId(int userId) {
+        this.userId.set(userId);
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName.set(firstName);
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName.set(lastName);
+    }
+
+    public void setRole(Role role) {
+        this.role.set(role);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", firstName=" + firstName +
+                ", lastName=" + lastName +
+                ", studieRichting=" + studieRichting +
+                ", role=" + role +
+                '}';
     }
 }
