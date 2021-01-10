@@ -1,19 +1,12 @@
 package database.mysql;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Role;
 import model.User;
-
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -184,7 +177,7 @@ public class TechnischBeheerderDAO extends AbstractDAO {
             ps.setString(3,u.getStudieRichting());
             ps.setInt(4,u.getUserId());
             executeManipulatePreparedStatement(ps);
-// TODO: update role or add new role function
+            // TODO: update role or add new role function
 
 //            setRoleToUser(u.getUserId(),u.getRole().toString());
         } catch (SQLException throwables) {
