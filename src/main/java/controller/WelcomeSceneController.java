@@ -29,7 +29,8 @@ public class WelcomeSceneController {
 
 
     public void logOutClick(ActionEvent actionEvent) {
-        System.out.println(logedIn);
+        Main.getSceneManager().showLoginScene();
+
     }
 
     public void setClient(User client) {

@@ -41,23 +41,25 @@ public class LoginDAO extends AbstractDAO {
                 int uid = resultSet.getInt("user_id");
                 String fname = resultSet.getString("firstname");
                 String lname = resultSet.getString("lastname");
+                String richting = resultSet.getString("studierichting");
+
                 String role = resultSet.getString("role");
                 try {
                     Role r = Role.getRole(role);
                     System.out.println(r);
-                    return makeUserObject(uid,fname,lname,r);
+                    return makeUserObject(uid,fname,lname,richting,r);
                 }catch (Exception e){
                     System.out.println("Something is wrong with user role.");
                     return null;
                 }
             }
         } catch (SQLException throwables) {
-            System.out.println(throwables.getMessage());
+            System.out.println(throwables.getMessage() + "Something is wrong with GettingUser.");
         }
         return null;
     }
 
-    private User makeUserObject(int uid,String fname,String lname,Role r){
+    private User makeUserObject(int uid,String fname ,String lname,String richting,Role r){
         User returnUser = null;
         switch (r){
             case STUDENT:
@@ -80,6 +82,7 @@ public class LoginDAO extends AbstractDAO {
                 returnUser = new TechnicalAdministrator(uid,fname,lname);
                 break;
         }
+        returnUser.setStudieRichting(richting);
         return returnUser;
     }
 }

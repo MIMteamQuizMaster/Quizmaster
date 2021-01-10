@@ -30,6 +30,7 @@ public class Main extends Application {
         DBAccess dbAccess = getDBaccess();
         dbAccess.openConnection();
         Main.primaryStage = primaryStage;
+        primaryStage.setResizable(false);
         primaryStage.setTitle("Make IT Work - Project 1");
         getSceneManager().setWindowTool();
         primaryStage.show();

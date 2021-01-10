@@ -3,69 +3,92 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-      prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.TechnicalAdministratorController">
-    <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0"
-             tabClosingPolicy="UNAVAILABLE">
-        <Tab text="Gebruikers">
-            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0"
-                        minWidth="0.0">
-                <GridPane prefHeight="150.0" prefWidth="295.0" AnchorPane.leftAnchor="0.0"
-                          AnchorPane.topAnchor="0.0">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TechnicalAdministratorController">
+    <VBox maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0">
+        <HBox>
+            <TitledPane animated="false" collapsible="false" text="Gebruiker">
+                <GridPane maxHeight="1.7976931348623157E308" prefHeight="183.0" prefWidth="300.0">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                     </rowConstraints>
-                    <padding>
-                        <Insets left="10.0" right="10.0" top="15.0"/>
-                    </padding>
-                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                    <Label text="Voornaam:"/>
-                    <Label text="Achternaam:" GridPane.rowIndex="1"/>
-                    <Label layoutX="10.0" layoutY="107.0" text="Studie richting:"
-                           GridPane.rowIndex="2"/>
-                    <Label text="Role:" GridPane.rowIndex="3"/>
-                    <TextField layoutX="10.0" layoutY="13.0" GridPane.columnIndex="1"
-                               GridPane.rowIndex="1"/>
-                    <TextField layoutX="10.0" layoutY="13.0" GridPane.columnIndex="1"/>
-                    <ComboBox fx:id="rolesComboBox" prefWidth="150.0" GridPane.columnIndex="1"
-                              GridPane.rowIndex="3"/>
-                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                            style="-fx-background-color: lightgreen;" text="Toevoegen"
-                            GridPane.columnIndex="1" GridPane.rowIndex="4">
+                    <TextField fx:id="richtingField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <Label text="Voornaam:" />
+                    <Label text="Achternaam:" GridPane.rowIndex="1" />
+                    <Label layoutX="10.0" layoutY="107.0" text="Studie richting:" GridPane.rowIndex="2" />
+                    <Label text="Role:" GridPane.rowIndex="3" />
+                    <TextField fx:id="achternaamField" layoutX="10.0" layoutY="13.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <TextField fx:id="voornaamField" layoutX="10.0" layoutY="13.0" GridPane.columnIndex="1" />
+                    <ComboBox fx:id="rolesComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               <Button fx:id="updateUserbtn" disable="true" layoutX="165.0" layoutY="155.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#updateUser" style="-fx-background-color: #a7ff96;" text="bijwerken" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <GridPane.margin>
+                     <Insets left="5.0" right="5.0" />
+                  </GridPane.margin></Button>
+                    <Button fx:id="addUserbtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addUser" style="-fx-background-color: #8ad3fc;" text="Toevoegen" GridPane.columnIndex="1" GridPane.rowIndex="4">
                         <GridPane.margin>
-                            <Insets top="5.0"/>
+                            <Insets left="5.0" right="5.0" />
                         </GridPane.margin>
                     </Button>
+               <Button fx:id="cancelBtn" alignment="BOTTOM_CENTER" cancelButton="true" layoutX="160.0" layoutY="157.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelUpdate" style="-fx-background-color: #fa8e8e;" text="Annuleren" visible="false" GridPane.rowIndex="4">
+                  <GridPane.margin>
+                     <Insets left="5.0" right="5.0" />
+                  </GridPane.margin>
+               </Button>
 
                 </GridPane>
-                <TableView fx:id="table_users" layoutX="6.0" layoutY="192.0"
-                           maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                           prefHeight="158.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0"
-                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-                    <columns>
-                        <TableColumn fx:id="col_id" prefWidth="95.0" text="GebruikerID"/>
-                        <TableColumn fx:id="col_fname" prefWidth="107.0" text="Voornaam"/>
-                        <TableColumn fx:id="col_lname" prefWidth="110.0" text="Achternaam"/>
-                        <TableColumn fx:id="col_richting" prefWidth="112.0" text="Richting"/>
-                        <TableColumn fx:id="col_role" prefWidth="175.0" text="Role"/>
-                    </columns>
-                </TableView>
-            </AnchorPane>
-        </Tab>
-        <Tab text="authenticatie">
-            <AnchorPane>
-                <Button fx:id="Click" mnemonicParsing="false" onAction="#onhetClick" text="Button"/>
-            </AnchorPane>
-        </Tab>
-    </TabPane>
+            </TitledPane>
+            <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" prefHeight="200.0" prefWidth="300.0" text="Authenticatie">
+                <GridPane fx:id="passwordPane" style="-fx-background-color: green;">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="134.0" minWidth="10.0" prefWidth="89.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="188.0" minWidth="10.0" prefWidth="188.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <Label text="Gebruikers ID:" textFill="WHITE">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font></Label>
+                    <Label layoutX="20.0" layoutY="39.0" text="Wachtwoord:" textFill="WHITE" GridPane.rowIndex="1">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font></Label>
+                    <TextField fx:id="passwordField" layoutX="159.0" layoutY="35.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <GridPane.margin>
+                     <Insets left="5.0" right="15.0" />
+                  </GridPane.margin></TextField>
+                    <Label fx:id="gebruikersidLabel" layoutX="20.0" layoutY="39.0" text="XXXXXX" textFill="WHITE" GridPane.columnIndex="1">
+                  <font>
+                     <Font name="System Bold" size="18.0" />
+                  </font></Label>
+               <Button fx:id="setPassword" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#setPasswordToUser" text="inloggegevens instellen" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                  <GridPane.margin>
+                     <Insets left="15.0" right="15.0" />
+                  </GridPane.margin>
+               </Button>
+                </GridPane>
+            </TitledPane>
+        </HBox>
+        <TableView fx:id="table_users" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#tableSelected" onSort="#clearSelectionOnSort" prefHeight="189.0" prefWidth="466.0">
+            <columns>
+                <TableColumn fx:id="col_id" prefWidth="95.0" text="GebruikerID" />
+                <TableColumn fx:id="col_fname" prefWidth="107.0" text="Voornaam" />
+                <TableColumn fx:id="col_lname" prefWidth="110.0" text="Achternaam" />
+                <TableColumn fx:id="col_richting" prefWidth="112.0" text="Richting" />
+                <TableColumn fx:id="col_role" prefWidth="175.0" text="Role" />
+            </columns>
+        </TableView>
+    </VBox>
 </Pane>
