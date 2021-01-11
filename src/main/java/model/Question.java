@@ -1,13 +1,16 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Question {
     private int questionId;
     private int quizId;
     private String question;
     private List<Answer> answers = new ArrayList<>();
+    private List<Answer> mixedAnswers;
 
 
     public Question(String question) {
@@ -35,6 +38,20 @@ public class Question {
         answers.add(answer);
     }
 
+    public List<Answer> getMixedAnswers() {
+        return mixedAnswers;
+    }
+
+    public void setMixedAnswers(List<Answer> mixedAnswers) {
+        this.mixedAnswers = mixedAnswers;
+    }
+
+    public void mixAnswers()
+    {
+        List<Answer> unmixedAnswers = new ArrayList<>(answers);
+        Collections.shuffle(unmixedAnswers);
+        mixedAnswers = unmixedAnswers;
+    }
 
     @Override
     public String toString() {
