@@ -29,18 +29,19 @@ public class WelcomeSceneController {
 
 
     public void logOutClick(ActionEvent actionEvent) {
-        System.out.println(logedIn);
+        Main.getSceneManager().showLoginScene();
+
     }
 
     public void setClient(User client) {
         // Setting the client-object in WelcomeSceneController
         this.logedIn = client;
         setPane();
-        this.fnameLabel.setText(logedIn.getFirstname());
-        this.welcomeLabel.setText(String.format("Welcome %s!",logedIn.getFirstname().toUpperCase()));
-        this.lnameLabel.setText(logedIn.getLastname());
+        this.fnameLabel.setText(logedIn.getFirstName());
+        this.welcomeLabel.setText(String.format("Welcome %s!",logedIn.getFirstName().toUpperCase()));
+        this.lnameLabel.setText(logedIn.getLastName());
         this.uidLabel.setText(String.valueOf(logedIn.getUserId()));
-        this.richtingLabel.setText(logedIn.getStudierichting());
+        this.richtingLabel.setText(logedIn.getStudieRichting());
     }
     private void setPane(){
         if(this.logedIn instanceof TechnicalAdministrator){

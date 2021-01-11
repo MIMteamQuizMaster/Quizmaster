@@ -8,9 +8,4 @@ public class TechnicalAdministrator extends User {
         super(userId, firstname, lastname);
     }
 
-    @Override
-    public boolean loginUser(String username, String password) {
-        return false;
-    }
-
 }

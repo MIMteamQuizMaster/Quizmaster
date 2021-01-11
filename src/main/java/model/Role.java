@@ -17,6 +17,12 @@ public enum Role{
         this.roleName = roleName;
     }
 
+    @Override
+    public String toString() {
+        return roleName;
+
+    }
+
     public static Role getRole(String value) {
         for(Role r: Role.values()) {
             if(r.roleName.equals(value)) {
