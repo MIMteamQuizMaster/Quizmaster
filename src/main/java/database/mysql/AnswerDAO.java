@@ -41,4 +41,26 @@ public class AnswerDAO extends AbstractDAO{
         }
         return answers;
     }
+
+    public void storePersonalizedAnswers(List<Answer> answers) {
+        String sql ="Insert into user_quiz_answers(user_quiz_id, question_id, answer_id, position) values(?,?,?,?) ;";
+        int answerPosition = 1;
+        for (Answer answer: answers)
+        {
+            try {
+                PreparedStatement preparedStatement = getStatementWithKey(sql);
+                preparedStatement.setInt(1, answer.getUserQuizId());
+                preparedStatement.setInt(2, answer.getQuestionId());
+                preparedStatement.setInt(3, answer.getId());
+                preparedStatement.setInt(4, answerPosition);
+                int key = executeInsertPreparedStatement(preparedStatement);
+                answer.setPersonalizedId(key);
+                answerPosition++;
+            } catch (SQLException e) {
+                System.out.println("SQL error " + e.getMessage());
+            }
+        }
+    }
+
+    
 }

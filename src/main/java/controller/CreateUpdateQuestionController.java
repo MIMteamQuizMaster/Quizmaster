@@ -63,4 +63,7 @@ public class CreateUpdateQuestionController {
         System.out.println("Connection closed");
         Main.getSceneManager().showEnterQuestionScene();
     }
+
+    public void saveQuestionAction(ActionEvent actionEvent) {
+    }
 }

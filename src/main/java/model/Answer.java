@@ -6,6 +6,8 @@ public class Answer {
     private int questionId;
     private boolean isCorrect;
     private String answer;
+    private int userQuizId;
+    private int personalizedId;
 
     public Answer(boolean isCorrect, String answer) {
         this.isCorrect = isCorrect;
@@ -34,6 +36,14 @@ public class Answer {
 
     public void setQuestionId(int questionId) {
         this.questionId = questionId;
+    }
+
+    public int getUserQuizId() {
+        return userQuizId;
+    }
+
+    public void setPersonalizedId(int personalizedId) {
+        this.personalizedId = personalizedId;
     }
 
     @Override
