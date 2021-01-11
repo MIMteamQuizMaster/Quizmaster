@@ -1,21 +1,109 @@
 package model;
-
-import java.util.List;
+import javafx.beans.property.*;
+import javafx.collections.ObservableList;
+import java.sql.Date;
 
 public class Course {
-    private int dbId;
-    private String name;
-    private Coordinator coordinator;
-    private List<Quiz> quizzes;
-    private List<Group> groups;
+    private IntegerProperty dbId;
+    private StringProperty name;
+    private ObjectProperty<User> coordinator;
+    private StringProperty startDate;
+    private StringProperty endDate;
+    private ListProperty<Quiz> quizzes;
+    private ListProperty<Group> groups;
 
-    public Course(String name, Coordinator coordinator) {
-        this.name = name;
-        this.coordinator = coordinator;
+    public Course(String name, User coordinator) {
+        this.name = new SimpleStringProperty(name);
+        this.coordinator = new SimpleObjectProperty<>(coordinator);
     }
 
-    public boolean addQuiz(Coordinator coordinator,Quiz quiz){
-        if (coordinator == this.coordinator){
+    public int getDbId() {
+        return dbId.get();
+    }
+
+    public IntegerProperty dbIdProperty() {
+        return dbId;
+    }
+
+    public void setDbId(int dbId) {
+        this.dbId.set(dbId);
+    }
+
+    public String getName() {
+        return name.get();
+    }
+
+    public StringProperty nameProperty() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
+    public User getCoordinator() {
+        return coordinator.get();
+    }
+
+    public ObjectProperty<User> coordinatorProperty() {
+        return coordinator;
+    }
+
+    public void setCoordinator(User coordinator) {
+        this.coordinator.set(coordinator);
+    }
+
+    public String getStartDate() {
+        return startDate.get();
+    }
+
+    public StringProperty startDateProperty() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = new SimpleStringProperty(startDate);
+//        this.startDate.set(startDate);
+    }
+
+    public String getEndDate() {
+        return endDate.get();
+    }
+
+    public StringProperty endDateProperty() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate= new SimpleStringProperty(endDate);
+    }
+
+    public ObservableList<Quiz> getQuizzes() {
+        return quizzes.get();
+    }
+
+    public ListProperty<Quiz> quizzesProperty() {
+        return quizzes;
+    }
+
+    public void setQuizzes(ObservableList<Quiz> quizzes) {
+        this.quizzes.set(quizzes);
+    }
+
+    public ObservableList<Group> getGroups() {
+        return groups.get();
+    }
+
+    public ListProperty<Group> groupsProperty() {
+        return groups;
+    }
+
+    public void setGroups(ObservableList<Group> groups) {
+        this.groups.set(groups);
+    }
+
+    public boolean addQuiz(Coordinator coordinator, Quiz quiz){
+        if (coordinator == this.getCoordinator()){
             quizzes.add(quiz);
             return true;
         }
@@ -23,42 +111,11 @@ public class Course {
     }
 
     public boolean addGroup(Coordinator coordinator,Group group){
-        if (coordinator == this.coordinator){
+        if (coordinator == this.getCoordinator()){
             groups.add(group);
             return true;
         }
         return false;
     }
 
-    public void setQuizzes(List<Quiz> quizzes) {
-        this.quizzes = quizzes;
-    }
-
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
-    public Coordinator getCoordinator() {
-        return coordinator;
-    }
-
-    public void setCoordinator(Coordinator coordinator) {
-        this.coordinator = coordinator;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<Quiz> getQuizzes() {
-        return quizzes;
-    }
-
-    public List<Group> getGroups() {
-        return groups;
-    }
-
-    public void setDbId(int dbId) {
-        this.dbId = dbId;
-    }
 }

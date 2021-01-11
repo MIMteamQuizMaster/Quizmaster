@@ -5,6 +5,7 @@ import database.mysql.TechnischBeheerderDAO;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -28,14 +29,21 @@ public class TechnicalAdministratorController {
     public TextField achternaamField;
     public TextField voornaamField;
     public Label gebruikersidLabel;
-    public Button updateUserbtn;
-    public Button cancelBtn;
-    public Button addUserbtn;
-    public TextField passwordField;
-    public Button setPassword;
-    public GridPane passwordPane;
+    @FXML
+    private Button updateUserbtn;
+    @FXML
+    private Button cancelBtn;
+    @FXML
+    private Button addUserbtn;
+    @FXML
+    private TextField passwordField;
+    @FXML
+    private Button setPassword;
+    @FXML
+    private GridPane passwordPane;
     private DBAccess dBaccess;
-    public ComboBox<String> rolesComboBox;
+    @FXML
+    private ComboBox<String> rolesComboBox;
     private TechnischBeheerderDAO dao;
     private HashMap<Integer, String> roles;
     ObservableList<User> listUsers;

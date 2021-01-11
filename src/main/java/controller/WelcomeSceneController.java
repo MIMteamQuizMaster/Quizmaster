@@ -7,9 +7,7 @@ import javafx.scene.layout.BorderPane;
 
 import javafx.scene.layout.Pane;
 import launcher.Main;
-import model.Student;
-import model.TechnicalAdministrator;
-import model.User;
+import model.*;
 import view.SceneManager;
 
 public class WelcomeSceneController {
@@ -21,40 +19,45 @@ public class WelcomeSceneController {
     public Label welcomeLabel;
     private SceneManager sceneManager ;
     private Pane view;
-    private User logedIn;
+    private User loggedInUser;
 
-    public WelcomeSceneController() {
+    public void initialize() {
         sceneManager = Main.getSceneManager();
-    }
+        // Setting the client-object in WelcomeSceneController
 
+        loggedInUser = (User) Main.getPrimaryStage().getUserData();
+
+        this.fnameLabel.setText(loggedInUser.getFirstName());
+        this.welcomeLabel.setText(String.format("Welcome %s!", loggedInUser.getFirstName().toUpperCase()));
+        this.lnameLabel.setText(loggedInUser.getLastName());
+        this.uidLabel.setText(String.valueOf(loggedInUser.getUserId()));
+        this.richtingLabel.setText(loggedInUser.getStudieRichting());
+
+        /// set the pane according to the loged in user .
+        setPane();
+    }
 
     public void logOutClick(ActionEvent actionEvent) {
         Main.getSceneManager().showLoginScene();
 
     }
 
-    public void setClient(User client) {
-        // Setting the client-object in WelcomeSceneController
-        this.logedIn = client;
-        setPane();
-        this.fnameLabel.setText(logedIn.getFirstName());
-        this.welcomeLabel.setText(String.format("Welcome %s!",logedIn.getFirstName().toUpperCase()));
-        this.lnameLabel.setText(logedIn.getLastName());
-        this.uidLabel.setText(String.valueOf(logedIn.getUserId()));
-        this.richtingLabel.setText(logedIn.getStudieRichting());
-    }
     private void setPane(){
-        if(this.logedIn instanceof TechnicalAdministrator){
+        if(this.loggedInUser.getRole() == Role.TECHNICAL_ADMINISTRATOR){
             view = sceneManager.getPage("TechnicalAdministrator");
-
             mainPanel.setCenter(view);
-        }else if (this.logedIn instanceof Student){
+        }else if (this.loggedInUser.getRole() == Role.STUDENT){
             view = sceneManager.getPage("studentSignInOut");
-
+            mainPanel.setCenter(view);
+        }
+        else if (this.loggedInUser.getRole() == Role.COORDINATOR)
+        {
+            view = sceneManager.getPage("coordinatorPanel");
             mainPanel.setCenter(view);
         }
     }
 
     public void editUserInfo(ActionEvent actionEvent) {
+        // TODO: give the loged in user to
     }
 }

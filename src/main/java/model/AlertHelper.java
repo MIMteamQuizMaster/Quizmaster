@@ -17,7 +17,7 @@ public class AlertHelper {
 
     public static boolean confirmationDialog(String text){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Weet je zeker dat?");
+        alert.setTitle("Weet je het zeker?");
         alert.setContentText(text);
         Optional<ButtonType> option = alert.showAndWait();
         return ButtonType.OK.equals(option.get());

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.CoordinatorPanelController">
+   <children>
+      <HBox layoutX="126.0" layoutY="187.0" prefHeight="100.0" prefWidth="210.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox prefHeight="400.0" prefWidth="210.0">
+               <children>
+                  <TableView fx:id="courseTable" maxHeight="-Infinity" prefHeight="210.0" prefWidth="210.0" VBox.vgrow="NEVER">
+                    <columns>
+                      <TableColumn fx:id="col_course_name" prefWidth="70.0" text="Course" />
+                      <TableColumn prefWidth="140.0" text="Period">
+                           <columns>
+                              <TableColumn fx:id="col_sdate" prefWidth="70.0" text="Start" />
+                              <TableColumn fx:id="col_edate" prefWidth="70.0" text="End" />
+                           </columns>
+                        </TableColumn>
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+                  <ListView prefHeight="71.0" prefWidth="210.0" />
+               </children></VBox>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+   </children>
+</AnchorPane>
