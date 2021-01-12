@@ -3,34 +3,100 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.CoordinatorPanelController">
-   <children>
-      <HBox layoutX="126.0" layoutY="187.0" prefHeight="100.0" prefWidth="210.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <VBox prefHeight="400.0" prefWidth="210.0">
-               <children>
-                  <TableView fx:id="courseTable" maxHeight="-Infinity" prefHeight="210.0" prefWidth="210.0" VBox.vgrow="NEVER">
-                    <columns>
-                      <TableColumn fx:id="col_course_name" prefWidth="70.0" text="Course" />
-                      <TableColumn prefWidth="140.0" text="Period">
-                           <columns>
-                              <TableColumn fx:id="col_sdate" prefWidth="70.0" text="Start" />
-                              <TableColumn fx:id="col_edate" prefWidth="70.0" text="End" />
-                           </columns>
-                        </TableColumn>
-                    </columns>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                  </TableView>
-                  <ListView prefHeight="71.0" prefWidth="210.0" />
-               </children></VBox>
-         </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CoordinatorPanelController">
+    <HBox layoutX="126.0" layoutY="187.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="210.0" HBox.hgrow="NEVER">
+            <TableView fx:id="courseTable" onMouseClicked="#courseTableClick" prefHeight="150.0" prefWidth="210.0" VBox.vgrow="NEVER">
+                <columns>
+                    <TableColumn fx:id="col_course_name" prefWidth="70.0" text="Course" />
+                    <TableColumn prefWidth="140.0" text="Period">
+                        <columns>
+                            <TableColumn fx:id="col_sdate" prefWidth="70.0" text="Start" />
+                            <TableColumn fx:id="col_edate" prefWidth="70.0" text="End" />
+                        </columns>
+                    </TableColumn>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
+            </TableView>
+            <TitledPane fx:id="quizPane" prefHeight="127.0" prefWidth="210.0" text="Quizen" VBox.vgrow="ALWAYS">
+                 <ListView fx:id="quizListView" onMouseClicked="#quizListClick" prefHeight="91.0" prefWidth="208.0" />
+            </TitledPane>
+            <TitledPane fx:id="questionPane" prefHeight="174.0" prefWidth="210.0" text="Vragen" VBox.vgrow="ALWAYS">
+                 <ListView fx:id="questionListView" prefHeight="0.0" prefWidth="208.0" />
+            </TitledPane>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
-      </HBox>
-   </children>
+        </VBox>
+         <VBox maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="390.0" spacing="5.0">
+             <HBox>
+                 <Label text="Geselecteerde cursus:" />
+                 <Label fx:id="courseLabel" text="Cursus">
+                     <font>
+                         <Font name="System Bold" size="12.0" />
+                     </font>
+                     <HBox.margin>
+                         <Insets left="5.0" />
+                     </HBox.margin>
+                 </Label>
+             </HBox>
+             <HBox>
+                 <Label text="Aantal quizen:" />
+                 <Label fx:id="totalLabel" text="nummer">
+                     <font>
+                         <Font name="System Bold" size="12.0" />
+                     </font>
+                     <HBox.margin>
+                         <Insets left="5.0" />
+                     </HBox.margin>
+                 </Label>
+             </HBox>
+         <HBox layoutX="10.0" layoutY="32.0">
+            <children>
+               <Label text="Geselecteerde quiz:" />
+               <Label fx:id="quizLabel" text="quiz">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font>
+                  <HBox.margin>
+                     <Insets left="5.0" />
+                  </HBox.margin>
+               </Label>
+            </children>
+         </HBox>
+         <HBox spacing="5.0">
+            <children>
+               <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                  <children>
+                     <Label prefHeight="17.0" prefWidth="58.0" text="Vraag:" />
+                     <Button mnemonicParsing="false" text="Bijwerken">
+                        <font>
+                           <Font size="10.0" />
+                        </font>
+                     </Button>
+                     <Button layoutX="10.0" layoutY="37.0" mnemonicParsing="false" text="Button" />
+                  </children>
+               </VBox>
+               <TextArea prefHeight="73.0" prefWidth="314.0" HBox.hgrow="ALWAYS" />
+            </children>
+         </HBox>
+         <ListView prefHeight="200.0" prefWidth="200.0" />
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         </VBox>
+    </HBox>
 </AnchorPane>

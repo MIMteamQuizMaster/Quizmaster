@@ -1,73 +1,76 @@
 package model;
 
 import javafx.beans.property.*;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
-    private List<Question> questions = new ArrayList<>();
-    private DoubleProperty succsesDefinition;
-    private StringProperty name;
-    private IntegerProperty idquiz;
-    private IntegerProperty idcourse;
+    private List<Question> questions;
+    private double succsesDefinition;
+    private String name;
+    private int idquiz;
+    private int idcourse;
+    private int timeLimit;
 
-    public Quiz(double succsesDefinition, String name) {
-        this.succsesDefinition = new SimpleDoubleProperty(succsesDefinition);
-        this.name = new SimpleStringProperty(name);
-    }
-
-    public void setIdquiz(int idquiz) {
-        this.idquiz.set(idquiz);
-    }
-
-    public void setIdcourse(int idcourse) {
-        this.idcourse.set(idcourse);
-    }
-
-    public void addQuestion(Question q){
-        questions.add(q);
-    }
-    public Question showQuestion(int i){
-        return questions.get(i);
-    }
-    public int getTotal(){
-        return questions.size();
+    public Quiz(String name,double succsesDefinition) {
+        this.succsesDefinition = succsesDefinition;
+        this.name = name;
     }
 
     public List<Question> getQuestions() {
         return questions;
     }
 
-    public double getSuccsesDefinition() {
-        return succsesDefinition.get();
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
 
-    public DoubleProperty succsesDefinitionProperty() {
+    public double getSuccsesDefinition() {
         return succsesDefinition;
     }
 
-    public String getName() {
-        return name.get();
+    public void setSuccsesDefinition(double succsesDefinition) {
+        this.succsesDefinition = succsesDefinition;
     }
 
-    public StringProperty nameProperty() {
+    public String getName() {
         return name;
     }
 
-    public int getIdquiz() {
-        return idquiz.get();
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public IntegerProperty idquizProperty() {
+    public int getIdquiz() {
         return idquiz;
     }
 
-    public int getIdcourse() {
-        return idcourse.get();
+    public void setIdquiz(int idquiz) {
+        this.idquiz = idquiz;
     }
 
-    public IntegerProperty idcourseProperty() {
+    public int getIdcourse() {
         return idcourse;
+    }
+
+    public void setIdcourse(int idcourse) {
+        this.idcourse = idcourse;
+    }
+
+    public int getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(int timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+    public int getTotal(){
+        return getQuestions().size();
+    }
+    @Override
+    public String toString() {
+        return getName() + " (" + getTotal() + ")";
     }
 }

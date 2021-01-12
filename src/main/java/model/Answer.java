@@ -1,70 +1,55 @@
-package model;
 
-import javafx.beans.property.*;
+package model;
 
 public class Answer {
 
-    private IntegerProperty id;
-    private IntegerProperty questionId;
-    private BooleanProperty isCorrect;
-    private StringProperty answer;
+    private int id;
+    private int questionId;
+    private boolean isCorrect;
+    private String answer;
+    private int userQuizId;
+    private int personalizedId;
 
-    public Answer( boolean isCorrect, String answer) {
-        this.isCorrect = new SimpleBooleanProperty(isCorrect);
-        this.answer = new SimpleStringProperty(answer);
+    public Answer(boolean isCorrect, String answer) {
+        this.isCorrect = isCorrect;
+        this.answer = answer;
     }
 
     public int getId() {
-        return id.get();
-    }
-
-    public IntegerProperty idProperty() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id.set(id);
-    }
-
     public int getQuestionId() {
-        return questionId.get();
-    }
-
-    public IntegerProperty questionIdProperty() {
         return questionId;
     }
 
-    public void setQuestionId(int questionId) {
-        this.questionId.set(questionId);
-    }
-
-    public boolean isIsCorrect() {
-        return isCorrect.get();
-    }
-
-    public BooleanProperty isCorrectProperty() {
+    public boolean isCorrect() {
         return isCorrect;
     }
 
-    public void setIsCorrect(boolean isCorrect) {
-        this.isCorrect.set(isCorrect);
-    }
-
     public String getAnswer() {
-        return answer.get();
-    }
-
-    public StringProperty answerProperty() {
         return answer;
     }
 
-    public void setAnswer(String answer) {
-        this.answer.set(answer);
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setQuestionId(int questionId) {
+        this.questionId = questionId;
+    }
+
+    public int getUserQuizId() {
+        return userQuizId;
+    }
+
+    public void setPersonalizedId(int personalizedId) {
+        this.personalizedId = personalizedId;
     }
 
     @Override
     public String toString() {
-        if (isIsCorrect())
+        if (isCorrect)
         {
             return String.format("%s: correct answer", answer);
         }

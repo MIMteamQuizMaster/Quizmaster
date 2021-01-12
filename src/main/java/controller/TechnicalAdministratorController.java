@@ -3,32 +3,39 @@ package controller;
 import database.mysql.DBAccess;
 import database.mysql.TechnischBeheerderDAO;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import launcher.Main;
 import model.AlertHelper;
 import model.Role;
 import model.User;
+import controller.fx.UserFx;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class TechnicalAdministratorController {
-
-    public TableView<User> table_users;
-    public TableColumn<User, Integer> col_id;
-    public TableColumn<User, String> col_fname;
-    public TableColumn<User, String> col_lname;
-    public TableColumn<User, String> col_richting;
-    public TableColumn<User, Role> col_role;
-    public TextField richtingField;
-    public TextField achternaamField;
-    public TextField voornaamField;
-    public Label gebruikersidLabel;
+    @FXML
+    private TableView<UserFx> table_users;
+    @FXML
+    private TableColumn<UserFx, Integer> col_id;
+    @FXML
+    private TableColumn<UserFx, String> col_fname;
+    @FXML
+    private TableColumn<UserFx, String> col_lname;
+    @FXML
+    private TableColumn<UserFx, String> col_richting;
+    @FXML
+    private TableColumn<UserFx, Role> col_role;
+    @FXML
+    private TextField richtingField;
+    @FXML
+    private TextField achternaamField;
+    @FXML
+    private TextField voornaamField;
+    @FXML
+    private Label gebruikersidLabel;
     @FXML
     private Button updateUserbtn;
     @FXML
@@ -38,49 +45,69 @@ public class TechnicalAdministratorController {
     @FXML
     private TextField passwordField;
     @FXML
-    private Button setPassword;
-    @FXML
     private GridPane passwordPane;
-    private DBAccess dBaccess;
     @FXML
     private ComboBox<String> rolesComboBox;
     private TechnischBeheerderDAO dao;
-    private HashMap<Integer, String> roles;
-    ObservableList<User> listUsers;
-    User selectedUser;
+    private UserFx selectedUser;
 
 
     public void initialize() {
         // Initialization code can go here.
         // The parameters url and resources can be omitted if they are not needed
-        this.dBaccess = Main.getDBaccess();
-        this.dao = new TechnischBeheerderDAO(this.dBaccess);
+        DBAccess dBaccess = Main.getDBaccess();
+        this.dao = new TechnischBeheerderDAO(dBaccess);
         populateRoleMenu();
         refreshTable();
-
     }
 
+
+    /**
+     * Get the roles frome Database and fill the ComboBox for User.
+     */
     public void populateRoleMenu() {
-        this.roles = new HashMap<>();
-        this.roles = dao.getMenuItems();
-        for (Map.Entry<Integer, String> e : roles.entrySet()) {
-            rolesComboBox.getItems().add(e.getValue());
+        ObservableList<String> roleList = FXCollections.observableArrayList();
+        for (Role r : Role.values()) {
+            roleList.add(r.toString());
         }
+        rolesComboBox.setItems(roleList);
     }
 
+
+    /**
+     * Convert User objects to UserFX objects
+     * @param userObservableList list of User objects
+     * @return a observableList UserFx objects
+     */
+    private ObservableList<UserFx> convertUsertoUserFX(ObservableList<User> userObservableList){
+        ObservableList<UserFx> listUsers = FXCollections.observableArrayList();
+        for (User u:userObservableList) {
+            listUsers.add(new UserFx(u));
+        }
+        return listUsers;
+    }
+
+    /**
+     *  add or refresh the table of users
+     */
     public void refreshTable() {
-        listUsers = dao.getAllusers();
+        table_users.getItems().clear();
+        ObservableList<UserFx> tableListUsers = convertUsertoUserFX(dao.getAllusers());
         col_id.setCellValueFactory(cellData -> cellData.getValue().userIdProperty().asObject());
         col_fname.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         col_lname.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
         col_richting.setCellValueFactory(cellData -> cellData.getValue().studieRichtingProperty());
         col_role.setCellValueFactory(cellData -> cellData.getValue().roleProperty());
-        table_users.setItems(listUsers);
+        table_users.setItems(tableListUsers);
 
     }
 
-
-    public void tableSelected(MouseEvent mouseEvent) {
+    /**
+     * if a row in the user table is selected , the function add all information of the users to the TexTFields
+     * and active the editmode
+     *
+     */
+    public void tableSelected() {
         if (table_users.getSelectionModel().getSelectedItem() != null) {
             this.selectedUser = table_users.getSelectionModel().getSelectedItem();
             String pass = getPasswordString();
@@ -95,6 +122,11 @@ public class TechnicalAdministratorController {
         }
     }
 
+    /**
+     * Check existence of credentials for the selected user in the table
+     * Also change the color of pane appropriate with the result of search
+     * @return the password of searched user
+     */
     private String getPasswordString() {
         String pass = dao.getCredential(this.selectedUser.getUserId());
         if (pass == null) {
@@ -105,11 +137,18 @@ public class TechnicalAdministratorController {
         return pass;
     }
 
-    public void clearSelectionOnSort(SortEvent<TableView<User>> tableViewSortEvent) {
+    /**
+     * clear the selection if the user change the table sort
+     *
+     */
+    public void clearSelectionOnSort() {
         table_users.getSelectionModel().clearSelection();
     }
 
-    public void updateUser(ActionEvent actionEvent) {
+    /**
+     * Update the user information given in the field to the Database
+     */
+    public void updateUser() {
         boolean r = AlertHelper.confirmationDialog("Wilt u deze gebruiker bijwerken in de databank?");
         if (r) {
             Role role = Role.getRole(rolesComboBox.getValue());
@@ -117,17 +156,24 @@ public class TechnicalAdministratorController {
             selectedUser.setLastName(achternaamField.getText());
             selectedUser.setStudieRichting(richtingField.getText());
             selectedUser.setRole(role);
-            dao.updateUser(selectedUser);
+            dao.updateUser(selectedUser.getUserObject());
             refreshTable();
             editMode(false);
         }
     }
 
-    public void cancelUpdate(ActionEvent actionEvent) {
+    /**
+     * change the edit mode to skip accidentally update command
+     */
+    public void cancelUpdate() {
         // hide edit btn
         editMode(false);
     }
 
+    /**
+     * this fucntion change the visiblity of UPDATE _ CANCEL _ ADD button also empty the fields
+     * @param editMode boolean to determine the situation of panel
+     */
     private void editMode(boolean editMode) {
         if (editMode) {
             // SHOW update btn
@@ -165,7 +211,12 @@ public class TechnicalAdministratorController {
 
     }
 
-    public User addUser(ActionEvent actionEvent) {
+    /**
+     * takes the values in textfield and add a new user to de database
+     *
+     * @return the object of made user
+     */
+    public User addUser() {
         boolean r = AlertHelper.confirmationDialog("Wilt u deze gebruiker toevoegen aan de databank?");
 
         if (r) {
@@ -183,7 +234,11 @@ public class TechnicalAdministratorController {
         return null;
     }
 
-    public void setPasswordToUser(ActionEvent actionEvent) {
+    /**
+     * add credential to user in the Database
+     *
+     */
+    public void setPasswordToUser() {
         if(passwordField.getText() != null){
             boolean r = AlertHelper.confirmationDialog("Wilt u de wachtwoord te veranderen?");
             if (r) {

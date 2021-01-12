@@ -2,85 +2,68 @@ package model;
 
 import javafx.beans.property.*;
 
-public class User {
-    private final IntegerProperty userId;
-    private final StringProperty firstName;
-    private final StringProperty lastName;
-    private final StringProperty studieRichting;
-    private final ObjectProperty<Role> role;
+import java.util.ArrayList;
+import java.util.List;
 
+public class User {
+    private int userId;
+    private String firstName;
+    private String lastName;
+    private String studieRichting;
+    private Role role;
 
 
     public User(int userId, String firstName, String lastName) {
-        this(userId, firstName, lastName,"Onbekend",null);
+        this(userId, firstName, lastName, "Onbekend", null);
     }
 
-    public User(int user_id, String fname, String lname, String richting, Role r) {
-        this.userId = new SimpleIntegerProperty(user_id);
-        this.firstName = new SimpleStringProperty(fname);
-        this.lastName = new SimpleStringProperty(lname);
-        this.studieRichting = new SimpleStringProperty(richting);
-        this.role = new SimpleObjectProperty<>(r);
+    public User(int userId, String firstName, String lastName, String studieRichting, Role r) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.studieRichting = studieRichting;
+        this.role = r;
+//        this.role.add(r);
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setRole(Role r){
+        this.role = r;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setStudieRichting(String richting){
+        this.studieRichting = richting;
     }
 
     public int getUserId() {
-        return userId.get();
-    }
-
-    public IntegerProperty userIdProperty() {
         return userId;
     }
 
     public String getFirstName() {
-        return firstName.get();
-    }
-
-    public StringProperty firstNameProperty() {
         return firstName;
     }
 
     public String getLastName() {
-        return lastName.get();
-    }
-
-    public StringProperty lastNameProperty() {
         return lastName;
     }
 
     public String getStudieRichting() {
-        return studieRichting.get();
-    }
-
-    public StringProperty studieRichtingProperty() {
         return studieRichting;
     }
 
-    public void setStudieRichting(String studieRichting) {
-        this.studieRichting.set(studieRichting);
-    }
-
     public Role getRole() {
-        return role.get();
-    }
-
-    public ObjectProperty<Role> roleProperty() {
         return role;
-    }
-
-    public void setUserId(int userId) {
-        this.userId.set(userId);
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName.set(firstName);
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName.set(lastName);
-    }
-
-    public void setRole(Role role) {
-        this.role.set(role);
     }
 
     @Override
