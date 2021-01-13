@@ -7,8 +7,8 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CoordinatorPanelController">
     <HBox layoutX="126.0" layoutY="187.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="210.0" HBox.hgrow="NEVER">
-            <TableView fx:id="courseTable" onMouseClicked="#courseTableClick" prefHeight="150.0" prefWidth="210.0" VBox.vgrow="NEVER">
+        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="225.0" HBox.hgrow="NEVER">
+            <TableView fx:id="courseTable" onMouseClicked="#courseTableSelect" prefHeight="150.0" prefWidth="210.0" VBox.vgrow="NEVER">
                 <columns>
                     <TableColumn fx:id="col_course_name" prefWidth="70.0" text="Course" />
                     <TableColumn prefWidth="140.0" text="Period">
@@ -26,10 +26,10 @@
             </VBox.margin>
             </TableView>
             <TitledPane fx:id="quizPane" prefHeight="127.0" prefWidth="210.0" text="Quizen" VBox.vgrow="ALWAYS">
-                 <ListView fx:id="quizListView" onMouseClicked="#quizListClick" prefHeight="91.0" prefWidth="208.0" />
+                 <ListView fx:id="quizListView" onMouseClicked="#quizListSelect" prefHeight="91.0" prefWidth="208.0" />
             </TitledPane>
             <TitledPane fx:id="questionPane" prefHeight="174.0" prefWidth="210.0" text="Vragen" VBox.vgrow="ALWAYS">
-                 <ListView fx:id="questionListView" prefHeight="0.0" prefWidth="208.0" />
+                 <ListView fx:id="questionListView" onMouseClicked="#questionListSelect" prefHeight="0.0" prefWidth="208.0" />
             </TitledPane>
          <HBox.margin>
             <Insets />
@@ -76,27 +76,44 @@
          </HBox>
          <HBox spacing="5.0">
             <children>
-               <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+               <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="115.0" spacing="5.0" HBox.hgrow="ALWAYS">
                   <children>
-                     <Label prefHeight="17.0" prefWidth="58.0" text="Vraag:" />
-                     <Button mnemonicParsing="false" text="Bijwerken">
-                        <font>
-                           <Font size="10.0" />
-                        </font>
-                     </Button>
-                     <Button layoutX="10.0" layoutY="37.0" mnemonicParsing="false" text="Button" />
+                     <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Vraag:" VBox.vgrow="ALWAYS" />
+                     <StackPane>
+                        <children>
+                           <Button fx:id="newQuestionBtn" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#newQuestionBtnAction" prefHeight="23.0" prefWidth="90.0" text="nieuw" />
+                           <Button fx:id="deleteQuestionBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteQuestionBtnAction" text="verwijderen" />
+                        </children>
+                     </StackPane>
+                     <Button fx:id="editQuestionBtn" mnemonicParsing="false" onAction="#editQuestionBtnAction" prefHeight="23.0" prefWidth="90.0" text="Bijwerken" />
+                     <Button fx:id="cancelQuestionBtn" layoutX="10.0" layoutY="72.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelQuestionBtnAction" text="annuleren" VBox.vgrow="ALWAYS" />
                   </children>
                </VBox>
-               <TextArea prefHeight="73.0" prefWidth="314.0" HBox.hgrow="ALWAYS" />
+               <TextArea fx:id="questionTextArea" prefHeight="73.0" prefWidth="314.0" HBox.hgrow="ALWAYS" />
             </children>
          </HBox>
-         <ListView prefHeight="200.0" prefWidth="200.0" />
+         <HBox prefHeight="100.0" prefWidth="115.0" spacing="5.0">
+            <children>
+               <VBox prefWidth="86.0">
+                  <children>
+                     <Label prefHeight="17.0" prefWidth="85.0" text="Antwoord:" />
+                  </children>
+               </VBox>
+               <TextArea fx:id="answerTextArea" prefHeight="90.0" prefWidth="167.0" />
+               <VBox>
+                  <children>
+                     <CheckBox fx:id="answerIsCorrectCheckBox" mnemonicParsing="false" text="Juist antwoord" />
+                     <Button fx:id="addAnswerToQuestionbtn" mnemonicParsing="false" onAction="#addAnswerToQuestionAction" text="Voeg Antwoord toe" textAlignment="CENTER" wrapText="true" />
+                  </children>
+               </VBox>
+            </children></HBox>
+         <ListView fx:id="answerListView" onMouseClicked="#answerListSelect" prefHeight="132.0" prefWidth="376.0">
+            <VBox.margin>
+               <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+            </VBox.margin></ListView>
          <HBox.margin>
             <Insets />
          </HBox.margin>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
          </VBox>
     </HBox>
 </AnchorPane>

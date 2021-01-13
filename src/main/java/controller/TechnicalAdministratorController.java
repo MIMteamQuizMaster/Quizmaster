@@ -9,10 +9,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import launcher.Main;
-import model.AlertHelper;
 import model.Role;
 import model.User;
 import controller.fx.UserFx;
+import static controller.fx.ObjectConvertor.*;
 
 
 public class TechnicalAdministratorController {
@@ -57,8 +57,8 @@ public class TechnicalAdministratorController {
         // The parameters url and resources can be omitted if they are not needed
         DBAccess dBaccess = Main.getDBaccess();
         this.dao = new TechnischBeheerderDAO(dBaccess);
-        populateRoleMenu();
-        refreshTable();
+        populateRoleMenu(); // add items to ComboBox
+        refreshTable(); // add data to table
     }
 
 
@@ -74,25 +74,14 @@ public class TechnicalAdministratorController {
     }
 
 
-    /**
-     * Convert User objects to UserFX objects
-     * @param userObservableList list of User objects
-     * @return a observableList UserFx objects
-     */
-    private ObservableList<UserFx> convertUsertoUserFX(ObservableList<User> userObservableList){
-        ObservableList<UserFx> listUsers = FXCollections.observableArrayList();
-        for (User u:userObservableList) {
-            listUsers.add(new UserFx(u));
-        }
-        return listUsers;
-    }
+
 
     /**
      *  add or refresh the table of users
      */
     public void refreshTable() {
         table_users.getItems().clear();
-        ObservableList<UserFx> tableListUsers = convertUsertoUserFX(dao.getAllusers());
+        ObservableList<UserFx> tableListUsers = convertUserToUserFX(dao.getAllusers());
         col_id.setCellValueFactory(cellData -> cellData.getValue().userIdProperty().asObject());
         col_fname.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         col_lname.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
@@ -156,6 +145,10 @@ public class TechnicalAdministratorController {
             selectedUser.setLastName(achternaamField.getText());
             selectedUser.setStudieRichting(richtingField.getText());
             selectedUser.setRole(role);
+
+            // Selected user is UserFX but dao Parameter is User
+            // the User Objet is stored in UserFX so
+
             dao.updateUser(selectedUser.getUserObject());
             refreshTable();
             editMode(false);

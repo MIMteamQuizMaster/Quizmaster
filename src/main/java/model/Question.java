@@ -12,10 +12,23 @@ public class Question {
     private List<Answer> answers = new ArrayList<>();
     private List<Answer> mixedAnswers;
 
+    public Question(int questionId, String question) {
+        this.questionId = questionId;
+        this.question = question;
+    }
 
     public Question(String question) {
         this.question = question;
     }
+
+    public int getQuestionId() {
+        return questionId;
+    }
+
+    public int getQuizId() {
+        return quizId;
+    }
+
 
     public String getQuestion() {
         return question;
@@ -53,7 +66,21 @@ public class Question {
         mixedAnswers = unmixedAnswers;
     }
 
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
+
+    public void addAnswers(Answer answer) {
+        this.answers.add(answer);
+    }
+
     @Override
     public String toString() {
         return question;}
+
+
 }

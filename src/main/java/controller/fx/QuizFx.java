@@ -32,6 +32,16 @@ public class QuizFx {
         this.quiz.setQuestions(questions);
     }
 
+    public void addQuestion(Question question) {
+        this.quiz.addQuestion(question);
+    }
+
+    public void removeQuestion(Question question) {
+        this.quiz.removeQuestion(question);
+    }
+
+
+
     public double getSuccsesDefinition() {
         return new SimpleDoubleProperty(this.quiz.getSuccsesDefinition()).get();
     }

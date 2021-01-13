@@ -39,7 +39,7 @@
                             <Insets left="5.0" right="5.0" />
                         </GridPane.margin>
                     </Button>
-               <Button fx:id="cancelBtn" alignment="BOTTOM_CENTER" cancelButton="true" layoutX="160.0" layoutY="157.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelUpdate" style="-fx-background-color: #fa8e8e;" text="Annuleren" visible="false" GridPane.rowIndex="4">
+               <Button fx:id="cancelBtn" alignment="BOTTOM_CENTER" cancelButton="true" layoutX="160.0" layoutY="157.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelUpdate" style="-fx-background-color: #ff8080;" text="Annuleren" visible="false" GridPane.rowIndex="4">
                   <GridPane.margin>
                      <Insets left="5.0" right="5.0" />
                   </GridPane.margin>

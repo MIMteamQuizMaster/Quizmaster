@@ -26,6 +26,13 @@ public class Quiz {
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
+    public void addQuestion(Question question) {
+        this.questions.add(question);
+    }
+
+    public void removeQuestion(Question question) {
+        this.questions.remove(question);
+    }
 
     public double getSuccsesDefinition() {
         return succsesDefinition;
@@ -66,6 +73,7 @@ public class Quiz {
     public void setTimeLimit(int timeLimit) {
         this.timeLimit = timeLimit;
     }
+
     public int getTotal(){
         return getQuestions().size();
     }

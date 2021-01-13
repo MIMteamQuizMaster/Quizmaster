@@ -12,6 +12,7 @@ import java.sql.SQLException;
 
 public class CoordinatorDAO extends AbstractDAO {
     User coordinator;
+
     public CoordinatorDAO(DBAccess dBaccess) {
         super(dBaccess);
     }
@@ -20,17 +21,17 @@ public class CoordinatorDAO extends AbstractDAO {
         this.coordinator = coordinator;
     }
 
-    public ObservableList<Course> getMyCourses(){
+    public ObservableList<Course> getMyCourses() {
         ObservableList<Course> courseList = FXCollections.observableArrayList();
         String query = "SELECT * FROM course WHERE coordinator_id=? and endDate > ?";
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setInt(1,this.coordinator.getUserId());
-            ps.setDate(2,java.sql.Date.valueOf(java.time.LocalDate.now()));
+            ps.setInt(1, this.coordinator.getUserId());
+            ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
             ResultSet rs = executeSelectPreparedStatement(ps);
-            while(rs.next()){
+            while (rs.next()) {
                 String name = rs.getString("name");
-                int courseDbid = rs.getInt( "idcourse");
+                int courseDbid = rs.getInt("idcourse");
                 String startDate = rs.getDate("startDate").toString();
                 String endDate = rs.getDate("endDate").toString();
 
@@ -39,8 +40,9 @@ public class CoordinatorDAO extends AbstractDAO {
                 course.setDbId(courseDbid);
                 course.setStartDate(startDate);
                 course.setEndDate(endDate);
-                /// add quizes to Course object
-                course.setQuizzes(getQuizOfCourse(course));;
+
+                course.setQuizzes(getQuizOfCourse(course)); // add quizes to Course object
+
                 courseList.add(course);
             }
             return courseList;
@@ -52,24 +54,25 @@ public class CoordinatorDAO extends AbstractDAO {
         return null;
     }
 
-    private ObservableList<Quiz> getQuizOfCourse(Course course){
+    public ObservableList<Quiz> getQuizOfCourse(Course course) {
         ObservableList<Quiz> quizList = FXCollections.observableArrayList();
         String query = "SELECT * FROM quiz WHERE course_idcourse =?";
+        int courseId = course.getDbId();
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setInt(1,course.getDbId());
+            ps.setInt(1,courseId );
             ResultSet rs = executeSelectPreparedStatement(ps);
-            while(rs.next()){
+            while (rs.next()) {
                 String name = rs.getString("name");
                 int quizID = rs.getInt("id");
-                int timelimit = rs.getInt( "timelimit_minutes");
+                int timelimit = rs.getInt("timelimit_minutes");
                 double successDefinition = rs.getDouble("successDefinition");
-                Quiz temp = new Quiz(name,successDefinition);
-                temp.setTimeLimit(timelimit);
-                temp.setIdquiz(quizID);
-                ObservableList<Question> questions = getQuestions(temp);
-                temp.setQuestions(questions);
-                quizList.add(temp);
+                Quiz quiz = new Quiz(name, successDefinition);
+                quiz.setTimeLimit(timelimit);
+                quiz.setIdquiz(quizID);
+                quiz.setIdcourse(courseId);
+                quiz.setQuestions(getQuestions(quiz)); // find questions of the quiz and add to its object
+                quizList.add(quiz);
             }
             return quizList;
         } catch (SQLException throwables) {
@@ -80,21 +83,22 @@ public class CoordinatorDAO extends AbstractDAO {
         return null;
     }
 
-    private ObservableList<Question> getQuestions (Quiz quiz){
+    public ObservableList<Question> getQuestions(Quiz quiz) {
         ObservableList<Question> questionsList = FXCollections.observableArrayList();
-
+        int quizId = quiz.getIdquiz();
         String query = "SELECT * FROM question WHERE quiz_id=?";
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setInt(1,quiz.getIdquiz());
+            ps.setInt(1, quizId);
             ResultSet rs = executeSelectPreparedStatement(ps);
-            while(rs.next()){
-                String question = rs.getString("question");
+            while (rs.next()) {
+                String questionString = rs.getString("question");
                 int id = rs.getInt("id");
-                Question q = new Question(id,question);
-                ObservableList<Answer> answers =getAllAnswers(q);
-                q.setAnswers(answers);
-                questionsList.add(q);
+                Question question = new Question(id,questionString);
+                question.setQuizId(quizId);
+                question.setAnswers(getAllAnswers(question)); // find answers
+
+                questionsList.add(question);
             }
             return questionsList;
         } catch (SQLException throwables) {
@@ -105,21 +109,22 @@ public class CoordinatorDAO extends AbstractDAO {
         return null;
     }
 
-    private ObservableList<Answer> getAllAnswers(Question question){
+    public ObservableList<Answer> getAllAnswers(Question question) {
         String query = "SELECT * from answer where question_id = ?";
         ObservableList<Answer> possibleAnswers = FXCollections.observableArrayList();
 
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setInt(1,question.getQuestionId());
+            ps.setInt(1, question.getQuestionId());
             ResultSet rs = executeSelectPreparedStatement(ps);
-            while(rs.next()){
+            while (rs.next()) {
                 int answerdbId = rs.getInt("id");
-                String answer = rs.getString("answer");
+                String answerString = rs.getString("answer");
                 boolean isCorrect = rs.getBoolean("isCorrect");
-                Answer a = new Answer(isCorrect,answer);
-                a.setId(answerdbId);
-
+                Answer answer = new Answer(isCorrect, answerString);
+                answer.setQuestionId(question.getQuestionId());
+                answer.setId(answerdbId);
+                possibleAnswers.add(answer);
             }
             return possibleAnswers;
         } catch (SQLException throwables) {
@@ -129,4 +134,67 @@ public class CoordinatorDAO extends AbstractDAO {
         }
         return null;
     }
+
+    public Answer addAnswerToQuestion(Answer answer){
+        String query = "INSERT INTO answer (question_id,isCorrect,answer) VALUES (?,?,?)";
+        int questionId = answer.getQuestionId();
+        boolean isCorrect = answer.isCorrect();
+        String answerString = answer.getAnswer();
+        try {
+            PreparedStatement ps = getStatementWithKey(query);
+            ps.setInt(1,questionId);
+            ps.setBoolean(2,isCorrect);
+            ps.setString(3,answerString);
+            int key = executeInsertPreparedStatement(ps);
+            answer.setId(key);
+            return answer;
+        } catch (SQLException throwables) {
+            System.out.println("Somthing went wrong while binding Answer to Question in db");
+        }
+        return null;
+    }
+
+    public Question saveQuestion(Question question){
+        int id = question.getQuestionId();
+        int quizid = question.getQuizId();
+        String query;
+        String questionString = question.getQuestion();
+        if (id == 0){ // then its a new Question
+            query = "INSERT INTO question (quiz_id,question,id) values (?,?,?)";
+        }else
+        {// it is update case
+            query = "UPDATE question SET quiz_id = ? , question = ? WHERE id = ?";
+        }
+        try {
+            PreparedStatement ps = getStatementWithKey(query);
+            ps.setInt(1,quizid);
+            ps.setString(2,questionString);
+            ps.setInt(3,id);
+            int questionID = executeInsertPreparedStatement(ps);
+            if(id==0){
+                question.setQuestionId(questionID);
+            }
+            return question;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public Boolean deleteQuestion(Question question){
+        String query = "DELETE FROM question WHERE id= ?";
+        int questionId = question.getQuestionId();
+        try {
+            PreparedStatement ps = getStatementWithKey(query);
+            ps.setInt(1,questionId);
+            executeManipulatePreparedStatement(ps);
+            executeInsertPreparedStatement(ps);
+            return true;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
+    }
+
+
 }

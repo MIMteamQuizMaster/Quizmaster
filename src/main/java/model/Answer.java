@@ -27,6 +27,14 @@ public class Answer {
         return isCorrect;
     }
 
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
     public String getAnswer() {
         return answer;
     }
