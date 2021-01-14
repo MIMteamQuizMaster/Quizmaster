@@ -38,6 +38,11 @@ public class Question {
         answers.add(answer);
     }
 
+    public void addAnswersToQuestion(List<Answer> newAnswers)
+    {
+        this.answers = newAnswers;
+    }
+
     public List<Answer> getMixedAnswers() {
         return mixedAnswers;
     }
@@ -46,6 +51,13 @@ public class Question {
         this.mixedAnswers = mixedAnswers;
     }
 
+    public int getQuestionId() {
+        return questionId;
+    }
+
+    /**
+     * @should return a mixed version of answers.
+     */
     public void mixAnswers()
     {
         List<Answer> unmixedAnswers = new ArrayList<>(answers);

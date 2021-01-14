@@ -18,6 +18,9 @@ public class Quiz {
     public void addQuestion(Question q){
         questions.add(q);
     }
+    public void addQuestion(List<Question> q){
+        this.questions = q;
+    }
     public Question showQuestion(int i){
         return questions.get(i);
     }
@@ -25,4 +28,37 @@ public class Quiz {
         return questions.size();
     }
 
+    public int getIdquiz() {
+        return idquiz;
+    }
+
+    public void setIdquiz(int idquiz) {
+        this.idquiz = idquiz;
+    }
+
+    public int getIdcourse() {
+        return idcourse;
+    }
+
+    public void setIdcourse(int idcourse) {
+        this.idcourse = idcourse;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void importQuestions(List<Question> questionList)
+    {
+        this.questions = questionList;
+    }
+
+    @Override
+    public String toString() {
+        return "Quiz{" +
+                "questions=" + questions +
+                ", name='" + name + '\'' +
+                ", idquiz=" + idquiz +
+                '}';
+    }
 }

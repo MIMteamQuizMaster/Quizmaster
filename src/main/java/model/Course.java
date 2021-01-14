@@ -6,6 +6,7 @@ public class Course {
     private int dbId;
     private String name;
     private Coordinator coordinator;
+    private int studentId;
     private List<Quiz> quizzes;
     private List<Group> groups;
 
@@ -60,5 +61,9 @@ public class Course {
 
     public void setDbId(int dbId) {
         this.dbId = dbId;
+    }
+
+    public int getDbId() {
+        return dbId;
     }
 }

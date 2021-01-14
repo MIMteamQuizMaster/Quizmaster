@@ -1,7 +1,9 @@
 package database.mysql;
 
 import model.Answer;
+import model.Course;
 import model.Question;
+import model.Quiz;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,11 +17,12 @@ public class QuestionDAO extends AbstractDAO {
         super(dBaccess);
     }
 
-    public List<Question> getQuestionsForCourse(int courseId)
+    public List<Question> getQuestionsForQuize(Quiz quiz)
     {
         List<Question> questions = new ArrayList<>();
+        int quizID = quiz.getIdquiz();
         String sql = String.format("SELECT * FROM question\n" +
-                "WHERE quiz_id=%d;", courseId);
+                "WHERE quiz_id=%d;", quizID);
         try {
             PreparedStatement preparedStatement = getStatement(sql);
             Question question;
@@ -27,7 +30,6 @@ public class QuestionDAO extends AbstractDAO {
             while (rs.next())
             {
                 String questionToCourse = rs.getString(3);
-                int correct = rs.getInt(3);
                 question = new Question(questionToCourse);
                 question.setQuestionId(rs.getInt(1));
                 question.setQuizId(2);
