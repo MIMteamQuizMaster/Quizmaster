@@ -74,46 +74,77 @@
                </Label>
             </children>
          </HBox>
+         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Vraag:" />
          <HBox spacing="5.0">
             <children>
-               <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="115.0" spacing="5.0" HBox.hgrow="ALWAYS">
+               <TextArea fx:id="questionTextArea" prefHeight="85.0" prefWidth="270.0" HBox.hgrow="ALWAYS" />
+               <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
                   <children>
-                     <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Vraag:" VBox.vgrow="ALWAYS" />
                      <StackPane>
                         <children>
                            <Button fx:id="newQuestionBtn" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#newQuestionBtnAction" prefHeight="23.0" prefWidth="90.0" text="nieuw" />
                            <Button fx:id="deleteQuestionBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteQuestionBtnAction" text="verwijderen" />
                         </children>
                      </StackPane>
-                     <Button fx:id="editQuestionBtn" mnemonicParsing="false" onAction="#editQuestionBtnAction" prefHeight="23.0" prefWidth="90.0" text="Bijwerken" />
-                     <Button fx:id="cancelQuestionBtn" layoutX="10.0" layoutY="72.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelQuestionBtnAction" text="annuleren" VBox.vgrow="ALWAYS" />
+                     <Button fx:id="editQuestionBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#editQuestionBtnAction" text="Bijwerken" />
+                     <Button fx:id="cancelQuestionBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelQuestionBtnAction" text="annuleren" VBox.vgrow="ALWAYS" />
                   </children>
                </VBox>
-               <TextArea fx:id="questionTextArea" prefHeight="73.0" prefWidth="314.0" HBox.hgrow="ALWAYS" />
             </children>
+            <padding>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
          </HBox>
-         <HBox prefHeight="100.0" prefWidth="115.0" spacing="5.0">
+         <Label prefHeight="17.0" prefWidth="85.0" text="Antwoord:" />
+         <HBox prefHeight="100.0" spacing="5.0">
             <children>
-               <VBox prefWidth="86.0">
-                  <children>
-                     <Label prefHeight="17.0" prefWidth="85.0" text="Antwoord:" />
-                  </children>
-               </VBox>
-               <TextArea fx:id="answerTextArea" prefHeight="90.0" prefWidth="167.0" />
-               <VBox>
+               <TextArea fx:id="answerTextArea" prefHeight="50.0" prefWidth="230.0" />
+               <VBox spacing="5.0">
                   <children>
                      <CheckBox fx:id="answerIsCorrectCheckBox" mnemonicParsing="false" text="Juist antwoord" />
                      <Button fx:id="addAnswerToQuestionbtn" mnemonicParsing="false" onAction="#addAnswerToQuestionAction" text="Voeg Antwoord toe" textAlignment="CENTER" wrapText="true" />
                   </children>
+                  <padding>
+                     <Insets left="5.0" right="5.0" top="5.0" />
+                  </padding>
                </VBox>
-            </children></HBox>
-         <ListView fx:id="answerListView" onMouseClicked="#answerListSelect" prefHeight="132.0" prefWidth="376.0">
+            </children>
+            <padding>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding></HBox>
+         <HBox>
+            <children>
+               <Label text="Lijst van antwoorden:" />
+               <Label fx:id="maxTotalAnswer" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="240.0" text="MAX 4 antwoord met MAX 1 juist anstwoord" textAlignment="CENTER" textFill="#c60b0b" visible="false" HBox.hgrow="ALWAYS" />
+            </children>
+         </HBox>
+         <HBox>
             <VBox.margin>
-               <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-            </VBox.margin></ListView>
+               <Insets bottom="5.0" left="5.0" right="5.0" />
+            </VBox.margin>
+            <children>
+               <ListView fx:id="answerListView" onMouseClicked="#answerListSelect" prefHeight="128.0" prefWidth="230.0" />
+               <VBox maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+                  <HBox.margin>
+                     <Insets bottom="5.0" left="5.0" right="5.0" />
+                  </HBox.margin>
+                  <children>
+                     <Label fx:id="totalAnswersLabel" text="Aantal antwoorden:" />
+                     <Label fx:id="totalGoodAnswersLabel" layoutX="10.0" layoutY="10.0" text="Aantal juist:" />
+                     <Button fx:id="answerDeleteBtn" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#answerDeleteBtnAction" prefHeight="26.0" prefWidth="47.0" text="verwijderen" textAlignment="CENTER" visible="false" wrapText="true" VBox.vgrow="ALWAYS">
+                        <VBox.margin>
+                           <Insets top="12.0" />
+                        </VBox.margin></Button>
+                  </children>
+               </VBox>
+            </children>
+         </HBox>
          <HBox.margin>
             <Insets />
          </HBox.margin>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
          </VBox>
     </HBox>
 </AnchorPane>

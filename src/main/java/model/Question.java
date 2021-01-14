@@ -74,9 +74,14 @@ public class Question {
         this.answers = answers;
     }
 
-    public void addAnswers(Answer answer) {
+    public void addAnswer(Answer answer) {
         this.answers.add(answer);
     }
+
+    public void removeAnswer(Answer answer) {
+        this.answers.remove(answer);
+    }
+
 
     @Override
     public String toString() {

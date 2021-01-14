@@ -184,9 +184,19 @@ public class CoordinatorDAO extends AbstractDAO {
     public Boolean deleteQuestion(Question question){
         String query = "DELETE FROM question WHERE id= ?";
         int questionId = question.getQuestionId();
+        return deleteQuery(query, questionId);
+    }
+
+    public Boolean deleteAnswer(Answer answer){
+        String query = "DELETE FROM answer WHERE id= ?";
+        int answerid = answer.getId();
+        return deleteQuery(query, answerid);
+    }
+
+    private Boolean deleteQuery(String query, int i) {
         try {
             PreparedStatement ps = getStatementWithKey(query);
-            ps.setInt(1,questionId);
+            ps.setInt(1,i);
             executeManipulatePreparedStatement(ps);
             executeInsertPreparedStatement(ps);
             return true;

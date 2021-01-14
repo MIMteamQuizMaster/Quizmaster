@@ -28,6 +28,10 @@ public class CoordinatorPanelController {
 
     public TextArea answerTextArea;
     public Button addAnswerToQuestionbtn;
+    public Button answerDeleteBtn;
+    public Label totalGoodAnswersLabel;
+    public Label totalAnswersLabel;
+    public Label maxTotalAnswer;
     @FXML
     private TextArea questionTextArea;
 
@@ -106,6 +110,9 @@ public class CoordinatorPanelController {
         }
     }
 
+    /**
+     * Quizlist select funtion
+     */
     public void quizListSelect() {
         if (quizListView.getSelectionModel().getSelectedItem() != null) {
 
@@ -133,22 +140,35 @@ public class CoordinatorPanelController {
 
 //            answerListView.setItems(dao.getAllAnswers(this.selectedQuestion.getQuestionObject()));
             answerListView.setItems(questionListView.getSelectionModel().getSelectedItem().getAnswers());
+            maxTotalAnswer.setVisible(false);
+            int coutGood = 0;
+            for (Answer a : questionListView.getSelectionModel().getSelectedItem().getAnswers()) {
+                if (a.isCorrect()) {
+                    coutGood++;
+                }
+            }
+            totalAnswersLabel.setText("Aantal antwoorden: "+ questionListView.getSelectionModel().getSelectedItem().getAnswers().size());
+            totalGoodAnswersLabel.setText("Aantal juist: "+ coutGood);
 
             questionTextArea.setText(this.selectedQuestion.getQuestion());
             editQuestionBtn.setVisible(true);
             addAnswerToQuestionbtn.setVisible(true);
-
+            answerDeleteBtn.setVisible(false);
 
         }
     }
 
-    public void answerListSelect(MouseEvent mouseEvent) {
+    public void answerListSelect() {
         if (answerListView.getSelectionModel().getSelectedItem() != null) {
             Answer answer = answerListView.getSelectionModel().getSelectedItem();
             answerTextArea.setText(answer.getAnswer());
             answerIsCorrectCheckBox.setSelected(answer.isCorrect());
+            answerDeleteBtn.setVisible(true);
 
+        } else {
+            answerDeleteBtn.setVisible(false);
         }
+
     }
 
 
@@ -162,11 +182,12 @@ public class CoordinatorPanelController {
         questionListView.getItems().clear();
 
         quizLabel.setText(" ");
-
+        maxTotalAnswer.setVisible(false);
         // hide extra buttons
         newQuestionBtn.setVisible(false);
         editQuestionBtn.setVisible(false);
         addAnswerToQuestionbtn.setVisible(false);
+        answerDeleteBtn.setVisible(false);
 
         // empty text area and checkbox
         questionTextArea.clear();
@@ -316,17 +337,22 @@ public class CoordinatorPanelController {
     /**
      * add answer to the databes according to the last selected question
      */
-    public void addAnswerToQuestionAction(ActionEvent actionEvent) {
+    public void addAnswerToQuestionAction() {
         // create the object fully with all needed information
         String answerString = answerTextArea.getText();
         Boolean isCorrect = answerIsCorrectCheckBox.isSelected();
         Answer answer = new Answer(isCorrect, answerString);
         int questionId = this.selectedQuestion.getQuestionId();
+        if(!limitAnswers(answer)){
+            maxTotalAnswer.setVisible(true);
+            System.out.println("max 4 answer and 1 good answer");
+            return;
+        }
         answer.setQuestionId(questionId);
 
         /// Send to DAO
         answer = dao.addAnswerToQuestion(answer);
-        questionListView.getSelectionModel().getSelectedItem().addAnswers(answer);
+        questionListView.getSelectionModel().getSelectedItem().addAnswer(answer);
 
 //        selectedQuestion.addAnswers(answer);
 //        answerListView.getItems().add(answer);
@@ -335,4 +361,33 @@ public class CoordinatorPanelController {
     }
 
 
+    public void answerDeleteBtnAction() {
+        if (answerListView.getSelectionModel().getSelectedItem() != null) {
+            Answer a = answerListView.getSelectionModel().getSelectedItem();
+            if (dao.deleteAnswer(a)) {
+                questionListView.getSelectionModel().
+                        getSelectedItem().
+                        removeAnswer(answerListView.getSelectionModel().getSelectedItem());
+                answerListView.refresh();
+                answerTextArea.clear();
+            }
+
+        }
+    }
+
+    public boolean limitAnswers(Answer lastAnswer) {
+        ObservableList<Answer> answers = questionListView.getSelectionModel().getSelectedItem().getAnswers();
+        int coutGood = (lastAnswer.isCorrect() ? 1 :0);
+        for (Answer a : answers) {
+            if (a.isCorrect()) {
+                coutGood++;
+            }
+        }
+        totalAnswersLabel.setText("Aantal antwoorden: "+ answers.size());
+        totalGoodAnswersLabel.setText("Aantal juist: "+ coutGood);
+        if (answers.size() <= 3 && coutGood <= 1) {
+            return true;
+        }
+        return false;
+    }
 }
