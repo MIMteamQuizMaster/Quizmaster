@@ -3,10 +3,7 @@ package controller.fx;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Course;
-import model.Group;
-import model.Quiz;
-import model.User;
+import model.*;
 
 public class CourseFx {
     private Course course;
@@ -101,5 +98,13 @@ public class CourseFx {
 
     public void setGroups(ObservableList<Group> groups) {
         this.course.setGroups(groups);
+    }
+
+    public void addQuiz(Quiz quiz){
+            this.course.addQuiz(quiz);
+    }
+
+    public void removeQuiz(Quiz quiz){
+        this.course.removeQuiz(quiz);
     }
 }

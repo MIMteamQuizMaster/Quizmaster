@@ -67,9 +67,15 @@ public class QuestionFx {
         this.questionObject.setAnswers(answers);
     }
 
-    public void addAnswers(Answer answer) {
-        this.questionObject.addAnswers(answer);
+    public void addAnswer(Answer answer) {
+        this.questionObject.addAnswer(answer);
     }
+
+    public void removeAnswer(Answer answer) {
+        this.questionObject.removeAnswer(answer);
+    }
+
+
 
     @Override
     public String toString() {

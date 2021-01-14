@@ -60,7 +60,7 @@ public class CoordinatorDAO extends AbstractDAO {
         int courseId = course.getDbId();
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setInt(1,courseId );
+            ps.setInt(1, courseId);
             ResultSet rs = executeSelectPreparedStatement(ps);
             while (rs.next()) {
                 String name = rs.getString("name");
@@ -94,7 +94,7 @@ public class CoordinatorDAO extends AbstractDAO {
             while (rs.next()) {
                 String questionString = rs.getString("question");
                 int id = rs.getInt("id");
-                Question question = new Question(id,questionString);
+                Question question = new Question(id, questionString);
                 question.setQuizId(quizId);
                 question.setAnswers(getAllAnswers(question)); // find answers
 
@@ -135,16 +135,16 @@ public class CoordinatorDAO extends AbstractDAO {
         return null;
     }
 
-    public Answer addAnswerToQuestion(Answer answer){
+    public Answer addAnswerToQuestion(Answer answer) {
         String query = "INSERT INTO answer (question_id,isCorrect,answer) VALUES (?,?,?)";
         int questionId = answer.getQuestionId();
         boolean isCorrect = answer.isCorrect();
         String answerString = answer.getAnswer();
         try {
             PreparedStatement ps = getStatementWithKey(query);
-            ps.setInt(1,questionId);
-            ps.setBoolean(2,isCorrect);
-            ps.setString(3,answerString);
+            ps.setInt(1, questionId);
+            ps.setBoolean(2, isCorrect);
+            ps.setString(3, answerString);
             int key = executeInsertPreparedStatement(ps);
             answer.setId(key);
             return answer;
@@ -154,24 +154,23 @@ public class CoordinatorDAO extends AbstractDAO {
         return null;
     }
 
-    public Question saveQuestion(Question question){
+    public Question saveQuestion(Question question) {
         int id = question.getQuestionId();
         int quizid = question.getQuizId();
         String query;
         String questionString = question.getQuestion();
-        if (id == 0){ // then its a new Question
+        if (id == 0) { // then its a new Question
             query = "INSERT INTO question (quiz_id,question,id) values (?,?,?)";
-        }else
-        {// it is update case
+        } else {// it is update case
             query = "UPDATE question SET quiz_id = ? , question = ? WHERE id = ?";
         }
         try {
             PreparedStatement ps = getStatementWithKey(query);
-            ps.setInt(1,quizid);
-            ps.setString(2,questionString);
-            ps.setInt(3,id);
+            ps.setInt(1, quizid);
+            ps.setString(2, questionString);
+            ps.setInt(3, id);
             int questionID = executeInsertPreparedStatement(ps);
-            if(id==0){
+            if (id == 0) {
                 question.setQuestionId(questionID);
             }
             return question;
@@ -181,12 +180,28 @@ public class CoordinatorDAO extends AbstractDAO {
         return null;
     }
 
-    public Boolean deleteQuestion(Question question){
+    public Boolean deleteQuestion(Question question) {
         String query = "DELETE FROM question WHERE id= ?";
         int questionId = question.getQuestionId();
+        return deleteQuery(query, questionId);
+    }
+
+    public Boolean deleteAnswer(Answer answer) {
+        String query = "DELETE FROM answer WHERE id= ?";
+        int answerid = answer.getId();
+        return deleteQuery(query, answerid);
+    }
+
+    public Boolean deleteQuiz(Quiz quiz) {
+        String query = "DELETE FROM quiz WHERE id= ?";
+        int quizId = quiz.getIdquiz();
+        return deleteQuery(query, quizId);
+    }
+
+    private Boolean deleteQuery(String query, int i) {
         try {
             PreparedStatement ps = getStatementWithKey(query);
-            ps.setInt(1,questionId);
+            ps.setInt(1, i);
             executeManipulatePreparedStatement(ps);
             executeInsertPreparedStatement(ps);
             return true;
@@ -196,5 +211,24 @@ public class CoordinatorDAO extends AbstractDAO {
         return false;
     }
 
-
+    public Quiz addQuiz(Quiz quiz) {
+        String query = "INSERT INTO quiz (name, course_idcourse, successDefinition, timelimit_minutes) VALUES (?,?,?,?)";
+        String name = quiz.getName();
+        int course_idcourse = quiz.getIdcourse();
+        double successDefinition = quiz.getSuccsesDefinition();
+        int timelimit = quiz.getTimeLimit();
+        try {
+            PreparedStatement ps = getStatementWithKey(query);
+            ps.setString(1, name);
+            ps.setInt(2, course_idcourse);
+            ps.setDouble(3, successDefinition);
+            ps.setInt(4, timelimit);
+            int key = executeInsertPreparedStatement(ps);
+            quiz.setIdquiz(key);
+            return quiz;
+        } catch (SQLException throwables) {
+            System.out.println("Somthing went wrong while adding quiz");
+        }
+        return null;
+    }
 }

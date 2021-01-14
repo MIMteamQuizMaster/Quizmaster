@@ -2,6 +2,7 @@ package model;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Course {
@@ -16,6 +17,8 @@ public class Course {
     public Course(String name, User coordinator) {
         this.name = name;
         this.coordinator = coordinator;
+        quizzes = new ArrayList<>();
+        groups = new ArrayList<>();
     }
 
     public int getDbId() {
@@ -74,20 +77,16 @@ public class Course {
         this.groups = groups;
     }
 
-    public boolean addQuiz(Coordinator coordinator, Quiz quiz){
-        if (coordinator == this.getCoordinator()){
-            quizzes.add(quiz);
-            return true;
-        }
-        return false;
+    public void addQuiz(Quiz quiz){
+        quizzes.add(quiz);
     }
 
-    public boolean addGroup(Coordinator coordinator,Group group){
-        if (coordinator == this.getCoordinator()){
+    public void removeQuiz(Quiz quiz){
+        quizzes.remove(quiz);
+    }
+
+    public void addGroup(Group group){
             groups.add(group);
-            return true;
-        }
-        return false;
     }
 
 }

@@ -17,6 +17,7 @@ public class Quiz {
     public Quiz(String name,double succsesDefinition) {
         this.succsesDefinition = succsesDefinition;
         this.name = name;
+        questions = new ArrayList<>();
     }
 
     public List<Question> getQuestions() {
@@ -78,6 +79,7 @@ public class Quiz {
         return getQuestions().size();
     }
     @Override
+
     public String toString() {
         return getName() + " (" + getTotal() + ")";
     }
