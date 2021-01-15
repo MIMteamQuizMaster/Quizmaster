@@ -31,7 +31,7 @@ public class CoordinatorDAO extends AbstractDAO {
             ResultSet rs = executeSelectPreparedStatement(ps);
             while (rs.next()) {
                 String name = rs.getString("name");
-                int courseDbid = rs.getInt("idcourse");
+                int courseDbid = rs.getInt("id");
                 String startDate = rs.getDate("startDate").toString();
                 String endDate = rs.getDate("endDate").toString();
 
@@ -56,7 +56,7 @@ public class CoordinatorDAO extends AbstractDAO {
 
     public ObservableList<Quiz> getQuizOfCourse(Course course) {
         ObservableList<Quiz> quizList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM quiz WHERE course_idcourse =?";
+        String query = "SELECT * FROM quiz WHERE course_id =?";
         int courseId = course.getDbId();
         try {
             PreparedStatement ps = getStatement(query);
@@ -65,7 +65,7 @@ public class CoordinatorDAO extends AbstractDAO {
             while (rs.next()) {
                 String name = rs.getString("name");
                 int quizID = rs.getInt("id");
-                int timelimit = rs.getInt("timelimit_minutes");
+                int timelimit = rs.getInt("timelimit");
                 double successDefinition = rs.getDouble("successDefinition");
                 Quiz quiz = new Quiz(name, successDefinition);
                 quiz.setTimeLimit(timelimit);
@@ -212,7 +212,7 @@ public class CoordinatorDAO extends AbstractDAO {
     }
 
     public Quiz addQuiz(Quiz quiz) {
-        String query = "INSERT INTO quiz (name, course_idcourse, successDefinition, timelimit_minutes) VALUES (?,?,?,?)";
+        String query = "INSERT INTO quiz (name, course_id, successDefinition, timelimit) VALUES (?,?,?,?)";
         String name = quiz.getName();
         int course_idcourse = quiz.getIdcourse();
         double successDefinition = quiz.getSuccsesDefinition();
