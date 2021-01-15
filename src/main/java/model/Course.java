@@ -1,69 +1,48 @@
 package model;
-
+import javafx.beans.property.*;
+import javafx.collections.ObservableList;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Course {
     private int dbId;
     private String name;
-    private Coordinator coordinator;
-
-
+    private User coordinator;
     private String startDate;
     private String endDate;
     private List<Quiz> quizzes;
     private List<Group> groups;
 
-    public Course(String name, Coordinator coordinator) {
+    public Course(String name, User coordinator) {
         this.name = name;
         this.coordinator = coordinator;
+        quizzes = new ArrayList<>();
+        groups = new ArrayList<>();
     }
 
-    public boolean addQuiz(Coordinator coordinator, Quiz quiz) {
-        if (coordinator == this.coordinator) {
-            quizzes.add(quiz);
-            return true;
-        }
-        return false;
+    public int getDbId() {
+        return dbId;
     }
 
-    public boolean addGroup(Coordinator coordinator, Group group) {
-        if (coordinator == this.coordinator) {
-            groups.add(group);
-            return true;
-        }
-        return false;
-    }
-
-    public void setQuizzes(List<Quiz> quizzes) {
-        this.quizzes = quizzes;
-    }
-
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
-    public Coordinator getCoordinator() {
-        return coordinator;
-    }
-
-    public void setCoordinator(Coordinator coordinator) {
-        this.coordinator = coordinator;
+    public void setDbId(int dbId) {
+        this.dbId = dbId;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Quiz> getQuizzes() {
-        return quizzes;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public List<Group> getGroups() {
-        return groups;
+    public User getCoordinator() {
+        return coordinator;
     }
 
-    public void setDbId(int dbId) {
-        this.dbId = dbId;
+    public void setCoordinator(User coordinator) {
+        this.coordinator = coordinator;
     }
 
     public String getStartDate() {
@@ -81,4 +60,33 @@ public class Course {
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
+
+    public List<Quiz> getQuizzes() {
+        return quizzes;
+    }
+
+    public void setQuizzes(List<Quiz> quizzes) {
+        this.quizzes = quizzes;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    public void addQuiz(Quiz quiz){
+        quizzes.add(quiz);
+    }
+
+    public void removeQuiz(Quiz quiz){
+        quizzes.remove(quiz);
+    }
+
+    public void addGroup(Group group){
+            groups.add(group);
+    }
+
 }

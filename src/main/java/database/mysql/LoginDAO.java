@@ -64,22 +64,27 @@ public class LoginDAO extends AbstractDAO {
         switch (r){
             case STUDENT:
                 returnUser = new Student(uid,fname,lname);
+                returnUser.setRole(Role.STUDENT);
                 break;
             case TEACHER:
                 ///
                 returnUser = new Teacher(uid,fname,lname);
+                returnUser.setRole(Role.TEACHER);
                 break;
             case COORDINATOR:
                 ///
                 returnUser = new Coordinator(uid,fname,lname);
+                returnUser.setRole(Role.COORDINATOR);
                 break;
             case ADMINISTRATOR:
                 ///
                 returnUser = new Administrator(uid,fname,lname);
+                returnUser.setRole(Role.ADMINISTRATOR);
                 break;
             case TECHNICAL_ADMINISTRATOR:
                 ///
-                returnUser = new TechnicalAdministrator(uid,fname,lname);
+                returnUser = new User(uid,fname,lname);
+                returnUser.setRole(Role.TECHNICAL_ADMINISTRATOR);
                 break;
         }
         returnUser.setStudieRichting(richting);

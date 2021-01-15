@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS `quizmaster`.`answer` (
   CONSTRAINT `fk_answer_question1`
     FOREIGN KEY (`question_id`)
     REFERENCES `quizmaster`.`question` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_answer_question1_idx` ON `quizmaster`.`answer` (`question_id` ASC) VISIBLE;
@@ -55,8 +55,8 @@ CREATE TABLE IF NOT EXISTS `quizmaster`.`course` (
   CONSTRAINT `fk_course_user1`
     FOREIGN KEY (`coordinator_user_id`)
     REFERENCES `quizmaster`.`user` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_course_user1_idx` ON `quizmaster`.`course` (`coordinator_user_id` ASC) VISIBLE;
@@ -90,8 +90,8 @@ CREATE TABLE IF NOT EXISTS `quizmaster`.`group` (
   CONSTRAINT `fk_group_course1`
     FOREIGN KEY (`course_id`)
     REFERENCES `quizmaster`.`course` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_group_course1_idx` ON `quizmaster`.`group` (`course_id` ASC) VISIBLE;
@@ -109,8 +109,8 @@ CREATE TABLE IF NOT EXISTS `quizmaster`.`question` (
   CONSTRAINT `fk_question_quiz1`
     FOREIGN KEY (`quiz_id`)
     REFERENCES `quizmaster`.`quiz` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_question_quiz1_idx` ON `quizmaster`.`question` (`quiz_id` ASC) VISIBLE;
@@ -129,8 +129,8 @@ CREATE TABLE IF NOT EXISTS `quizmaster`.`quiz` (
   CONSTRAINT `fk_quiz_course1`
     FOREIGN KEY (`course_id`)
     REFERENCES `quizmaster`.`course` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_quiz_course1_idx` ON `quizmaster`.`quiz` (`course_id` ASC) VISIBLE;
@@ -173,13 +173,13 @@ CREATE TABLE IF NOT EXISTS `quizmaster`.`user_answer_log` (
   CONSTRAINT `fk_user_answer_log_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `quizmaster`.`user` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_user_answer_log_answer1`
     FOREIGN KEY (`answer_id`)
     REFERENCES `quizmaster`.`answer` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_user_answer_log_user1_idx` ON `quizmaster`.`user_answer_log` (`user_id` ASC) VISIBLE;
@@ -201,18 +201,18 @@ CREATE TABLE IF NOT EXISTS `quizmaster`.`user_has_group` (
   CONSTRAINT `fk_user_has_group_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `quizmaster`.`user` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_user_has_group_group1`
     FOREIGN KEY (`group_id`)
     REFERENCES `quizmaster`.`group` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_user_has_group_user2`
     FOREIGN KEY (`teacher_user_id`)
     REFERENCES `quizmaster`.`user` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_user_has_group_group1_idx` ON `quizmaster`.`user_has_group` (`group_id` ASC) VISIBLE;
@@ -235,13 +235,13 @@ CREATE TABLE IF NOT EXISTS `quizmaster`.`user_role` (
   CONSTRAINT `fk_user_role_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `quizmaster`.`user` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_user_role_role1`
     FOREIGN KEY (`role_id`)
     REFERENCES `quizmaster`.`role` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_user_role_user1_idx` ON `quizmaster`.`user_role` (`user_id` ASC) VISIBLE;

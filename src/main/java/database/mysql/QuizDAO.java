@@ -1,16 +1,16 @@
-//package database.mysql;
-//
-//import model.Quiz;
-//
-//import java.sql.PreparedStatement;
-//import java.sql.ResultSet;
-//import java.sql.SQLException;
-//
-//public class QuizDAO extends AbstractDAO{
-//    public QuizDAO(DBAccess dBaccess) {
-//        super(dBaccess);
-//    }
-//
+package database.mysql;
+
+import model.Quiz;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class QuizDAO extends AbstractDAO{
+    public QuizDAO(DBAccess dBaccess) {
+        super(dBaccess);
+    }
+
 //    public int getPersonalQuiz(int userId) {
 //
 //        String sql = String.format("SELECT * FROM user_quiz_log\n" +
@@ -36,5 +36,5 @@
 //        }
 //        return result;
 //    }
-//
-//}
+
+}

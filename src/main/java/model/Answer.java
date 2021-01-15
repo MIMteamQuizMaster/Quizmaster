@@ -1,3 +1,4 @@
+
 package model;
 
 public class Answer {
@@ -24,6 +25,14 @@ public class Answer {
 
     public boolean isCorrect() {
         return isCorrect;
+    }
+
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 
     public String getAnswer() {

@@ -1,20 +1,14 @@
 package database.mysql;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Role;
 import model.User;
 
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+
 import java.util.List;
 
 
@@ -23,22 +17,6 @@ public class TechnischBeheerderDAO extends AbstractDAO {
         super(dBaccess);
     }
 
-    public HashMap<Integer,String> getMenuItems() {
-        String sql = "SELECT * FROM role";
-        HashMap<Integer,String> roles = new HashMap<>();
-        try {
-            PreparedStatement ps = getStatement(sql);
-            ResultSet resultSet = executeSelectPreparedStatement(ps);
-            while (resultSet.next()) {
-                int key = resultSet.getInt("id");
-                String value = resultSet.getString("name");
-                roles.put(key,value);
-            }
-        } catch (SQLException throwables) {
-            System.out.println(throwables.getMessage() + " Somthing wrong while getting menu items");
-        }
-        return roles;
-    }
 
     public ObservableList<User> getAllusers() {
         String sql = "SELECT u.user_id , u.firstname, u.lastname,u.studierichting , r.name FROM user u \n" +
@@ -55,6 +33,7 @@ public class TechnischBeheerderDAO extends AbstractDAO {
                 String richting = resultSet.getString("studierichting");
                 String role = resultSet.getString("name");
                 Role r = Role.getRole(role);
+
                 rList.add(new User(user_id,fname,lname,richting,r));
             }
         } catch (SQLException throwables) {
@@ -184,7 +163,7 @@ public class TechnischBeheerderDAO extends AbstractDAO {
             ps.setString(3,u.getStudieRichting());
             ps.setInt(4,u.getUserId());
             executeManipulatePreparedStatement(ps);
-// TODO: update role or add new role function
+            // TODO: update role or add new role function
 
 //            setRoleToUser(u.getUserId(),u.getRole().toString());
         } catch (SQLException throwables) {
