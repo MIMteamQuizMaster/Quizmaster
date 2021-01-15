@@ -23,7 +23,7 @@ public class CoordinatorDAO extends AbstractDAO {
 
     public ObservableList<Course> getMyCourses() {
         ObservableList<Course> courseList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM course WHERE coordinator_id=? and endDate > ?";
+        String query = "SELECT * FROM course WHERE coordinator_user_id=? and endDate > ?";
         try {
             PreparedStatement ps = getStatement(query);
             ps.setInt(1, this.coordinator.getUserId());
