@@ -54,35 +54,16 @@ public class SceneManager {
     }
 
     public void setWindowTool() {
-        FXMLLoader loader = getScene("/view/fxml/windowTool.fxml");
-//        if (loader != null) {
-//            WindowToolController controller = loader.getController();
-//            controller.populateScreenMenu();
-//        } else {
-//            System.out.println("set windowTool: Loader is not initialized");
-//            System.out.flush();
-//        }
+        getScene("/view/fxml/windowTool.fxml");
     }
 
     public void showLoginScene() {
         getScene("/view/fxml/login.fxml");
     }
 
-    public void showWelcome(User logedIn) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/fxml/welcomeScene.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
 
-            WelcomeSceneController wsc = loader.getController();
-            wsc.setClient(logedIn); // Passing the client-object to the ClientViewController
-
-
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void showWelcome() {
+        getScene("/view/fxml/welcomeScene.fxml");
     }
 
     public void showEnterQuestionScene() {

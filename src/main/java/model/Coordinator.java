@@ -7,9 +7,5 @@ public class Coordinator extends Teacher {
         super(userId, firstname, lastname);
     }
 
-    public boolean addQuiz(Course c, Quiz q){
-        return c.addQuiz(this,q);
-    }
-
 
 }

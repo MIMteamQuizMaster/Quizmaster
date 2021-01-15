@@ -1,31 +1,54 @@
 package model;
 
+import javafx.beans.property.*;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
-    private List<Question> questions = new ArrayList<>();
+    private List<Question> questions;
     private double succsesDefinition;
     private String name;
     private int idquiz;
     private int idcourse;
+    private int timeLimit;
 
-    public Quiz(double succsesDefinition, String name) {
+    public Quiz(String name,double succsesDefinition) {
         this.succsesDefinition = succsesDefinition;
         this.name = name;
+        questions = new ArrayList<>();
     }
 
-    public void addQuestion(Question q){
-        questions.add(q);
+    public List<Question> getQuestions() {
+        return questions;
     }
-    public void addQuestion(List<Question> q){
-        this.questions = q;
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
-    public Question showQuestion(int i){
-        return questions.get(i);
+    public void addQuestion(Question question) {
+        this.questions.add(question);
     }
-    public int getTotal(){
-        return questions.size();
+
+    public void removeQuestion(Question question) {
+        this.questions.remove(question);
+    }
+
+    public double getSuccsesDefinition() {
+        return succsesDefinition;
+    }
+
+    public void setSuccsesDefinition(double succsesDefinition) {
+        this.succsesDefinition = succsesDefinition;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getIdquiz() {
@@ -44,21 +67,20 @@ public class Quiz {
         this.idcourse = idcourse;
     }
 
-    public List<Question> getQuestions() {
-        return questions;
+    public int getTimeLimit() {
+        return timeLimit;
     }
 
-    public void importQuestions(List<Question> questionList)
-    {
-        this.questions = questionList;
+    public void setTimeLimit(int timeLimit) {
+        this.timeLimit = timeLimit;
     }
 
+    public int getTotal(){
+        return getQuestions().size();
+    }
     @Override
+
     public String toString() {
-        return "Quiz{" +
-                "questions=" + questions +
-                ", name='" + name + '\'' +
-                ", idquiz=" + idquiz +
-                '}';
+        return getName() + " (" + getTotal() + ")";
     }
 }

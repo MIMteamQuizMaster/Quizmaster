@@ -43,9 +43,7 @@ public class LoginController {
     }
 
     public void unShowPassword(MouseEvent mouseEvent) {
-
         loginMaskedPassword.setVisible(true);
-
         loginUnMaskedPassword.setVisible(false);
         loginUnMaskedPassword.setDisable(true);
 
@@ -58,7 +56,12 @@ public class LoginController {
             String password = loginMaskedPassword.getText();
             boolean result = dao.isValidUser(userid, password);
             if (result) {
-                Main.getSceneManager().showWelcome(passUser(userid));
+                System.out.println("login permission: " +result);
+
+                // set logedin user data to use in different pane with appropriate permision!
+                Main.getPrimaryStage().setUserData(passUser(userid));
+                //
+                Main.getSceneManager().showWelcome();
             } else {
 
                 loginMaskedPassword.setStyle("-fx-border-color: red;");
@@ -67,7 +70,7 @@ public class LoginController {
                 warningLabel.setVisible(true);
 
             }
-            System.out.println(result);
+
         }
         catch (Exception e){
             warningLabel.setVisible(true);

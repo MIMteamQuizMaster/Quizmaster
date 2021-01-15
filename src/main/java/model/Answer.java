@@ -1,3 +1,4 @@
+
 package model;
 
 import javafx.scene.control.TextArea;
@@ -32,6 +33,14 @@ public class Answer {
 
     public boolean isCorrect() {
         return isCorrect;
+    }
+
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 
     public String getAnswer() {
