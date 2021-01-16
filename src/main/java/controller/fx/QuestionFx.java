@@ -75,6 +75,19 @@ public class QuestionFx {
         this.questionObject.removeAnswer(answer);
     }
 
+    public IntegerProperty getTotalAnswer() {
+        return new SimpleIntegerProperty(this.questionObject.getAnswers().size());
+    }
+
+    public IntegerProperty getTotalGoodAnswer() {
+        int coutGood = 0;
+        for (Answer a : this.questionObject.getAnswers()) {
+            if (a.isCorrect()) {
+                coutGood++;
+            }
+        }
+        return new SimpleIntegerProperty(coutGood);
+    }
 
 
     @Override

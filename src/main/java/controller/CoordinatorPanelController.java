@@ -1,44 +1,70 @@
 package controller;
 
+import controller.fx.AnswerFx;
 import controller.fx.CourseFx;
 import controller.fx.QuestionFx;
 import controller.fx.QuizFx;
 import database.mysql.CoordinatorDAO;
 import database.mysql.DBAccess;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import launcher.Main;
-import model.*;
+import model.Answer;
+import model.Question;
+import model.Quiz;
+import model.User;
+
+import java.util.List;
 
 import static controller.fx.ObjectConvertor.*;
 
 public class CoordinatorPanelController {
     public TitledPane quizPane;
     public TitledPane questionPane;
+    public TitledPane answerPane;
 
-    public Button btnNewQuestion;
-    public Button btnEditQuestion;
-    public Button btnDeleteQuestion;
-    public Button btnCancelQuestion;
-    public Button btnNewAnswer;
-    public Button btnDeleteAnswer;
-    public Button btnNewQuiz;
-    public Button btnDeleteQuiz;
+
+    public Button btnQuizPanelOpen;
+    public Button btnQuestionPanelOpen;
+    public Button btnAnswerPanelOpen;
+
 
     public CheckBox cBoxAnswerIsCorrect;
 
     public Label labelCourse;
     public Label labelTotalQuizen;
-    public Label labelTotalGoodAnswers;
-    public Label labelTotalAnswers;
-    public Label labelMaxTotalAnswer;
+
 
     public TextArea textAnswer;
     public TextField textQuizName;
     public TextField textSuccessDefinite;
     public TextArea textQuestion;
     public TextField textTimeLimit;
+
+    public TableView<QuizFx> quizzesTable;
+    public TableColumn<QuizFx, String> colNameQuizTable;
+    public TableColumn<QuizFx, Double> colSuccessQuizTable;
+    public TableColumn<QuizFx, Integer> colTimeLimitQuizTable;
+    public TableColumn<QuizFx, Void> col_Delete_Quiz;
+
+    public TableView<QuestionFx> questionTable;
+    public TableColumn<QuestionFx, String> colQuestion;
+    public TableColumn<QuestionFx, Integer> colTotalAnswer;
+    public TableColumn<QuestionFx, Integer> colTotatlGood;
+    public TableColumn<QuestionFx, Void> colDelQuestion;
+    public TableColumn<QuestionFx, Void> colEditQuestion;
+
+    public TableView<AnswerFx> answerTable;
+    public TableColumn<AnswerFx, String> col_Answer;
+    public TableColumn<AnswerFx, Boolean> col_validity;
+    public TableColumn<AnswerFx, Void> col_Delete_Answer;
+
 
 
     @FXML
@@ -50,15 +76,12 @@ public class CoordinatorPanelController {
     @FXML
     private TableColumn<CourseFx, String> col_course_name;
 
-    public ListView<QuizFx> quizFxListView;
-    public ListView<QuestionFx> questionFxListView;
-    public ListView<Answer> answersListView;
 
     private CoordinatorDAO dao;
+    private CourseFx selectedCourse;
     private QuestionFx selectedQuestion;
     private QuizFx selectedQuiz;
-    private CourseFx selectedCourse;
-    private Answer selectedAnswer;
+    private AnswerFx selectedAnswer;
     private boolean questionEditMode;
 
     public void initialize() {
@@ -72,6 +95,43 @@ public class CoordinatorPanelController {
     }
 
     /**
+     * Empty and clear fields and selected objects
+     */
+    private void emptyFieldsAndSelected() {
+        selectedCourse = null;
+        selectedQuiz = null;
+        selectedQuestion = null;
+        selectedAnswer = null;
+
+        //Close all open pane
+        quizPane.setCollapsible(true);
+        quizPane.setExpanded(false);
+        quizPane.setCollapsible(false);
+
+        questionPane.setCollapsible(true);
+        questionPane.setExpanded(false);
+        questionPane.setCollapsible(false);
+
+        btnQuizPanelOpen.setDisable(true);
+        btnQuestionPanelOpen.setDisable(true);
+        btnAnswerPanelOpen.setDisable(true);
+
+
+        // empty sub quiz lists
+        answerTable.getItems().clear();
+        quizzesTable.getItems().clear();
+        questionTable.getItems().clear();
+
+        // empty text area and checkbox
+        textQuestion.clear();
+        textAnswer.clear();
+        textTimeLimit.clear();
+        textSuccessDefinite.clear();
+        textQuizName.clear();
+    }
+
+
+    /**
      * Fill the Course Table view Using CoursFX objects
      */
     public void fillCoursesTable() {
@@ -83,456 +143,503 @@ public class CoordinatorPanelController {
         courseTable.setItems(courses);
     }
 
-    private void emptyFieldsAndSelected() {
-//        selectedCourse = null;
-        selectedQuiz = null;
-        selectedQuestion = null;
-        selectedAnswer = null;
+    /**
+     * Fill the Quiz Table view using QuizFX
+     */
+    public void fillQuizTable() {
+        ObservableList<QuizFx> quizFxes;
 
-        // empty sub quiz lists
-        answersListView.getItems().clear();
-        questionFxListView.getItems().clear();
-        quizFxListView.getItems().clear();
+        // fil table accodring to selectedCourse
 
-        // hide warning label
-        labelMaxTotalAnswer.setVisible(false);
+        quizFxes = convertQuizToQuizFX(dao.getQuizOfCourse(selectedCourse.getCourseObject()));
+        colNameQuizTable.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        colSuccessQuizTable.setCellValueFactory(cellData -> cellData.getValue().succsesDefinitionProperty().asObject());
+        colTimeLimitQuizTable.setCellValueFactory(cellData -> cellData.getValue().timeLimitProperty().asObject());
 
-        // hide extra buttons
-        setQuestionEditMode(false);
+        col_Delete_Quiz.setCellFactory(cellData -> new TableCell<QuizFx, Void>() {
+            private final Button editButton = new Button("bijwerken");
+            private final Button deleteButton = new Button("Verwijderen");
+            private final VBox pane = new VBox(deleteButton, editButton);
 
-        btnNewQuestion.setVisible(false);
-        btnNewQuiz.setVisible(false);
-        btnNewAnswer.setVisible(false);
-        btnEditQuestion.setVisible(false);
+            {
+                deleteButton.setOnAction(event -> {
+                    quizzesTable.getSelectionModel().select(getIndex());
+                    selectedQuiz = getTableView().getItems().get(getIndex());
+                    deleteQuiz();
+                });
 
-        btnDeleteQuiz.setVisible(false);
+                editButton.setOnAction(event -> {
+                    quizzesTable.getSelectionModel().select(getIndex());
+                    selectedQuiz = getTableView().getItems().get(getIndex());
+                    editQuizPreSetup();
+                });
+            }
 
-        btnDeleteAnswer.setVisible(false);
-        cBoxAnswerIsCorrect.setSelected(false);
-        cBoxAnswerIsCorrect.setVisible(false);
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : pane);
+            }
+        });
+
+        quizzesTable.setItems(quizFxes);
+        this.labelCourse.setText(selectedCourse.getName());
+        this.labelTotalQuizen.setText(String.valueOf(quizFxes.size()));
+
+    }
+
+    /**
+     * Fill the Question Table view using QuestionFx
+     */
+    private void fillQuestionTable() {
+        ObservableList<QuestionFx> questionFxes;
+        // fil table accodring to selectedQuiz
+        questionFxes = convertQuestionToQuestionFX(dao.getQuestions(selectedQuiz.getQuizObject()));
+        colQuestion.setCellValueFactory(cellData -> cellData.getValue().questionProperty());
+        colTotalAnswer.setCellValueFactory(cellData -> cellData.getValue().getTotalAnswer().asObject());
+        colTotatlGood.setCellValueFactory(cellData -> cellData.getValue().getTotalGoodAnswer().asObject());
+
+        colDelQuestion.setCellFactory(cellData -> new TableCell<QuestionFx, Void>() {
+            private final Button editButton = new Button("bijwerken");
+            private final Button deleteButton = new Button("Verwijderen");
+            private final VBox pane = new VBox(deleteButton, editButton);
+
+            {
+                deleteButton.setOnAction(event -> {
+                    questionTable.getSelectionModel().select(getIndex());
+                    selectedQuestion = getTableView().getItems().get(getIndex());
+
+                    deleteQuestion();
+                });
+
+                editButton.setOnAction(event -> {
+                    questionTable.getSelectionModel().select(getIndex());
+                    selectedQuestion = getTableView().getItems().get(getIndex());
+
+                    editQuestionPreSetup();
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : pane);
+            }
+        });
 
 
-        // empty text area and checkbox
-        textQuestion.clear();
-        textAnswer.clear();
-        textTimeLimit.clear();
-        textSuccessDefinite.clear();
+        questionTable.setItems(questionFxes);
+        btnQuestionPanelOpen.setDisable(false);
+    }
+
+    /**
+     * Fill the Answer table using AnswerFX
+     */
+    private void fillAnswerTable() {
+        // fill questions
+        ObservableList<AnswerFx> answerFxes;
+        // fil table according to selectedQuestion
+        answerFxes = convertAnswerToAnswerFX(dao.getAllAnswers(this.selectedQuestion.getQuestionObject()));
+        col_Answer.setCellValueFactory(cellData -> cellData.getValue().answerProperty());
+        col_validity.setCellValueFactory(cellData -> cellData.getValue().isCorrectProperty().asObject());
+        col_Delete_Answer.setCellFactory(cellData -> new TableCell<AnswerFx, Void>() {
+            private final Button editButton = new Button("bijwerken");
+            private final Button deleteButton = new Button("Verwijderen");
+            private final VBox pane = new VBox(deleteButton, editButton);
+            {
+                deleteButton.setOnAction(event -> {
+                    answerTable.getSelectionModel().select(getIndex());
+                    selectedAnswer = getTableView().getItems().get(getIndex());
+                    deleteAnswer();
+                });
+
+                editButton.setOnAction(event -> {
+                    answerTable.getSelectionModel().select(getIndex());
+                    selectedAnswer = getTableView().getItems().get(getIndex());
+                    editAnswerPreSetup();
+
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : pane);
+            }
+        });
+        answerTable.setItems(answerFxes);
+    }
+
+    /**
+     * change or refresh the GUI in sub section of Course
+     */
+    public void refreshQuizTable() {
+        if (selectedCourse != null) {
+            fillQuizTable();
+            btnQuizPanelOpen.setDisable(false);
+
+        } else {
+            selectedQuiz = null;
+            selectedQuestion = null;
+            selectedAnswer = null;
+            btnQuizPanelOpen.setDisable(true);
+            emptyFieldsAndSelected();
+        }
         textQuizName.clear();
+        textSuccessDefinite.clear();
+        textTimeLimit.clear();
+    }
+
+    public void refreshQuestionTable() {
+        if (selectedQuiz != null) {
+            fillQuestionTable();
+            btnQuestionPanelOpen.setDisable(false);
+        } else {
+            questionTable.getItems().clear();
+            btnQuestionPanelOpen.setDisable(true);
+        }
+        textQuestion.clear();
+    }
+
+    private void refreshAnswerTable() {
+        if (selectedQuestion != null) {
+            fillAnswerTable();
+            btnAnswerPanelOpen.setDisable(false);
+        } else {
+            answerTable.getItems().clear();
+        }
+        textAnswer.clear();
+    }
+
+    private void editQuizPreSetup() {
+        /// open panel  and fill selected item valuses to fields
+        textQuizName.setText(selectedQuiz.getName());
+        textSuccessDefinite.setText(String.valueOf(selectedQuiz.getSuccsesDefinition()));
+        textTimeLimit.setText(String.valueOf(selectedQuiz.getTimeLimit()));
+        expandTitledPane(new ActionEvent(), quizPane);
+
+    }
+
+    /**
+     * Open the pane and set qustion ready to edit and save
+     */
+    private void editQuestionPreSetup() {
+        textQuestion.setText(selectedQuestion.getQuestion());
+        expandTitledPane(new ActionEvent(), questionPane);
+    }
+
+    private void editAnswerPreSetup() {
+        expandTitledPane(new ActionEvent(), answerPane);
+        textAnswer.setText(selectedAnswer.getAnswer());
+        cBoxAnswerIsCorrect.setSelected(selectedAnswer.isIsCorrect());
     }
 
     /**
      * Action method of Click on Course table
      * Which will fill add quizzes of selected course to de ListView
      */
-    public void courseTableSelect() {
+    public void courseTableOnClick() {
         if (courseTable.getSelectionModel().getSelectedItem() != null) {
             emptyFieldsAndSelected();
-
-            // get selected Course
-//            ObservableList<Quiz> quizzes = dao.getQuizOfCourse(this.selectedCourse.getCourseObject());
             selectedCourse = courseTable.getSelectionModel().getSelectedItem();
-            refeshCourseSubSections();
+            refreshQuizTable();
 
         }
     }
 
     /**
-     * Quiz list select function
+     * Quiz Table select function
      */
-    public void quizListSelect() {
-        if (quizFxListView.getSelectionModel().getSelectedItem() != null) {
-//            ObservableList<Question> questions = dao.getQuestions(this.selectedQuiz.getQuizObject()); // update from DB
-            selectedQuiz = quizFxListView.getSelectionModel().getSelectedItem();
-            refreshQuizSubSection();
-
-
+    public void quizTableOnClick(MouseEvent mouseEvent) {
+        if (quizzesTable.getSelectionModel().getSelectedItem() != null) {
+            selectedQuiz = quizzesTable.getSelectionModel().getSelectedItem();
+            refreshQuestionTable();
         }
     }
 
     /**
-     * Question list select function
+     * Question Table select function
      */
-    public void questionListSelect() {
-        if (questionFxListView.getSelectionModel().getSelectedItem() != null) {
+    public void questionTableOnClick(MouseEvent mouseEvent) {
+        if (questionTable.getSelectionModel().getSelectedItem() != null) {
             // set selected quiz
-            selectedQuestion = questionFxListView.getSelectionModel().getSelectedItem();
-            refreshQuestionSubSection();
+            this.selectedQuestion = questionTable.getSelectionModel().getSelectedItem();
+            refreshAnswerTable();
 
         }
-
     }
 
     /**
-     * Answer list select funtion
+     * Answer table select funtion
      */
-    public void answerListSelect() {
-        if (answersListView.getSelectionModel().getSelectedItem() != null) {
-            selectedAnswer = answersListView.getSelectionModel().getSelectedItem();
+
+    public void answerTableOnClick(MouseEvent mouseEvent) {
+        if (answerTable.getSelectionModel().getSelectedItem() != null) {
+            selectedAnswer = answerTable.getSelectionModel().getSelectedItem();
             textAnswer.setText(selectedAnswer.getAnswer());
-            cBoxAnswerIsCorrect.setSelected(selectedAnswer.isCorrect());
-            btnDeleteAnswer.setVisible(true);
-
-        } else {
-            btnDeleteAnswer.setVisible(false);
-        }
-
-    }
-
-    /**
-     *  change or refresh the GUI in sub section of Course
-     */
-    public void refeshCourseSubSections() {
-        if (selectedCourse != null) {
-            this.quizFxListView.getItems().clear();
-            // fill the quiz list
-            this.quizFxListView.setItems(convertQuizToQuizFX(selectedCourse.getQuizzes()));
-            // set the course information to labels
-            this.labelCourse.setText(selectedCourse.getName());
-            this.labelTotalQuizen.setText(String.valueOf(selectedCourse.getQuizzes().size()));
-
-            // make New btn AND Delete btn available
-            btnNewQuiz.setVisible(true);
-            btnDeleteQuiz.setVisible(false);
-
-            textQuizName.clear();
-            textQuizName.setDisable(false);
-
-            textSuccessDefinite.clear();
-            textSuccessDefinite.setDisable(false);
-
-            textTimeLimit.clear();
-            textTimeLimit.setDisable(false);
-
-        } else {
-
-            emptyFieldsAndSelected();
-        }
-    }
-
-    /**
-     * Refresh the Question Section and add fill the question list if a quiz has been selected
-     */
-    private void refreshQuizSubSection() {
-        if (selectedQuiz != null) {
-
-            // fill questions
-            this.questionFxListView.setItems(convertQuestionToQuestionFX(selectedQuiz.getQuestions()));
-
-            // update the values in text Field according to selection
-            textQuizName.setText(this.selectedQuiz.getName());
-            textQuizName.setDisable(true);
-
-            textSuccessDefinite.setText(String.valueOf(selectedQuiz.getSuccsesDefinition()));
-            textSuccessDefinite.setDisable(true);
-
-            textTimeLimit.setText(String.valueOf(selectedQuiz.getTimeLimit()));
-            textTimeLimit.setDisable(true);
-
-            /// and show delete btn
-            btnDeleteQuiz.setVisible(true);
-
-            btnNewQuiz.setVisible(false);
-
-            setQuestionEditMode(false);
-
-        } else {
-            // if nothing is selected then no delete btn for quiz
-            if(selectedCourse!= null){
-                btnNewQuiz.setVisible(true);
-            }
+            cBoxAnswerIsCorrect.setSelected(selectedAnswer.isIsCorrect());
 
         }
-        selectedQuestion = null;
-        selectedAnswer = null;
-        refreshQuestionSubSection();
-    }
-
-    /**
-     * If a question has been selected it will update the fields
-     * otherwise
-     * wil refresh the list of answers and empty the fields
-     **/
-    private void refreshQuestionSubSection() {
-        if (selectedQuestion != null) {
-            answersListView.setItems(selectedQuestion.getAnswers());
-            answersListView.refresh();
-
-            // fill question textView
-            textQuestion.setText(this.selectedQuestion.getQuestion());
-
-            // fill available answer details
-            labelTotalAnswers.setText("Aantal antwoorden: " + selectedQuestion.getAnswers().size());
-            int coutGood = 0;
-            for (Answer a : selectedQuestion.getAnswers()) {
-                if (a.isCorrect()) {
-                    coutGood++;
-                }
-            }
-            labelTotalGoodAnswers.setText("Aantal juist: " + coutGood);
-            // show add answer btn anc check box
-
-            btnNewAnswer.setVisible(true);
-            cBoxAnswerIsCorrect.setVisible(true);
-            cBoxAnswerIsCorrect.setSelected(false);
-
-
-            // show question btn
-            btnNewQuestion.setVisible(true);
-            btnEditQuestion.setVisible(true);
-
-
-        } else {
-            // empty fields and hide btns
-            textQuestion.clear();
-            cBoxAnswerIsCorrect.setVisible(false);
-            btnNewAnswer.setVisible(false);
-            btnDeleteAnswer.setVisible(false);
-            btnNewQuestion.setVisible(false);
-            btnEditQuestion.setVisible(false);
-            setQuestionEditMode(false);
-            labelTotalAnswers.setText("Aantal antwoorden: ?");
-            labelTotalGoodAnswers.setText("Aantal juist: ?");
-            answersListView.getItems().clear();
-
-            if(selectedQuiz != null){
-                btnNewQuestion.setVisible(true);
-            }
-        }
-        textAnswer.clear();
-        labelMaxTotalAnswer.setVisible(false);
-
     }
 
 
     /**
-     * This method change visibilty and of keys to determine what user can do
+     * Limit adding new answer if the given answer is extra or its the second correct answer
      *
-     * @param active a boolean to determine edit mode
+     * @param lastAnswer is the answer which the user is trying to add
+     * @return a boolean define possibility of adding given answer
      */
-    private void setQuestionEditMode(boolean active) {
-        if (active) {
-            // set text area white and disable
-            textQuestion.setDisable(false);
-            textQuestion.setStyle("-fx-background-color: #90f869");
-
-            // hide new btn
-            btnNewQuestion.setVisible(false);
-
-            // change edit btn text to "save" ans make it visible
-            btnEditQuestion.setText("Opslaan");
-
-            btnEditQuestion.setVisible(true);
-            btnEditQuestion.setDefaultButton(true);
-
-            // show delete btn and cancel btn
-            btnDeleteQuestion.setVisible(true);
-            btnDeleteQuestion.setCancelButton(true);
-
-            btnCancelQuestion.setVisible(true);
-            // set the mode on so the save btn works appropriate
-            this.questionEditMode = true;
-
-        } else {
-            // set text area gray and disable
-            textQuestion.setDisable(true);
-            textQuestion.setStyle("-fx-background-color: gray");
-
-            // show new btn
-            btnNewQuestion.setVisible(true);
-            // change edit btn text back  to "edit"
-            btnEditQuestion.setText("Bijwerken");
-            btnEditQuestion.setVisible(false);
-
-            // hide delete btn and cancel btn
-            btnDeleteQuestion.setVisible(false);
-            btnCancelQuestion.setVisible(false);
-
-            this.questionEditMode = false;
-        }
-    }
-
-
-    /**
-     * The action binded to New Question btn in GUI
-     * which makes fields available for user to type a new Question
-     */
-    public void newQuestionBtnAction() {
-        if (quizFxListView.getSelectionModel().getSelectedItem() != null) {
-            refreshQuestionSubSection();
-            /// empty the textArea and the selectedQuestion and listViewSelection
-            this.selectedQuestion = null;
-            questionFxListView.getSelectionModel().clearSelection();
-            textQuestion.setText("");
-
-            setQuestionEditMode(true);
-            btnDeleteQuestion.setVisible(false); // hide the delete btn cause its useless for new entry
-
-        }
-    }
-
-    /**
-     * the action binded to Edit/Save buttom which behaves differently according to the QuestionEditMode boolean in class
-     */
-    public void editQuestionBtnAction() {
-        Question question;
-        String questionString = textQuestion.getText();
-        if (questionEditMode) {
-            // id the mode is On the the key will act like a Save btn
-            if (this.selectedQuestion == null) {
-                // if the user has chose new item then the selectionQuestion is empty so
-                //  we creat an object with id 0 so in dao we can use it as a trick to call INSERT query
-                // create new Question Object and send it to dao for saving function
-                question = new Question(questionString);
-                question.setQuizId(this.selectedQuiz.getIdquiz());
-                question.setQuestionId(0);
-                question = dao.saveQuestion(question); // save the question
-                quizFxListView.getSelectionModel().getSelectedItem().addQuestion(question); // add it to quizlist object
-                selectedQuestion = new QuestionFx(question);
-                questionFxListView.getItems().add(selectedQuestion);
-                questionFxListView.getSelectionModel().select(selectedQuestion);
-                answersListView.setItems(selectedQuestion.getAnswers());
-
-            } else { /// UPDATE ITEM so we send update the selected question and send it to dao save method
-                questionFxListView.getSelectionModel().getSelectedItem().setQuestion(questionString);
-
-                selectedQuestion = questionFxListView.getSelectionModel().getSelectedItem();
-                question = dao.saveQuestion(this.selectedQuestion.getQuestionObject());
-                questionFxListView.getSelectionModel().getSelectedItem().setQuestionId(question.getQuestionId());
-
-            }
-            if (question != null) { // after succesfull add we disable the editMode
-                setQuestionEditMode(false);
-                cBoxAnswerIsCorrect.setVisible(true);
-                btnNewAnswer.setVisible(true);
-            }
-
-        } else {
-            /// then the edit method is not activated so the key will be act to active it
-            setQuestionEditMode(true);
-        }
-
-        quizFxListView.refresh();
-        questionFxListView.refresh();
-    }
-
-    /**
-     * Delete the selected qustion from quiz
-     */
-    public void deleteQuestionBtnAction() {
-        boolean result = dao.deleteQuestion(this.selectedQuestion.getQuestionObject());
-        if (result) {
-            this.selectedQuiz.removeQuestion(this.selectedQuestion.getQuestionObject());
-        }
-        questionFxListView.getItems().remove(questionFxListView.getSelectionModel().getSelectedIndex());
-        quizFxListView.refresh();
-        questionFxListView.refresh();
-
-//        ObservableList<Question> questions = this.selectedQuiz.getQuestions();
-//        this.questionListView.setItems(convertQuestionToQuestionFX(questions));
-
-        textQuestion.setText("");
-        this.selectedQuestion = null;
-        setQuestionEditMode(false);
-
-    }
-
-    /**
-     * Cancel editing end disable the editMode
-     */
-    public void cancelQuestionBtnAction() {
-        setQuestionEditMode(false);
-//        questionListSelect();
-    }
-
-    /**
-     * add answer to the databes according to the last selected question
-     */
-    public void addAnswerToQuestionAction() {
-        // create the object fully with all needed information
-        String answerString = textAnswer.getText();
-        boolean isCorrect = cBoxAnswerIsCorrect.isSelected();
-        Answer answer = new Answer(isCorrect, answerString);
-        int questionId = this.selectedQuestion.getQuestionId();
-        if (!limitAnswers(answer)) {
-            labelMaxTotalAnswer.setVisible(true);
-            System.out.println("max 4 answer and 1 good answer");
-            return;
-        } else {
-            labelMaxTotalAnswer.setVisible(false);
-        }
-        answer.setQuestionId(questionId);
-
-        /// Send to DAO
-        selectedAnswer = dao.addAnswerToQuestion(answer);
-        questionFxListView.getSelectionModel().getSelectedItem().addAnswer(selectedAnswer);
-        textAnswer.clear();
-        refreshQuestionSubSection();
-    }
-
-
-    public void answerDeleteBtnAction() {
-        if (answersListView.getSelectionModel().getSelectedItem() != null) {
-            Answer a = answersListView.getSelectionModel().getSelectedItem();
-            if (dao.deleteAnswer(a)) {
-                questionFxListView.getSelectionModel().
-                        getSelectedItem().
-                        removeAnswer(answersListView.getSelectionModel().getSelectedItem());
-
-                refreshQuestionSubSection();
-            }
-
-        }
-    }
-
     public boolean limitAnswers(Answer lastAnswer) {
-        ObservableList<Answer> answers = questionFxListView.getSelectionModel().getSelectedItem().getAnswers();
+        List<Answer> answerList = selectedQuestion.getAnswers();
+        ObservableList<Answer> answers = FXCollections.observableArrayList(answerList);
         int coutGood = (lastAnswer.isCorrect() ? 1 : 0);
         for (Answer a : answers) {
             if (a.isCorrect()) {
                 coutGood++;
             }
         }
-        if(answers.size() <= 3 && coutGood <= 1){
-            labelTotalAnswers.setText("Aantal antwoorden: " + answers.size());
-            labelTotalGoodAnswers.setText("Aantal juist: " + coutGood);
-            return true;
-        }
+        if (answers.size() <= 3 && coutGood <= 1) return true;
         return false;
     }
 
-    public void newQuizAction() {
-        int course_id = courseTable.getSelectionModel().getSelectedItem().getDbId();
-        String quizName = textQuizName.getText();
-        String sd = textSuccessDefinite.getText();
-        String tl = textTimeLimit.getText();
-        if (!sd.equals("") && !tl.equals("") && !quizName.equals("")) {
-            double succesDefinite = Double.parseDouble(sd);
-            int timeLimit = Integer.parseInt(tl);
-            Quiz q = new Quiz(quizName, succesDefinite);
-            q.setIdcourse(course_id);
-            q.setTimeLimit(timeLimit);
-            q = dao.addQuiz(q);
-            if (q != null) {
-                courseTable.getSelectionModel().getSelectedItem().addQuiz(q);
-                selectedCourse = courseTable.getSelectionModel().getSelectedItem();
-                refeshCourseSubSections();
-
-            }
-        } else {
-            new Alert(Alert.AlertType.ERROR, "AUB vull alle benodigde informatie").show();
-        }
-
-    }
-
-    public void deletQuizSelectedAction() {
+    /**
+     * Delete the quiz if the user Approve the confirmation
+     */
+    public void deleteQuiz() {
+        QuizFx quizFx = quizzesTable.getSelectionModel().getSelectedItem();
         boolean r = AlertHelper.confirmationDialog("Wilt u zeker Quiz " +
-                quizFxListView.getSelectionModel().getSelectedItem().getName()
+                quizzesTable.getSelectionModel().getSelectedItem().getName()
                 + " verwijderen ?");
         if (r) {
-            dao.deleteQuiz(quizFxListView.getSelectionModel().getSelectedItem().getQuizObject());
-            courseTable.getSelectionModel().getSelectedItem().removeQuiz(quizFxListView.getSelectionModel().getSelectedItem().getQuizObject());
+            dao.deleteQuiz(quizFx.getQuizObject());
+            refreshQuizTable();
             emptyFieldsAndSelected();
-            refeshCourseSubSections();
+            selectedQuiz = null;
         }
     }
+
+    /**
+     * Delete the Question if the user accept the confirmation
+     */
+    private void deleteQuestion() {
+        boolean r = AlertHelper.confirmationDialog("Wilt u zeker Question " +
+                selectedQuestion.getQuestion()
+                + " verwijderen ?");
+        if (r) {
+            dao.deleteQuestion(selectedQuestion.getQuestionObject());
+            selectedQuestion = null;
+            refreshQuestionTable();
+        }
+    }
+
+    /**
+     * Delete Answer if the user accept the confirmation
+     */
+    private void deleteAnswer() {
+        boolean r = AlertHelper.confirmationDialog("Wilt u zeker Answer" +
+                selectedAnswer.getAnswer()
+                + " verwijderen ?");
+        if (r) {
+            dao.deleteAnswer(selectedAnswer.getAnswerObject());
+            selectedAnswer= null;
+            refreshAnswerTable();
+        }
+    }
+
+
+    /**
+     * Save or update quiz
+     *
+     * @param actionEvent
+     */
+    public void btnSaveQuizAction(ActionEvent actionEvent) {
+        if (selectedCourse != null) {
+            int course_id = courseTable.getSelectionModel().getSelectedItem().getDbId();
+            String quizName = textQuizName.getText();
+            String sd = textSuccessDefinite.getText();
+            String tl = textTimeLimit.getText();
+            if (!sd.equals("") && !tl.equals("") && !quizName.equals("")) {
+                double succesDefinite = Double.parseDouble(sd);
+                int timeLimit = Integer.parseInt(tl);
+                Quiz quiz;
+                if (this.selectedQuiz == null) {
+                    quiz = new Quiz(quizName, succesDefinite);
+                    quiz.setIdcourse(course_id);
+                    quiz.setTimeLimit(timeLimit);
+                    quiz.setIdquiz(0);
+                    quiz = dao.saveQuiz(quiz);
+                    // new QUiz
+                } else {
+                    // update Quiz
+                    selectedQuiz.setName(quizName);
+                    selectedQuiz.setSuccsesDefinition(succesDefinite);
+                    selectedQuiz.setTimeLimit(timeLimit);
+                    quiz = dao.saveQuiz(selectedQuiz.getQuizObject());
+                }
+
+                if (quiz != null) {
+                    courseTable.getSelectionModel().getSelectedItem().addQuiz(quiz);
+                    selectedCourse = courseTable.getSelectionModel().getSelectedItem();
+                    refreshQuizTable();
+                    expandTitledPane(new ActionEvent(), quizPane);
+
+                }
+            } else {
+                new Alert(Alert.AlertType.ERROR, "AUB vull alle benodigde informatie").show();
+            }
+        } else {
+
+            new Alert(Alert.AlertType.ERROR, "AUB kies een cursus").show();
+        }
+    }
+
+    /**
+     * Save or update Question
+     *
+     * @param actionEvent
+     */
+    public void btnSaveQuestionAction(ActionEvent actionEvent) {
+        Question question;
+        String questionString = textQuestion.getText();
+        if (questionString.equals("")) {
+            new Alert(Alert.AlertType.ERROR, "Schrijf de vraag aub").show();
+            return;
+        }
+        if (this.selectedQuestion == null) {
+            // if the user has chose new item then the selectionQuestion is empty so
+            //  we creat an object with id 0 so in dao we can use it as a trick to call INSERT query
+            // create new Question Object and send it to dao for saving function
+            question = new Question(questionString);
+            question.setQuizId(this.selectedQuiz.getIdquiz());
+            question.setQuestionId(0);
+            question = dao.saveQuestion(question); // save the question
+
+            selectedQuestion = new QuestionFx(question);
+
+        } else {
+            /// UPDATE ITEM so we send update the selected question and send it to dao save method
+            selectedQuestion.setQuestion(questionString);
+            question = dao.saveQuestion(this.selectedQuestion.getQuestionObject());
+        }
+        if (question != null) { // after succesfull add we disable the editMode
+            expandTitledPane(new ActionEvent(), questionPane);
+            refreshQuestionTable();
+        }
+
+    }
+
+
+
+    /**
+     * add answer to the databes according to the last selected question
+     */
+    public void btnSaveAnswerAction() {
+        String answerString = textAnswer.getText();
+        boolean isCorrect = cBoxAnswerIsCorrect.isSelected();
+        Answer answer;
+        if (selectedAnswer != null) {
+            //update
+            answer = selectedAnswer.getAnswerObject();
+            answer.setAnswer(answerString);
+            answer.setCorrect(isCorrect);
+        } else {
+            // new
+            int questionId = this.selectedQuestion.getQuestionId();
+            answer = new Answer(isCorrect, answerString);
+            answer.setQuestionId(questionId);
+            answer.setId(0);
+
+        }
+        if (!limitAnswers(answer)) {
+            new Alert(Alert.AlertType.ERROR, "max 4 answer and 1 good answer").show();
+            return;
+        }
+
+        /// Send to DAO
+        answer = dao.saveAnswer(answer);
+
+        if (answer != null) { // after succesfull add we disable the editMode
+            selectedAnswer = new AnswerFx(answer);
+            expandTitledPane(new ActionEvent(), answerPane);
+            refreshQuestionTable();
+            textAnswer.clear();
+            refreshAnswerTable();
+        }
+
+    }
+
+
+    /**
+     * Close the New Quiz Pane and empty the fields
+     *
+     * @param actionEvent
+     */
+    public void cancelQuizBtnAction(ActionEvent actionEvent) {
+        btnQuizPanelOpenAction(new ActionEvent());
+        textQuizName.clear();
+        textTimeLimit.clear();
+        textSuccessDefinite.clear();
+    }
+
+    /**
+     * Cancel editing end disable the editMode
+     *
+     * @param actionEvent
+     */
+    public void cancelQuestionBtnAction(ActionEvent actionEvent) {
+        textQuestion.clear();
+        expandTitledPane(new ActionEvent(), questionPane);
+    }
+
+    public void cancelNewAnswerAction(ActionEvent actionEvent) {
+        textAnswer.clear();
+        cBoxAnswerIsCorrect.setSelected(false);
+        expandTitledPane(new ActionEvent(),answerPane);
+    }
+
+    public void btnQuizPanelOpenAction(ActionEvent actionEvent) {
+        selectedQuiz = null;
+        textTimeLimit.clear();
+        textQuizName.clear();
+        textSuccessDefinite.clear();
+        expandTitledPane(actionEvent, quizPane);
+    }
+
+    public void btnQuestionPanelAction(ActionEvent actionEvent) {
+        selectedQuestion = null;
+        textQuestion.clear();
+        expandTitledPane(actionEvent, questionPane);
+    }
+
+    public void btnAnswerPanelOpenAction(ActionEvent actionEvent) {
+        selectedAnswer = null;
+        textAnswer.clear();
+        cBoxAnswerIsCorrect.setSelected(false);
+        expandTitledPane(actionEvent,answerPane);
+    }
+
+    private void expandTitledPane(ActionEvent actionEvent, TitledPane selectedPane) {
+        HBox n = (HBox) selectedPane.getGraphic();
+        Button b = new Button();
+        if (n.getChildren().get(1) instanceof Button) {
+            b = (Button) n.getChildren().get(1);
+        }
+        if (selectedPane.isExpanded()) {
+
+            selectedPane.setCollapsible(true);
+            selectedPane.setExpanded(false);
+            selectedPane.setCollapsible(false);
+            b.setText("Nieuw");
+            b.setStyle("-fx-background-color: green");
+        } else {
+
+            selectedPane.setCollapsible(true);
+            selectedPane.setExpanded(true);
+            selectedPane.setCollapsible(false);
+            b.setText("Afsluiten");
+            b.setStyle("-fx-background-color: red");
+        }
+        actionEvent.consume();
+    }
+
 }

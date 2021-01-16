@@ -1,5 +1,6 @@
 package database.mysql;
 
+import controller.fx.QuizFx;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -135,18 +136,28 @@ public class CoordinatorDAO extends AbstractDAO {
         return null;
     }
 
-    public Answer addAnswerToQuestion(Answer answer) {
-        String query = "INSERT INTO answer (question_id,isCorrect,answer) VALUES (?,?,?)";
+    public Answer saveAnswer(Answer answer) {
+        String query;
+        int id = answer.getId();
         int questionId = answer.getQuestionId();
         boolean isCorrect = answer.isCorrect();
         String answerString = answer.getAnswer();
+
+        if (id == 0) { // then its a new Question
+            query = "INSERT INTO answer (question_id,isCorrect,answer,id) VALUES (?,?,?,?)";
+        } else {// it is update case
+            query = "UPDATE answer SET question_id = ? , isCorrect = ? ,answer=? WHERE id = ?";
+        }
         try {
             PreparedStatement ps = getStatementWithKey(query);
             ps.setInt(1, questionId);
             ps.setBoolean(2, isCorrect);
             ps.setString(3, answerString);
+            ps.setInt(4,id);
             int key = executeInsertPreparedStatement(ps);
-            answer.setId(key);
+            if (id == 0) {
+                answer.setId(key);
+            }
             return answer;
         } catch (SQLException throwables) {
             System.out.println("Somthing went wrong while binding Answer to Question in db");
@@ -211,19 +222,32 @@ public class CoordinatorDAO extends AbstractDAO {
         return false;
     }
 
-    public Quiz addQuiz(Quiz quiz) {
-        String query = "INSERT INTO quiz (name, course_id, successDefinition, timelimit) VALUES (?,?,?,?)";
+    public Quiz saveQuiz(Quiz quiz) {
+        String query;
+
         String name = quiz.getName();
         int course_idcourse = quiz.getIdcourse();
         double successDefinition = quiz.getSuccsesDefinition();
         int timelimit = quiz.getTimeLimit();
+        int id = quiz.getIdquiz();
+
+        if (id == 0) { // then its a new Question
+            query = "INSERT INTO quiz (name, course_id, successDefinition, timelimit ,id) VALUES (?, ?,?,?,?)";
+        } else {// it is update case
+            query = "UPDATE quiz SET name=?, course_id=?, successDefinition=?, timelimit = ?  WHERE id = ?";
+        }
         try {
             PreparedStatement ps = getStatementWithKey(query);
             ps.setString(1, name);
             ps.setInt(2, course_idcourse);
             ps.setDouble(3, successDefinition);
             ps.setInt(4, timelimit);
+            ps.setInt(5,id);
             int key = executeInsertPreparedStatement(ps);
+
+            if (id == 0) {
+                quiz.setIdquiz(key);
+            }
             quiz.setIdquiz(key);
             return quiz;
         } catch (SQLException throwables) {

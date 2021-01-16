@@ -3,6 +3,8 @@ package controller;
 import javafx.event.ActionEvent;
 
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 
 import javafx.scene.layout.Pane;
@@ -11,12 +13,12 @@ import model.*;
 import view.SceneManager;
 
 public class WelcomeSceneController {
-    public BorderPane mainPanel;
     public Label fnameLabel;
     public Label lnameLabel;
     public Label uidLabel;
     public Label richtingLabel;
     public Label welcomeLabel;
+    public TabPane tabPanel;
     private SceneManager sceneManager ;
     private Pane view;
     private User loggedInUser;
@@ -43,17 +45,31 @@ public class WelcomeSceneController {
     }
 
     private void setPane(){
+
         if(this.loggedInUser.getRole() == Role.TECHNICAL_ADMINISTRATOR){
             view = sceneManager.getPage("TechnicalAdministrator");
-            mainPanel.setCenter(view);
-        }else if (this.loggedInUser.getRole() == Role.STUDENT){
-            view = sceneManager.getPage("studentSignInOut");
-            mainPanel.setCenter(view);
+            Tab tab = new Tab();
+            tab.setText("Technical Administrator");
+            tab.setContent(view);
+            tabPanel.getTabs().add(tab);
+
         }
-        else if (this.loggedInUser.getRole() == Role.COORDINATOR)
+        if (this.loggedInUser.getRole() == Role.STUDENT){
+            view = sceneManager.getPage("studentSignInOut");
+            Tab tab = new Tab();
+            tab.setText("Student");
+            tab.setContent(view);
+            tabPanel.getTabs().add(tab);
+
+        }
+        if (this.loggedInUser.getRole() == Role.COORDINATOR)
         {
             view = sceneManager.getPage("coordinatorPanel");
-            mainPanel.setCenter(view);
+            Tab tab = new Tab();
+            tab.setText("Coordinator");
+            tab.setContent(view);
+            tabPanel.getTabs().add(tab);
+
         }
     }
 
