@@ -13,7 +13,7 @@ import model.*;
 import view.SceneManager;
 
 public class WelcomeSceneController {
-    public Label fnameLabel;
+
     public Label lnameLabel;
     public Label uidLabel;
     public Label richtingLabel;
@@ -29,7 +29,6 @@ public class WelcomeSceneController {
 
         loggedInUser = (User) Main.getPrimaryStage().getUserData();
 
-        this.fnameLabel.setText(loggedInUser.getFirstName());
         this.welcomeLabel.setText(String.format("Welcome %s!", loggedInUser.getFirstName().toUpperCase()));
         this.lnameLabel.setText(loggedInUser.getLastName());
         this.uidLabel.setText(String.valueOf(loggedInUser.getUserId()));
