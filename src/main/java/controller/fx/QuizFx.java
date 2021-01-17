@@ -3,6 +3,7 @@ package controller.fx;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 import model.Question;
 import model.Quiz;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class QuizFx {
     private Quiz quiz;
+
 
     public QuizFx(Quiz q) {
         this.quiz = q;
