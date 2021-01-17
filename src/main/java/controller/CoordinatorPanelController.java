@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import launcher.Main;
 import model.Answer;
 import model.Question;
@@ -64,7 +65,6 @@ public class CoordinatorPanelController {
     public TableColumn<AnswerFx, String> col_Answer;
     public TableColumn<AnswerFx, Boolean> col_validity;
     public TableColumn<AnswerFx, Void> col_Delete_Answer;
-
 
 
     @FXML
@@ -204,7 +204,11 @@ public class CoordinatorPanelController {
             private final Button deleteButton = new Button("Verwijderen");
             private final VBox pane = new VBox(deleteButton, editButton);
 
+
             {
+                pane.setPrefWidth(90);
+                editButton.setPrefWidth(90);
+                deleteButton.setPrefWidth(90);
                 deleteButton.setOnAction(event -> {
                     questionTable.getSelectionModel().select(getIndex());
                     selectedQuestion = getTableView().getItems().get(getIndex());
@@ -242,10 +246,31 @@ public class CoordinatorPanelController {
         answerFxes = convertAnswerToAnswerFX(dao.getAllAnswers(this.selectedQuestion.getQuestionObject()));
         col_Answer.setCellValueFactory(cellData -> cellData.getValue().answerProperty());
         col_validity.setCellValueFactory(cellData -> cellData.getValue().isCorrectProperty().asObject());
+        col_validity.setCellFactory(cellData -> new TableCell<AnswerFx, Boolean>() {
+
+            @Override
+            protected void updateItem(Boolean aBoolean, boolean b) {
+                super.updateItem(aBoolean, b);
+
+                if (!b) {
+                    // Get fancy and change color based on data
+                    if (aBoolean)
+                    {
+                        this.getTableRow().setStyle("-fx-background-color: #ccffcc");
+                    }else {
+                        this.getTableRow().setStyle("-fx-background-color: #f6a3a3");
+                    }
+
+                }
+
+            }
+        });
+
         col_Delete_Answer.setCellFactory(cellData -> new TableCell<AnswerFx, Void>() {
             private final Button editButton = new Button("bijwerken");
-            private final Button deleteButton = new Button("Verwijderen");
-            private final VBox pane = new VBox(deleteButton, editButton);
+            private final Button deleteButton = new Button("wissen");
+            private final HBox pane = new HBox(editButton,deleteButton);
+
             {
                 deleteButton.setOnAction(event -> {
                     answerTable.getSelectionModel().select(getIndex());
@@ -259,6 +284,7 @@ public class CoordinatorPanelController {
                     editAnswerPreSetup();
 
                 });
+
             }
 
             @Override
@@ -268,6 +294,7 @@ public class CoordinatorPanelController {
             }
         });
         answerTable.setItems(answerFxes);
+
     }
 
     /**
@@ -285,6 +312,9 @@ public class CoordinatorPanelController {
             btnQuizPanelOpen.setDisable(true);
             emptyFieldsAndSelected();
         }
+        if(quizPane.isExpanded()){
+            expandTitledPane(new ActionEvent(), quizPane);
+        }
         textQuizName.clear();
         textSuccessDefinite.clear();
         textTimeLimit.clear();
@@ -298,15 +328,23 @@ public class CoordinatorPanelController {
             questionTable.getItems().clear();
             btnQuestionPanelOpen.setDisable(true);
         }
+        if(questionPane.isExpanded()){
+            expandTitledPane(new ActionEvent(), questionPane);
+        }
+        refreshAnswerTable();
         textQuestion.clear();
     }
 
     private void refreshAnswerTable() {
+        selectedAnswer=null;
         if (selectedQuestion != null) {
             fillAnswerTable();
             btnAnswerPanelOpen.setDisable(false);
         } else {
             answerTable.getItems().clear();
+        }
+        if(answerPane.isExpanded()){
+            expandTitledPane(new ActionEvent(), answerPane);
         }
         textAnswer.clear();
     }
@@ -441,7 +479,7 @@ public class CoordinatorPanelController {
                 + " verwijderen ?");
         if (r) {
             dao.deleteAnswer(selectedAnswer.getAnswerObject());
-            selectedAnswer= null;
+            selectedAnswer = null;
             refreshAnswerTable();
         }
     }
@@ -529,7 +567,6 @@ public class CoordinatorPanelController {
     }
 
 
-
     /**
      * add answer to the databes according to the last selected question
      */
@@ -563,7 +600,6 @@ public class CoordinatorPanelController {
             expandTitledPane(new ActionEvent(), answerPane);
             refreshQuestionTable();
             textAnswer.clear();
-            refreshAnswerTable();
         }
 
     }
@@ -594,7 +630,7 @@ public class CoordinatorPanelController {
     public void cancelNewAnswerAction(ActionEvent actionEvent) {
         textAnswer.clear();
         cBoxAnswerIsCorrect.setSelected(false);
-        expandTitledPane(new ActionEvent(),answerPane);
+        expandTitledPane(new ActionEvent(), answerPane);
     }
 
     public void btnQuizPanelOpenAction(ActionEvent actionEvent) {
@@ -615,7 +651,7 @@ public class CoordinatorPanelController {
         selectedAnswer = null;
         textAnswer.clear();
         cBoxAnswerIsCorrect.setSelected(false);
-        expandTitledPane(actionEvent,answerPane);
+        expandTitledPane(actionEvent, answerPane);
     }
 
     private void expandTitledPane(ActionEvent actionEvent, TitledPane selectedPane) {
