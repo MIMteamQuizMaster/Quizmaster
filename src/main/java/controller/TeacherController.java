@@ -54,7 +54,7 @@ public class TeacherController implements Initializable {
     public void fillCoursesTable() {
         ObservableList<ClassFX> classes;
         classes = convertClassToClassFX(dao.getAllClasses(loggedInUser));
-
+        //TODO: fix NullPointerException
         classColumn.setCellValueFactory(cellData -> cellData.getValue().dbIdProperty().asObject());
         leftTable.setItems(classes);
     }
