@@ -24,7 +24,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import launcher.Main;
-import model.AlertHelper;
+//import model.AlertHelper;
 
 import java.net.URL;
 import java.util.HashMap;

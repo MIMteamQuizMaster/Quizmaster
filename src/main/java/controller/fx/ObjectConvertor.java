@@ -3,6 +3,7 @@ package controller.fx;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.*;
+import model.Class;
 
 public class ObjectConvertor {
 
@@ -68,5 +69,18 @@ public class ObjectConvertor {
             listedAnswer.add(new AnswerFx(a));
         }
         return listedAnswer;
+    }
+
+    /**
+     * Convert Class objects to ClassFX objects
+     * @param userObservableList list of Class objects
+     * @return a observableList ClassFX objects
+     */
+    public static ObservableList<ClassFX> convertClassToClassFX(ObservableList<Class> userObservableList){
+        ObservableList<ClassFX> listedClasses = FXCollections.observableArrayList();
+        for (Class c:userObservableList) {
+            listedClasses.add(new ClassFX(c));
+        }
+        return listedClasses;
     }
 }
