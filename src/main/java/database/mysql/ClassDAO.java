@@ -36,10 +36,10 @@ public class ClassDAO extends AbstractDAO {
         return rList;
     }
 
-    public ObservableList<Student> getStudents(Class c) {
+    public ObservableList<User> getStudents(Class c) {
 
         String sql = "SELECT sc.student_user_id, u.firstname, u.lastname FROM student_has_class sc INNER JOIN user u ON sc.student_user_id = u.user_id WHERE sc.class_id = " + c.getDbId();
-        ObservableList<Student> rList = FXCollections.observableArrayList();
+        ObservableList<User> rList = FXCollections.observableArrayList();
         try {
             PreparedStatement ps = getStatement(sql);
             ResultSet resultSet = executeSelectPreparedStatement(ps);
@@ -48,7 +48,7 @@ public class ClassDAO extends AbstractDAO {
                 String firstName = resultSet.getString("firstname");
                 String lastName = resultSet.getString("lastname");
 
-                rList.add(new Student(studentId,firstName,lastName));
+                rList.add(new User(studentId,firstName,lastName));
 
 
             }

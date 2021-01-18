@@ -7,8 +7,8 @@
    <children>
       <TableView fx:id="leftTable" layoutX="200.0" layoutY="131.0" prefHeight="200.0" prefWidth="200.0">
         <columns>
-          <TableColumn id="classColumn" prefWidth="75.0" text="Klas" />
-          <TableColumn id="studentColumn" prefWidth="75.0" text="Student" />
+          <TableColumn fx:id="classColumn" prefWidth="75.0" text="Klas" />
+          <TableColumn fx:id="studentColumn" prefWidth="75.0" text="Student" />
         </columns>
       </TableView>
       <TableView fx:id="rightTable" layoutX="400.0" layoutY="131.0" prefHeight="200.0" prefWidth="200.0">
