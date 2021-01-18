@@ -55,8 +55,10 @@ public class FillOutFormController {
 
     public void initialize()
     {
+        Quiz quiz = new Quiz("Math", 0.55);
+        quiz.setIdquiz(1);
         CreateQuizFromDatabase createQuiz = new CreateQuizFromDatabase();
-        this.quiz = createQuiz.returnQuizFromDatabase();
+        this.quiz = createQuiz.returnQuizFromDatabase(quiz);
         this.questions = this.quiz.getQuestions();
         for (Question question: this.questions)
         {

@@ -16,16 +16,13 @@ public class CreateQuizFromDatabase {
     private DBAccess dbAccess = Main.getDBaccess();
     private QuestionDAO questionDAO = new QuestionDAO(dbAccess);
     private AnswerDAO answerDAO = new AnswerDAO(dbAccess);
-    private Quiz quiz;
     private List<Question> questions = new ArrayList<>();
     private List<Answer> answers = new ArrayList<>();
 
 
-    public Quiz returnQuizFromDatabase()
+    public Quiz returnQuizFromDatabase(Quiz quiz)
     {
-        this.quiz = new Quiz(0.55, "Math");
-        this.quiz.setIdquiz(1);
-        this.questions = questionDAO.getQuestionsForQuize(this.quiz);
+        this.questions = questionDAO.getQuestionsForQuize(quiz);
         for (Question question: this.questions)
         {
             this.answers = answerDAO.getAnswersForQuestion(question);
@@ -35,9 +32,9 @@ public class CreateQuizFromDatabase {
         {
             question.mixAnswers();
         }
-        this.quiz.importQuestions(this.questions);
+        quiz.setQuestions(this.questions);
 
-        return this.quiz;
+        return quiz;
     }
 
 }

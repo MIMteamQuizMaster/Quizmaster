@@ -64,9 +64,6 @@ public class Question {
         this.mixedAnswers = mixedAnswers;
     }
 
-    public int getQuestionId() {
-        return questionId;
-    }
 
     /**
      * @should return a mixed version of answers.

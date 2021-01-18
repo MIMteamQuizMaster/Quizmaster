@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane prefHeight="433.0" prefWidth="654.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.FillOutFormNewController">
+   <children>
+      <Pane layoutX="10.0" layoutY="5.0" prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <TableView fx:id="answerTable" layoutX="125.0" layoutY="100.0" prefHeight="100.0" prefWidth="350.0">
+              <columns>
+                <TableColumn fx:id="firstColumn" prefWidth="70.0" />
+                <TableColumn fx:id="secondColumn" prefWidth="70.0" />
+                  <TableColumn fx:id="thirdColumn" prefWidth="128.66668701171875" />
+                  <TableColumn fx:id="fourthColumn" prefWidth="79.33334350585938" sortable="false" />
+              </columns>
+            </TableView>
+            <Button fx:id="nextButton" layoutX="481.0" layoutY="338.0" mnemonicParsing="false" onAction="#nextButtonAction" text="Volgende" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
