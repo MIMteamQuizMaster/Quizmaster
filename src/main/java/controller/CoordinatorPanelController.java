@@ -121,7 +121,6 @@ public class CoordinatorPanelController {
         answerTable.getItems().clear();
         quizzesTable.getItems().clear();
         questionTable.getItems().clear();
-
         // empty text area and checkbox
         textQuestion.clear();
         textAnswer.clear();
@@ -198,7 +197,6 @@ public class CoordinatorPanelController {
         colQuestion.setCellValueFactory(cellData -> cellData.getValue().questionProperty());
         colTotalAnswer.setCellValueFactory(cellData -> cellData.getValue().getTotalAnswer().asObject());
         colTotatlGood.setCellValueFactory(cellData -> cellData.getValue().getTotalGoodAnswer().asObject());
-
         colDelQuestion.setCellFactory(cellData -> new TableCell<QuestionFx, Void>() {
             private final Button editButton = new Button("bijwerken");
             private final Button deleteButton = new Button("Verwijderen");
@@ -230,8 +228,6 @@ public class CoordinatorPanelController {
                 setGraphic(empty ? null : pane);
             }
         });
-
-
         questionTable.setItems(questionFxes);
         btnQuestionPanelOpen.setDisable(false);
     }
@@ -304,25 +300,21 @@ public class CoordinatorPanelController {
         if (selectedCourse != null) {
             fillQuizTable();
             btnQuizPanelOpen.setDisable(false);
+            textQuizName.clear();
+            textSuccessDefinite.clear();
+            textTimeLimit.clear();
 
         } else {
-            selectedQuiz = null;
-            selectedQuestion = null;
-            selectedAnswer = null;
-            btnQuizPanelOpen.setDisable(true);
             emptyFieldsAndSelected();
         }
         if(quizPane.isExpanded()){
             expandTitledPane(new ActionEvent(), quizPane);
         }
-        textQuizName.clear();
-        textSuccessDefinite.clear();
-        textTimeLimit.clear();
+
     }
 
     public void refreshQuestionTable() {
         if (selectedQuiz != null) {
-            fillQuestionTable();
             btnQuestionPanelOpen.setDisable(false);
         } else {
             questionTable.getItems().clear();
@@ -381,7 +373,7 @@ public class CoordinatorPanelController {
             emptyFieldsAndSelected();
             selectedCourse = courseTable.getSelectionModel().getSelectedItem();
             refreshQuizTable();
-
+            refreshQuestionTable();
         }
     }
 
@@ -403,7 +395,6 @@ public class CoordinatorPanelController {
             // set selected quiz
             this.selectedQuestion = questionTable.getSelectionModel().getSelectedItem();
             refreshAnswerTable();
-
         }
     }
 
@@ -419,7 +410,6 @@ public class CoordinatorPanelController {
 
         }
     }
-
 
     /**
      * Limit adding new answer if the given answer is extra or its the second correct answer
@@ -480,10 +470,12 @@ public class CoordinatorPanelController {
         if (r) {
             dao.deleteAnswer(selectedAnswer.getAnswerObject());
             selectedAnswer = null;
+            int a = questionTable.getSelectionModel().getSelectedIndex();
+            refreshQuestionTable();
+            questionTable.getSelectionModel().select(a);
             refreshAnswerTable();
         }
     }
-
 
     /**
      * Save or update quiz
@@ -566,7 +558,6 @@ public class CoordinatorPanelController {
 
     }
 
-
     /**
      * add answer to the databes according to the last selected question
      */
@@ -574,6 +565,7 @@ public class CoordinatorPanelController {
         String answerString = textAnswer.getText();
         boolean isCorrect = cBoxAnswerIsCorrect.isSelected();
         Answer answer;
+
         if (selectedAnswer != null) {
             //update
             answer = selectedAnswer.getAnswerObject();
@@ -587,6 +579,7 @@ public class CoordinatorPanelController {
             answer.setId(0);
 
         }
+
         if (!limitAnswers(answer)) {
             new Alert(Alert.AlertType.ERROR, "max 4 answer and 1 good answer").show();
             return;
@@ -598,7 +591,10 @@ public class CoordinatorPanelController {
         if (answer != null) { // after succesfull add we disable the editMode
             selectedAnswer = new AnswerFx(answer);
             expandTitledPane(new ActionEvent(), answerPane);
+            int a = questionTable.getSelectionModel().getSelectedIndex();
             refreshQuestionTable();
+            questionTable.getSelectionModel().select(a);
+
             textAnswer.clear();
         }
 
@@ -661,14 +657,12 @@ public class CoordinatorPanelController {
             b = (Button) n.getChildren().get(1);
         }
         if (selectedPane.isExpanded()) {
-
             selectedPane.setCollapsible(true);
             selectedPane.setExpanded(false);
             selectedPane.setCollapsible(false);
             b.setText("Nieuw");
             b.setStyle("-fx-background-color: green");
         } else {
-
             selectedPane.setCollapsible(true);
             selectedPane.setExpanded(true);
             selectedPane.setCollapsible(false);
