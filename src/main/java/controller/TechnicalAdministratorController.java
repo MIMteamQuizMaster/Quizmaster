@@ -103,7 +103,9 @@ public class TechnicalAdministratorController {
                     UserFx u = getTableRow().getItem();
                     this.setGraphic(passwordField);
                     String currentPassword = showPasswordString(u.getUserObject());
+                    Tooltip tooltip = new Tooltip("From the moment you see this field, you have 10 second to type the password.\n It will be Automatically saved.");
                     passwordField.setText(currentPassword);
+                    passwordField.setTooltip(tooltip);
                     Timer timer = new Timer();
                     TimerTask task = new TimerTask() {
                         @Override
@@ -126,7 +128,7 @@ public class TechnicalAdministratorController {
                             });
                         }
                     };
-                    timer.schedule(task, 9000L);
+                    timer.schedule(task, 10000L);
 
                 });
 
