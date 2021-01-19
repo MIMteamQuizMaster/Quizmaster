@@ -5,17 +5,26 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TeacherController">
    <children>
-      <TableView fx:id="leftTable" layoutX="200.0" layoutY="131.0" prefHeight="200.0" prefWidth="200.0">
+      <TableView fx:id="classTable" layoutX="100.0" layoutY="14.0" prefHeight="200.0" prefWidth="150.0">
         <columns>
-          <TableColumn fx:id="classColumn" prefWidth="75.0" text="Klas" />
-          <TableColumn fx:id="studentColumn" prefWidth="75.0" text="Student" />
+          <TableColumn fx:id="classColumn" prefWidth="149.0" text="Klas" />
         </columns>
       </TableView>
-      <TableView fx:id="rightTable" layoutX="400.0" layoutY="131.0" prefHeight="200.0" prefWidth="200.0">
-        <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
-        </columns>
-      </TableView>
+       <TableView fx:id="studentTable" layoutX="250.0" layoutY="14.0" prefHeight="200.0" prefWidth="150.0">
+           <columns>
+               <TableColumn fx:id="studentColumn" prefWidth="149.0" text="Student" />
+           </columns>
+       </TableView>
+       <TableView fx:id="quizTable" layoutX="400.0" layoutY="14.0" prefHeight="200.0" prefWidth="150.0">
+           <columns>
+               <TableColumn fx:id="quizColumn" prefWidth="149.0" text="Quiz" />
+           </columns>
+       </TableView>
+       <TableView fx:id="gradeTable" layoutX="550.0" layoutY="14.0" prefHeight="200.0" prefWidth="150.0">
+           <columns>
+               <TableColumn fx:id="gradeColumn" prefWidth="149.0" text="Cijfer" />
+           </columns>
+       </TableView>
+      <ComboBox fx:id="groupComboBox" layoutX="100.0" layoutY="300.0" prefWidth="150.0" promptText="Selecteer groep" />
    </children>
 </AnchorPane>
