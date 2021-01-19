@@ -25,6 +25,6 @@
                <TableColumn fx:id="gradeColumn" prefWidth="149.0" text="Cijfer" />
            </columns>
        </TableView>
-      <ComboBox fx:id="groupComboBox" layoutX="100.0" layoutY="300.0" prefWidth="150.0" promptText="Selecteer groep" />
+      <ComboBox fx:id="groupComboBox" layoutX="100.0" layoutY="300.0" onAction="#groupComboBoxSelected" prefWidth="150.0" promptText="Selecteer groep" />
    </children>
 </AnchorPane>

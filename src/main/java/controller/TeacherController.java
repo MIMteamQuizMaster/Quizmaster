@@ -57,6 +57,12 @@ public class TeacherController implements Initializable {
     @FXML
     public ComboBox<ClassFX> groupComboBox;
 
+    private ObservableList<ClassFX> classes = null;
+
+    //TODO: create StudentFX, use instead of UserFx
+    private ObservableList<UserFx> students = null;
+    private ObservableList<GradeFX> grades = null;
+
 
 
 
@@ -70,17 +76,16 @@ public class TeacherController implements Initializable {
         loggedInUser = new Teacher(10040,"piet","paulusma");
 
         fillTable();
+
+        selectStudents();
     }
 
     /**
      * Fill each table with respective objects in TableColumn
      */
     public void fillTable() {
-        ObservableList<ClassFX> classes;
 
         //TODO: create StudentFX, use instead of UserFx
-        ObservableList<UserFx> students;
-        ObservableList<GradeFX> grades;
 
 
         classes = convertClassToClassFX(dao.getAllClasses(loggedInUser));
@@ -89,15 +94,22 @@ public class TeacherController implements Initializable {
         //System.out.println(grades.get(0).getGrade());
         classColumn.setCellValueFactory(cellData -> cellData.getValue().dbIdProperty().asObject());
 
-        studentColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         quizColumn.setCellValueFactory(cellData -> cellData.getValue().quizIdProperty().asObject());
         gradeColumn.setCellValueFactory(cellData -> cellData.getValue().gradeProperty().asObject());
 
         classTable.getItems().addAll(classes);
-        studentTable.getItems().addAll(students);
         quizTable.getItems().addAll(grades);
         gradeTable.getItems().addAll(grades);
 
+
+
+        studentTable.getItems().addAll(students);
+
+    }
+
+
+
+    public void selectStudents() {
         groupComboBox.setItems(classes);
 
         groupComboBox.setConverter(new StringConverter<ClassFX>() {
@@ -110,6 +122,16 @@ public class TeacherController implements Initializable {
             public ClassFX fromString(String s) {
                 return null;
             }
+        });
+
+        groupComboBox.setOnAction((event) -> {
+            int selectedIndex = groupComboBox.getSelectionModel().getSelectedIndex();
+            ClassFX selectedItem = groupComboBox.getSelectionModel().getSelectedItem();
+
+            students = convertUserToUserFX(dao.getStudentsPerClass(selectedItem.getClassObject()));
+
+            System.out.println("Selection made: [" + selectedIndex + "] " + selectedItem);
+            System.out.println("   ComboBox.getValue(): " + groupComboBox.getValue());
         });
 
 
