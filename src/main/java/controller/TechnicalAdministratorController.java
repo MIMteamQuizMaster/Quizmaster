@@ -4,6 +4,8 @@ import database.mysql.DBAccess;
 import database.mysql.TechnischBeheerderDAO;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -86,17 +88,24 @@ public class TechnicalAdministratorController {
      * add or refresh the table of users
      */
     public void refreshTable() {
-        table_users.refresh();
+
         table_users.getItems().clear();
         ObservableList<UserFx> tableListUsers = convertUserToUserFX(dao.getAllusers());
         col_id.setCellValueFactory(cellData -> cellData.getValue().userIdProperty().asObject());
         col_fname.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+
         col_lname.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
         col_richting.setCellValueFactory(cellData -> cellData.getValue().studieRichtingProperty());
         col_role.setCellValueFactory(cellData -> cellData.getValue().rolesProperty().asString());
         addSetCredentialBtnToUserTable();
+        addEndBtnToUserTable();
+        table_users.setItems(tableListUsers);
+
+    }
+
+    private void addEndBtnToUserTable() {
         col_delete.setCellFactory(cellData -> new TableCell<UserFx,Void>(){
-            private final Button delButton = new Button("end");
+            private final Button delButton = new Button("Beëindigen");
 
             {
                 delButton.setOnAction(event ->
@@ -105,7 +114,8 @@ public class TechnicalAdministratorController {
                     if(r){
                         UserFx u = getTableRow().getItem();
                         dao.setEnd(u.getUserObject());
-                        refreshTable();
+
+                        table_users.getItems().remove(u);
                     }
 
                 });
@@ -119,8 +129,6 @@ public class TechnicalAdministratorController {
 
             }
         });
-        table_users.setItems(tableListUsers);
-
     }
 
     private void addSetCredentialBtnToUserTable() {
@@ -148,8 +156,7 @@ public class TechnicalAdministratorController {
                                         if (r) {
                                             savePassword(passwordField.getText(), u.getUserObject());
                                             refreshTable();
-//                                            editButton.setStyle("-fx-background-color: #ccffcc");
-//                                            editButton.setText("Edit Credential");
+
                                         }
                                     }
                                 setGraphic(editButton);
@@ -166,15 +173,23 @@ public class TechnicalAdministratorController {
                 super.updateItem(item, empty);
                 if (!empty) {
                     setGraphic(editButton);
-                    UserFx user = getTableRow().getItem();
-                    String pass = showPasswordString(user.getUserObject());
-                    if (pass.equals("")) {
-                        editButton.setStyle("-fx-background-color: #f6a3a3");
-                        editButton.setText("Set Credential");
-                    } else {
-                        editButton.setStyle("-fx-background-color: #ccffcc");
-                        editButton.setText("Edit Credential");
+
+                    try{
+                        UserFx user = getTableRow().getItem();
+                        String pass = showPasswordString(user.getUserObject());
+                        if (pass.equals("")) {
+                            editButton.setStyle("-fx-background-color: #f6a3a3");
+                            editButton.setText("Set Credential");
+                        } else {
+                            editButton.setStyle("-fx-background-color: #ccffcc");
+                            editButton.setText("Edit Credential");
+                        }
+                    }catch (NullPointerException e){
+                        table_users.refresh();
+                        UserFx user = getTableRow().getItem();
+                        System.out.println("null");
                     }
+
                 }
 
             }
@@ -309,7 +324,10 @@ public class TechnicalAdministratorController {
                     roles);
             u = dao.saveUser(u);
 
-            refreshTable();
+            table_users.refresh();
+            table_users.getItems().add(new UserFx(u));
+
+
             return u;
         }
         return null;

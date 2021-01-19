@@ -530,7 +530,7 @@ public class CoordinatorPanelController {
             String quizName = textQuizName.getText();
             String sd = textSuccessDefinite.getText();
             String tl = textTimeLimit.getText();
-            if (!sd.equals("") && !tl.equals("") && !quizName.equals("")) {
+            if (!sd.equals("") && !quizName.equals("")) {
                 double succesDefinite = Double.parseDouble(sd);
                 int timeLimit = Integer.parseInt(tl);
                 Quiz quiz;
