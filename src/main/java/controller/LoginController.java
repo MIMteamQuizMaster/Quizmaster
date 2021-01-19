@@ -17,7 +17,7 @@ import model.User;
 public class LoginController {
     private final DBAccess dBaccess;
     public Label warningLabel;
-    private LoginDAO dao;
+    private final LoginDAO dao;
     public TextField loginUsername;
     public TextField loginUnMaskedPassword;
     public PasswordField loginMaskedPassword;
@@ -64,7 +64,7 @@ public class LoginController {
                 Main.getSceneManager().showWelcome();
             } else {
 
-                loginMaskedPassword.setStyle("-fx-border-color: red;");
+                loginMaskedPassword.setStyle("-fx-border-color: #ff0000;");
                 loginUnMaskedPassword.setStyle("-fx-border-color: red;");
                 warningLabel.setText("De gebruikersnaam of het wachtwoord is niet correct.");
                 warningLabel.setVisible(true);
@@ -99,14 +99,10 @@ public class LoginController {
 
     public void onlyIntegerAcceptable(KeyEvent keyEvent) {
 //        System.out.println(keyEvent.getCode());
-        if (keyEvent.getCode() == KeyCode.BACK_SPACE ||
+        loginUsername.setEditable(keyEvent.getCode() == KeyCode.BACK_SPACE ||
                 keyEvent.getCode().isDigitKey() ||
                 keyEvent.getCode().isKeypadKey() ||
-                keyEvent.getCode().isArrowKey()) {
-            loginUsername.setEditable(true);
-        } else {
-            loginUsername.setEditable(false);
-        }
+                keyEvent.getCode().isArrowKey());
         warningLabel.setVisible(false);
     }
 }

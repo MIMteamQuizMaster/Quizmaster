@@ -8,7 +8,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 
 import launcher.Main;
 import model.Role;
@@ -232,7 +231,7 @@ public class TechnicalAdministratorController {
             // Selected user is UserFX but dao Parameter is User
             // the User Objet is stored in UserFX so
 
-            dao.updateUser(selectedUser.getUserObject());
+            dao.saveUser(selectedUser.getUserObject());
             refreshTable();
             editMode(false);
         }
@@ -296,17 +295,18 @@ public class TechnicalAdministratorController {
         boolean r = AlertHelper.confirmationDialog("Wilt u deze gebruiker toevoegen aan de databank?");
 
         if (r) {
-//            Role role = Role.getRole(rolesComboBox.getValue());
+            List<String> allChecked = rolesComboBox.getCheckModel().getCheckedItems();
             List<Role> roles = new ArrayList<>();
-            //TODO get roles from comboBox
-//            roles.add(role);
+
+            for (String stringRole : allChecked) {
+                roles.add(Role.getRole(stringRole));
+            }
             User u = new User(0,
                     voornaamField.getText(),
                     achternaamField.getText(),
                     richtingField.getText(),
                     roles);
-            int id = dao.addNewUser(u);
-            u.setUserId(id);
+            u = dao.saveUser(u);
             refreshTable();
             return u;
         }

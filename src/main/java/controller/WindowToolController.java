@@ -10,7 +10,7 @@ import java.io.File;
 
 public class WindowToolController {
 
-    private SceneManager sceneManager = Main.getSceneManager();
+    private final SceneManager sceneManager = Main.getSceneManager();
 
     @FXML
     private MenuButton screenMenuButton;

@@ -11,7 +11,7 @@ public class AnswerFx {
     private SimpleIntegerProperty questionId;
     private SimpleBooleanProperty isCorrect;
     private SimpleStringProperty answer;
-    private Answer answerObject;
+    private final Answer answerObject;
 
 
     public AnswerFx(Answer a) {
