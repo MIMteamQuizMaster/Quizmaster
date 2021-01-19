@@ -254,5 +254,5 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
-CREATE USER 'quizmasteruser'@'localhost' IDENTIFIED BY 'pwQuizMaster';
-GRANT ALL PRIVILEGES ON quizmaster.* TO 'quizmasteruser'@'localhost';
+CREATE USER 'quizmasteruser'@'%' IDENTIFIED BY 'pwQuizMaster';
+GRANT ALL PRIVILEGES ON quizmaster.* TO 'quizmasteruser'@'%';

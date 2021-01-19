@@ -7,7 +7,7 @@ import model.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.RowId;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -23,12 +23,12 @@ public class TechnischBeheerderDAO extends AbstractDAO {
 
 
     public ObservableList<User> getAllusers() {
-        String sql = "SELECT DISTINCT u.user_id , u.firstname, u.lastname,u.studierichting FROM user u ";
-//        "left join  user_role ur on u.user_id = ur.user_id \n" +
-//                "left join role r on ur.role_id = r.id";
+        String sql = "SELECT DISTINCT u.user_id , u.firstname, u.lastname,u.studierichting FROM user u where deletionDate > ? or deletionDate is null";
+
         ObservableList<User> rList = FXCollections.observableArrayList();
         try {
             PreparedStatement ps = getStatement(sql);
+            ps.setDate(1,java.sql.Date.valueOf(java.time.LocalDate.now()));
             ResultSet resultSet = executeSelectPreparedStatement(ps);
             while (resultSet.next()) {
                 int user_id = resultSet.getInt("user_id");
@@ -65,6 +65,7 @@ public class TechnischBeheerderDAO extends AbstractDAO {
                 int dbid = rs.getInt("id");
                 roles.put(dbid, r);
             }
+
             return roles;
         } catch (SQLException throwables) {
             System.out.println("Somthing wrong while retrieving roles of user ");
@@ -73,46 +74,34 @@ public class TechnischBeheerderDAO extends AbstractDAO {
 
     }
 
-    public int addNewUser(User u) {
-        String query = "INSERT INTO user\n" +
-                "(`firstname`,\n" +
-                "`lastname`,\n" +
-                "`studierichting`,\n" +
-                "`creationDate`)\n" +
-                "VALUES\n" +
-                "(?,?,?,?)";
-        int id = 0;
-        try {
-            PreparedStatement ps = getStatementWithKey(query);
-            ps.setString(1, u.getFirstName());
-            ps.setString(2, u.getLastName());
-            ps.setString(3, u.getStudieRichting());
-            ps.setDate(4, java.sql.Date.valueOf(java.time.LocalDate.now()));
-            id = executeInsertPreparedStatement(ps);
-            //TODO
-//            setRoleToUser(id, u.getRoles().toString());
-        } catch (SQLException throwables) {
-            System.out.println(throwables.getMessage() + " Somthing wrong while adding new user");
-            throwables.printStackTrace();
+    public User saveUser(User u) {
+        String query;
+        if (u.getUserId() == 0) { // then its a new Question
+            query = "INSERT INTO user (firstname, lastname, studierichting, user_id) VALUES (?,?,?,?)";
+        } else {// it is update case
+            query = "UPDATE user SET firstname = ? ,lastname = ?, studierichting =? WHERE user_id = ?";
         }
-        return id;
-    }
 
-    public void updateUser(User u) {
-        String query = "UPDATE user SET firstname = ? ,lastname = ?, studierichting =? WHERE user_id = ?";
+        int key = 0;
         try {
             PreparedStatement ps = getStatementWithKey(query);
             ps.setString(1, u.getFirstName());
             ps.setString(2, u.getLastName());
             ps.setString(3, u.getStudieRichting());
             ps.setInt(4, u.getUserId());
-            executeManipulatePreparedStatement(ps);
+            key = executeInsertPreparedStatement(ps);
+            if(u.getUserId() == 0){
+                u.setUserId(key);
+            }
             setRoleToUser(u, u.getRoles());
+            return u;
         } catch (SQLException throwables) {
-            System.out.println(throwables.getMessage() + " Somthing wrong while updating");
+            System.out.println(throwables.getMessage() + " Somthing wrong while adding/Updating new user");
             throwables.printStackTrace();
         }
+        return null;
     }
+
 
     public int getRoleId(String roleString) {
         String query = "SELECT id FROM role where name = ?";
@@ -142,6 +131,7 @@ public class TechnischBeheerderDAO extends AbstractDAO {
             throwables.printStackTrace();
         }
     }
+
 
     public void setRoleToUser(User u, List<Role> roles) {
         HashMap<Integer, Role> userAlreadyHaveRoles = getUserRoles(u);
@@ -173,7 +163,6 @@ public class TechnischBeheerderDAO extends AbstractDAO {
 
         }
 
-
     }
 
     public String getCredential(int userID) {
@@ -191,6 +180,18 @@ public class TechnischBeheerderDAO extends AbstractDAO {
             System.out.println(throwables.getMessage() + " Somthing wrong while getting credentials");
         }
         return returnString;
+    }
+
+    public void setEnd(User u){
+        try {
+            String query = "UPDATE user set deletionDate = ? WHERE user_id = ?";
+            PreparedStatement ps = getStatement(query);
+            ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            ps.setInt(2, u.getUserId());
+            executeManipulatePreparedStatement(ps);
+        } catch (SQLException throwables) {
+            System.out.println(throwables.getMessage() + " Somthing wrong while ending user membership");
+        }
     }
 
     public void setCredential(int userID, String password) {

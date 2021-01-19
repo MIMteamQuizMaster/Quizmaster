@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import model.*;
 
 public class CourseFx {
-    private Course course;
+    private final Course course;
 
     public CourseFx(Course c) {
         this.course = c;

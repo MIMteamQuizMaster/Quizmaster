@@ -3,10 +3,10 @@ package model;
 import java.util.List;
 
 public class Group {
-    private String name;
+    private final String name;
     private Teacher teacher;
     private Coordinator coordinator;
-    private List<Student> students;
+    private final List<Student> students;
 
     public Group(String name, Teacher teacher, Coordinator coordinator, List<Student> students) {
         this.name = name;

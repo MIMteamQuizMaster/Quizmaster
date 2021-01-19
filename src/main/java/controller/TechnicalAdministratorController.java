@@ -8,7 +8,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 
 import launcher.Main;
 import model.Role;
@@ -26,6 +25,7 @@ import static controller.fx.ObjectConvertor.*;
 
 public class TechnicalAdministratorController {
 
+
     @FXML
     private TableView<UserFx> table_users;
     @FXML
@@ -39,6 +39,7 @@ public class TechnicalAdministratorController {
     @FXML
     private TableColumn<UserFx, String> col_role;
     public TableColumn<UserFx, Void> col_actie;
+    public TableColumn<UserFx,Void> col_delete;
     @FXML
     private TextField richtingField;
     @FXML
@@ -70,7 +71,7 @@ public class TechnicalAdministratorController {
 
 
     /**
-     * Get the roles frome Database and fill the ComboBox for User.
+     * Get the roles fill the ComboBox for User.
      */
     public void populateRoleMenu() {
         ObservableList<String> roleList = FXCollections.observableArrayList();
@@ -78,7 +79,6 @@ public class TechnicalAdministratorController {
             roleList.add(r.toString());
         }
         rolesComboBox.getItems().addAll(roleList);
-
     }
 
 
@@ -86,6 +86,7 @@ public class TechnicalAdministratorController {
      * add or refresh the table of users
      */
     public void refreshTable() {
+        table_users.refresh();
         table_users.getItems().clear();
         ObservableList<UserFx> tableListUsers = convertUserToUserFX(dao.getAllusers());
         col_id.setCellValueFactory(cellData -> cellData.getValue().userIdProperty().asObject());
@@ -93,17 +94,47 @@ public class TechnicalAdministratorController {
         col_lname.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
         col_richting.setCellValueFactory(cellData -> cellData.getValue().studieRichtingProperty());
         col_role.setCellValueFactory(cellData -> cellData.getValue().rolesProperty().asString());
+        addSetCredentialBtnToUserTable();
+        col_delete.setCellFactory(cellData -> new TableCell<UserFx,Void>(){
+            private final Button delButton = new Button("end");
+
+            {
+                delButton.setOnAction(event ->
+                {
+                    boolean r = AlertHelper.confirmationDialog("Wilt u de lidmaatschap ven deze gebruiker beëindigen?");
+                    if(r){
+                        UserFx u = getTableRow().getItem();
+                        dao.setEnd(u.getUserObject());
+                        refreshTable();
+                    }
+
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) {
+                    setGraphic(delButton);
+                }
+
+            }
+        });
+        table_users.setItems(tableListUsers);
+
+    }
+
+    private void addSetCredentialBtnToUserTable() {
         col_actie.setCellFactory(cellData -> new TableCell<UserFx, Void>() {
             private final Button editButton = new Button("Set Credential");
             private final TextField passwordField = new TextField("");
-
             {
-
                 editButton.setOnAction(event -> {
                     UserFx u = getTableRow().getItem();
                     this.setGraphic(passwordField);
                     String currentPassword = showPasswordString(u.getUserObject());
+                    Tooltip tooltip = new Tooltip("From the moment you see this field, you have 10 second to type the password.\n It will be Automatically saved.");
                     passwordField.setText(currentPassword);
+                    passwordField.setTooltip(tooltip);
                     Timer timer = new Timer();
                     TimerTask task = new TimerTask() {
                         @Override
@@ -126,12 +157,10 @@ public class TechnicalAdministratorController {
                             });
                         }
                     };
-                    timer.schedule(task, 9000L);
+                    timer.schedule(task, 10000L);
 
                 });
-
             }
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -150,8 +179,6 @@ public class TechnicalAdministratorController {
 
             }
         });
-        table_users.setItems(tableListUsers);
-
     }
 
     /**
@@ -205,7 +232,7 @@ public class TechnicalAdministratorController {
             // Selected user is UserFX but dao Parameter is User
             // the User Objet is stored in UserFX so
 
-            dao.updateUser(selectedUser.getUserObject());
+            dao.saveUser(selectedUser.getUserObject());
             refreshTable();
             editMode(false);
         }
@@ -269,17 +296,19 @@ public class TechnicalAdministratorController {
         boolean r = AlertHelper.confirmationDialog("Wilt u deze gebruiker toevoegen aan de databank?");
 
         if (r) {
-//            Role role = Role.getRole(rolesComboBox.getValue());
+            List<String> allChecked = rolesComboBox.getCheckModel().getCheckedItems();
             List<Role> roles = new ArrayList<>();
-            //TODO get roles from comboBox
-//            roles.add(role);
+
+            for (String stringRole : allChecked) {
+                roles.add(Role.getRole(stringRole));
+            }
             User u = new User(0,
                     voornaamField.getText(),
                     achternaamField.getText(),
                     richtingField.getText(),
                     roles);
-            int id = dao.addNewUser(u);
-            u.setUserId(id);
+            u = dao.saveUser(u);
+
             refreshTable();
             return u;
         }

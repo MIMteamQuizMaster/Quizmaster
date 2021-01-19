@@ -15,7 +15,7 @@ import java.net.URL;
 
 public class SceneManager {
 
-    private Stage primaryStage;
+    private final Stage primaryStage;
     private Pane view;
 
     public SceneManager(Stage primaryStage) {
