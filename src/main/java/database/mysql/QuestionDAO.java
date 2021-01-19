@@ -14,14 +14,14 @@ import java.util.List;
 
 public class QuestionDAO extends AbstractDAO {
     private AnswerDAO answerDAO;
+
     public QuestionDAO(DBAccess dBaccess) {
         super(dBaccess);
         this.answerDAO = new AnswerDAO(dBaccess);
 
     }
 
-    public List<Question> getQuestionsForCourse(int courseId)
-    {
+    public List<Question> getQuestionsForCourse(int courseId) {
         List<Question> questions = new ArrayList<>();
         String sql = String.format("SELECT * FROM question\n" +
                 "WHERE quiz_id=%d;", courseId);
@@ -29,8 +29,7 @@ public class QuestionDAO extends AbstractDAO {
             PreparedStatement preparedStatement = getStatement(sql);
             Question question;
             ResultSet rs = executeSelectPreparedStatement(preparedStatement);
-            while (rs.next())
-            {
+            while (rs.next()) {
                 String questionToCourse = rs.getString(3);
                 int correct = rs.getInt(3);
                 question = new Question(questionToCourse);
