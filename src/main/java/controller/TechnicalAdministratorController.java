@@ -86,6 +86,7 @@ public class TechnicalAdministratorController {
      * add or refresh the table of users
      */
     public void refreshTable() {
+        table_users.refresh();
         table_users.getItems().clear();
         ObservableList<UserFx> tableListUsers = convertUserToUserFX(dao.getAllusers());
         col_id.setCellValueFactory(cellData -> cellData.getValue().userIdProperty().asObject());
@@ -307,6 +308,7 @@ public class TechnicalAdministratorController {
                     richtingField.getText(),
                     roles);
             u = dao.saveUser(u);
+
             refreshTable();
             return u;
         }
