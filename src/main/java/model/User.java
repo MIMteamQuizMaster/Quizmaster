@@ -10,28 +10,28 @@ public class User {
     private String firstName;
     private String lastName;
     private String studieRichting;
-    private Role role;
+    private List<Role> roles;
 
 
     public User(int userId, String firstName, String lastName) {
-        this(userId, firstName, lastName, "Onbekend", null);
+        this(userId, firstName, lastName, "Onbekend", new ArrayList<>());
     }
 
-    public User(int userId, String firstName, String lastName, String studieRichting, Role r) {
+    public User(int userId, String firstName, String lastName, String studieRichting, List<Role> r) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.studieRichting = studieRichting;
-        this.role = r;
-//        this.role.add(r);
+        this.roles = r;
+
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public void setRole(Role r){
-        this.role = r;
+    public void setRoles(List<Role> r){
+        this.roles = r;
     }
 
     public void setFirstName(String firstName) {
@@ -62,8 +62,8 @@ public class User {
         return studieRichting;
     }
 
-    public Role getRole() {
-        return role;
+    public List<Role> getRoles() {
+        return roles;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class User {
                 ", firstName=" + firstName +
                 ", lastName=" + lastName +
                 ", studieRichting=" + studieRichting +
-                ", role=" + role +
+                ", role=" + roles +
                 '}';
     }
 }

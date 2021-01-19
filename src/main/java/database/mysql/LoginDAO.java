@@ -5,6 +5,8 @@ import model.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginDAO extends AbstractDAO {
     public LoginDAO(DBAccess dBaccess) {
@@ -29,67 +31,83 @@ public class LoginDAO extends AbstractDAO {
         return false;
     }
 
-    public User getUser(int user_id){
-        String sql = "SELECT u.* , r.name as role FROM quizmaster.user u, quizmaster.user_role ur , quizmaster.role r\n" +
-                "where u.user_id = ur.user_id and ur.role_id = r.id and u.user_id = ?";
+    public User getUser(int user_id) {
+        String sql = "SELECT u.*, ur.endDate , r.name as role FROM quizmaster.user u, quizmaster.user_role ur , quizmaster.role r where u.user_id = ur.user_id and ur.role_id = r.id and \n" +
+                "u.user_id = ? and\n" +
+                "( ur.endDate > ? or ur.endDate is null)";
         try {
             PreparedStatement ps = getStatement(sql);
             ps.setInt(1, user_id);
+            ps.setDate(2,java.sql.Date.valueOf(java.time.LocalDate.now()));
 
             ResultSet resultSet = executeSelectPreparedStatement(ps);
-            while (resultSet.next()) {
-                int uid = resultSet.getInt("user_id");
-                String fname = resultSet.getString("firstname");
-                String lname = resultSet.getString("lastname");
-                String richting = resultSet.getString("studierichting");
+            List<Role> roles = new ArrayList<>();
+            int uid =0;
+            String fname = "";
+            String lname = "";
+            String richting = "";
 
+            while (resultSet.next()) {
+                uid = resultSet.getInt("user_id");
+                fname = resultSet.getString("firstname");
+                lname = resultSet.getString("lastname");
+                richting = resultSet.getString("studierichting");
+                Role r;
                 String role = resultSet.getString("role");
                 try {
-                    Role r = Role.getRole(role);
+                    r = Role.getRole(role);
                     System.out.println(r);
-                    return makeUserObject(uid,fname,lname,richting,r);
-                }catch (Exception e){
+
+                } catch (Exception e) {
                     System.out.println("Something is wrong with user role.");
                     return null;
                 }
+                roles.add(r);
             }
+
+            return new User(uid, fname, lname, richting, roles);
         } catch (SQLException throwables) {
             System.out.println(throwables.getMessage() + "Something is wrong with GettingUser.");
         }
         return null;
     }
 
-    private User makeUserObject(int uid,String fname ,String lname,String richting,Role r){
+/*
+    private User makeUserObject(int uid, String fname, String lname, String richting, List<Role> roles) {
         User returnUser = null;
-        switch (r){
+        for (Role r : roles) {
+
+        }
+        switch (r) {
             case STUDENT:
-                returnUser = new Student(uid,fname,lname);
-                returnUser.setRole(Role.STUDENT);
+                returnUser = new Student(uid, fname, lname);
+                returnUser.setRoles(Role.STUDENT);
                 break;
             case TEACHER:
                 ///
-                returnUser = new Teacher(uid,fname,lname);
-                returnUser.setRole(Role.TEACHER);
+                returnUser = new Teacher(uid, fname, lname);
+                returnUser.setRoles(Role.TEACHER);
                 break;
             case COORDINATOR:
                 ///
-                returnUser = new Coordinator(uid,fname,lname);
-                returnUser.setRole(Role.COORDINATOR);
+                returnUser = new Coordinator(uid, fname, lname);
+                returnUser.setRoles(Role.COORDINATOR);
                 break;
             case ADMINISTRATOR:
                 ///
-                returnUser = new Administrator(uid,fname,lname);
-                returnUser.setRole(Role.ADMINISTRATOR);
+                returnUser = new Administrator(uid, fname, lname);
+                returnUser.setRoles(Role.ADMINISTRATOR);
                 break;
             case TECHNICAL_ADMINISTRATOR:
                 ///
-                returnUser = new User(uid,fname,lname);
-                returnUser.setRole(Role.TECHNICAL_ADMINISTRATOR);
+                returnUser = new User(uid, fname, lname);
+                returnUser.setRoles(Role.TECHNICAL_ADMINISTRATOR);
                 break;
         }
         returnUser.setStudieRichting(richting);
         return returnUser;
     }
+*/
 }
 
 

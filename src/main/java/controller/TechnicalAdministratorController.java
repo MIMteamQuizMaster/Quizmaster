@@ -3,19 +3,29 @@ package controller;
 import database.mysql.DBAccess;
 import database.mysql.TechnischBeheerderDAO;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+
 import launcher.Main;
 import model.Role;
 import model.User;
 import controller.fx.UserFx;
+import org.controlsfx.control.CheckComboBox;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static controller.fx.ObjectConvertor.*;
 
 
 public class TechnicalAdministratorController {
+
     @FXML
     private TableView<UserFx> table_users;
     @FXML
@@ -27,27 +37,24 @@ public class TechnicalAdministratorController {
     @FXML
     private TableColumn<UserFx, String> col_richting;
     @FXML
-    private TableColumn<UserFx, Role> col_role;
+    private TableColumn<UserFx, String> col_role;
+    public TableColumn<UserFx, Void> col_actie;
     @FXML
     private TextField richtingField;
     @FXML
     private TextField achternaamField;
     @FXML
     private TextField voornaamField;
-    @FXML
-    private Label gebruikersidLabel;
+
     @FXML
     private Button updateUserbtn;
     @FXML
     private Button cancelBtn;
     @FXML
     private Button addUserbtn;
+
     @FXML
-    private TextField passwordField;
-    @FXML
-    private GridPane passwordPane;
-    @FXML
-    private ComboBox<String> rolesComboBox;
+    private CheckComboBox<String> rolesComboBox;
     private TechnischBeheerderDAO dao;
     private UserFx selectedUser;
 
@@ -70,14 +77,13 @@ public class TechnicalAdministratorController {
         for (Role r : Role.values()) {
             roleList.add(r.toString());
         }
-        rolesComboBox.setItems(roleList);
+        rolesComboBox.getItems().addAll(roleList);
+
     }
 
 
-
-
     /**
-     *  add or refresh the table of users
+     * add or refresh the table of users
      */
     public void refreshTable() {
         table_users.getItems().clear();
@@ -86,7 +92,64 @@ public class TechnicalAdministratorController {
         col_fname.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         col_lname.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
         col_richting.setCellValueFactory(cellData -> cellData.getValue().studieRichtingProperty());
-        col_role.setCellValueFactory(cellData -> cellData.getValue().roleProperty());
+        col_role.setCellValueFactory(cellData -> cellData.getValue().rolesProperty().asString());
+        col_actie.setCellFactory(cellData -> new TableCell<UserFx, Void>() {
+            private final Button editButton = new Button("Set Credential");
+            private final TextField passwordField = new TextField("");
+
+            {
+
+                editButton.setOnAction(event -> {
+                    UserFx u = getTableRow().getItem();
+                    this.setGraphic(passwordField);
+                    String currentPassword = showPasswordString(u.getUserObject());
+                    passwordField.setText(currentPassword);
+                    Timer timer = new Timer();
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            Platform.runLater(() -> {
+
+                                    if(!passwordField.getText().equals(currentPassword)){
+                                        boolean r = AlertHelper.confirmationDialog("Wilt u de wachtwoord van user id:" +
+                                                u.getUserId()
+                                                +" te veranderen?");
+                                        if (r) {
+                                            savePassword(passwordField.getText(), u.getUserObject());
+                                            refreshTable();
+//                                            editButton.setStyle("-fx-background-color: #ccffcc");
+//                                            editButton.setText("Edit Credential");
+                                        }
+                                    }
+                                setGraphic(editButton);
+
+                            });
+                        }
+                    };
+                    timer.schedule(task, 9000L);
+
+                });
+
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) {
+                    setGraphic(editButton);
+                    UserFx user = getTableRow().getItem();
+                    String pass = showPasswordString(user.getUserObject());
+                    if (pass.equals("")) {
+                        editButton.setStyle("-fx-background-color: #f6a3a3");
+                        editButton.setText("Set Credential");
+                    } else {
+                        editButton.setStyle("-fx-background-color: #ccffcc");
+                        editButton.setText("Edit Credential");
+                    }
+                }
+
+            }
+        });
         table_users.setItems(tableListUsers);
 
     }
@@ -94,41 +157,27 @@ public class TechnicalAdministratorController {
     /**
      * if a row in the user table is selected , the function add all information of the users to the TexTFields
      * and active the editmode
-     *
      */
     public void tableSelected() {
         if (table_users.getSelectionModel().getSelectedItem() != null) {
             this.selectedUser = table_users.getSelectionModel().getSelectedItem();
-            String pass = getPasswordString();
-            passwordField.setText(pass);
+
             voornaamField.setText(selectedUser.getFirstName());
             achternaamField.setText(selectedUser.getLastName());
             richtingField.setText((selectedUser.getStudieRichting()));
-            rolesComboBox.setValue((selectedUser.getRole() == null ? "" : selectedUser.getRole().toString()));
-            gebruikersidLabel.setText(String.valueOf(selectedUser.getUserId()));
-            passwordField.setText(dao.getCredential(selectedUser.getUserId()));
+            List<Role> roles = selectedUser.getRoles();
+            rolesComboBox.getCheckModel().clearChecks();
+            for (Role r : roles) {
+                rolesComboBox.getCheckModel().check(r.toString());
+            }
+
             editMode(true);
         }
     }
 
-    /**
-     * Check existence of credentials for the selected user in the table
-     * Also change the color of pane appropriate with the result of search
-     * @return the password of searched user
-     */
-    private String getPasswordString() {
-        String pass = dao.getCredential(this.selectedUser.getUserId());
-        if (pass == null) {
-            passwordPane.setStyle("-fx-background-color: red;");
-        } else {
-            passwordPane.setStyle("-fx-background-color: green;");
-        }
-        return pass;
-    }
 
     /**
      * clear the selection if the user change the table sort
-     *
      */
     public void clearSelectionOnSort() {
         table_users.getSelectionModel().clearSelection();
@@ -140,11 +189,18 @@ public class TechnicalAdministratorController {
     public void updateUser() {
         boolean r = AlertHelper.confirmationDialog("Wilt u deze gebruiker bijwerken in de databank?");
         if (r) {
-            Role role = Role.getRole(rolesComboBox.getValue());
+            List<String> allChecked = rolesComboBox.getCheckModel().getCheckedItems();
+            List<Role> roles = new ArrayList<>();
+
+            for (String stringRole : allChecked) {
+                roles.add(Role.getRole(stringRole));
+            }
+
             selectedUser.setFirstName(voornaamField.getText());
             selectedUser.setLastName(achternaamField.getText());
             selectedUser.setStudieRichting(richtingField.getText());
-            selectedUser.setRole(role);
+
+            selectedUser.setRoles(roles);
 
             // Selected user is UserFX but dao Parameter is User
             // the User Objet is stored in UserFX so
@@ -165,6 +221,7 @@ public class TechnicalAdministratorController {
 
     /**
      * this fucntion change the visiblity of UPDATE _ CANCEL _ ADD button also empty the fields
+     *
      * @param editMode boolean to determine the situation of panel
      */
     private void editMode(boolean editMode) {
@@ -197,8 +254,7 @@ public class TechnicalAdministratorController {
             voornaamField.setText("");
             achternaamField.setText("");
             richtingField.setText("");
-            rolesComboBox.setValue("");
-            gebruikersidLabel.setText("XXXXX");
+
             table_users.getSelectionModel().clearSelection();
         }
 
@@ -213,12 +269,15 @@ public class TechnicalAdministratorController {
         boolean r = AlertHelper.confirmationDialog("Wilt u deze gebruiker toevoegen aan de databank?");
 
         if (r) {
-            Role role = Role.getRole(rolesComboBox.getValue());
+//            Role role = Role.getRole(rolesComboBox.getValue());
+            List<Role> roles = new ArrayList<>();
+            //TODO get roles from comboBox
+//            roles.add(role);
             User u = new User(0,
                     voornaamField.getText(),
                     achternaamField.getText(),
                     richtingField.getText(),
-                    role);
+                    roles);
             int id = dao.addNewUser(u);
             u.setUserId(id);
             refreshTable();
@@ -229,16 +288,22 @@ public class TechnicalAdministratorController {
 
     /**
      * add credential to user in the Database
-     *
      */
-    public void setPasswordToUser() {
-        if(passwordField.getText() != null){
-            boolean r = AlertHelper.confirmationDialog("Wilt u de wachtwoord te veranderen?");
-            if (r) {
-            dao.setCredential(selectedUser.getUserId(),passwordField.getText());
-                String pass = getPasswordString();
-                passwordField.setText(pass);
-            }
+    public void savePassword(String text, User u) {
+        if (!text.equals("")) {
+            dao.setCredential(u.getUserId(), text);
         }
     }
+
+    /**
+     * Check existence of credentials for the selected user in the table
+     * Also change the color of pane appropriate with the result of search
+     *
+     * @return the password of searched user
+     */
+    private String showPasswordString(User u) {
+        return dao.getCredential(u.getUserId());
+    }
+
+
 }

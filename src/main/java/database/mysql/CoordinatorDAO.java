@@ -9,6 +9,7 @@ import model.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 
 public class CoordinatorDAO extends AbstractDAO {
@@ -197,27 +198,27 @@ public class CoordinatorDAO extends AbstractDAO {
         return deleteQuery(query, questionId);
     }
 
-    public Boolean deleteAnswer(Answer answer) {
+    public Boolean deleteAnswer(Answer answer)  {
         String query = "DELETE FROM answer WHERE id= ?";
         int answerid = answer.getId();
         return deleteQuery(query, answerid);
     }
 
-    public Boolean deleteQuiz(Quiz quiz) {
+    public Boolean deleteQuiz(Quiz quiz)  {
         String query = "DELETE FROM quiz WHERE id= ?";
         int quizId = quiz.getIdquiz();
         return deleteQuery(query, quizId);
     }
 
-    private Boolean deleteQuery(String query, int i) {
+    private Boolean deleteQuery(String query, int i)  {
         try {
             PreparedStatement ps = getStatementWithKey(query);
             ps.setInt(1, i);
             executeManipulatePreparedStatement(ps);
             executeInsertPreparedStatement(ps);
             return true;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (Exception throwables) {
+            System.out.println(throwables.getCause());
         }
         return false;
     }

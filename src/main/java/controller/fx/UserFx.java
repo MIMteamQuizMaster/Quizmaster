@@ -1,15 +1,31 @@
 package controller.fx;
 
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.Role;
 import model.User;
+
+import java.util.List;
 
 public class UserFx{
     private final User userObject;
 
+
     public UserFx(User user) {
         this.userObject = user;
     }
+
+    public ObservableList<Role> getRoles() {
+        return new SimpleListProperty<>(FXCollections.observableList(this.userObject.getRoles())).get();
+    }
+
+    public ListProperty<Role> rolesProperty() {
+
+        return new SimpleListProperty<>(FXCollections.observableList(this.userObject.getRoles()));
+    }
+
+
 
     public int getUserId() {
         return new SimpleIntegerProperty(userObject.getUserId()).get();
@@ -43,13 +59,6 @@ public class UserFx{
         return new SimpleStringProperty(userObject.getStudieRichting());
     }
 
-    public Role getRole() {
-        return new SimpleObjectProperty<>(userObject.getRole()).get();
-    }
-
-    public ObjectProperty<Role> roleProperty() {
-        return new SimpleObjectProperty<>(userObject.getRole());
-    }
 
     public void setStudieRichting(String studieRichting) {
         this.userObject.setStudieRichting(studieRichting);
@@ -64,11 +73,11 @@ public class UserFx{
     }
 
     public void setLastName(String lastName) {
-        this.userObject.setFirstName(lastName);
+        this.userObject.setLastName(lastName);
     }
 
-    public void setRole(Role role) {
-        this.userObject.setRole(role);
+    public void setRoles(List<Role> roles) {
+        this.userObject.setRoles(roles);
     }
 
     public User getUserObject(){
