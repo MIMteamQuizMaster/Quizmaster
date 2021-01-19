@@ -4,8 +4,7 @@ import controller.fx.AnswerFx;
 import controller.fx.CourseFx;
 import controller.fx.QuestionFx;
 import controller.fx.QuizFx;
-import database.mysql.CoordinatorDAO;
-import database.mysql.DBAccess;
+import database.mysql.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,7 +13,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import launcher.Main;
 import model.Answer;
 import model.Question;
@@ -77,7 +75,11 @@ public class CoordinatorPanelController {
     private TableColumn<CourseFx, String> col_course_name;
 
 
-    private CoordinatorDAO dao;
+    private CoordinatorDAO coordinatorDAO;
+    private QuizDAO quizDAO;
+    private QuestionDAO questionDAO;
+    private AnswerDAO answerDAO;
+
     private CourseFx selectedCourse;
     private QuestionFx selectedQuestion;
     private QuizFx selectedQuiz;
@@ -87,8 +89,11 @@ public class CoordinatorPanelController {
     public void initialize() {
         DBAccess dBaccess = Main.getDBaccess();
         User loggedInUser = (User) Main.getPrimaryStage().getUserData();
-        this.dao = new CoordinatorDAO(dBaccess);
-        this.dao.setCoordinator(loggedInUser);
+        this.coordinatorDAO = new CoordinatorDAO(dBaccess);
+        this.quizDAO = new QuizDAO(dBaccess);
+        this.questionDAO = new QuestionDAO(dBaccess);
+        this.answerDAO = new AnswerDAO(dBaccess);
+        this.coordinatorDAO.setCoordinator(loggedInUser);
         System.out.println("initialize");
         fillCoursesTable();
         emptyFieldsAndSelected();
@@ -137,7 +142,7 @@ public class CoordinatorPanelController {
      */
     public void fillCoursesTable() {
         ObservableList<CourseFx> courses;
-        courses = convertCoursetoCourseFX(dao.getMyCourses());
+        courses = convertCoursetoCourseFX(coordinatorDAO.getMyCourses());
         col_course_name.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         col_sdate.setCellValueFactory(cellData -> cellData.getValue().startDateProperty());
         col_edate.setCellValueFactory(cellData -> cellData.getValue().endDateProperty());
@@ -150,7 +155,7 @@ public class CoordinatorPanelController {
     public void fillQuizTable() {
         ObservableList<QuizFx> quizFxes;
         // fil table accodring to selectedCourse
-        quizFxes = convertQuizToQuizFX(dao.getQuizOfCourse(selectedCourse.getCourseObject()));
+        quizFxes = convertQuizToQuizFX(quizDAO.getQuizOfCourse(selectedCourse.getCourseObject()));
         colNameQuizTable.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         colSuccessQuizTable.setCellValueFactory(cellData -> cellData.getValue().succsesDefinitionProperty().asObject());
         colTimeLimitQuizTable.setCellValueFactory(cellData -> cellData.getValue().timeLimitProperty().asObject());
@@ -199,7 +204,7 @@ public class CoordinatorPanelController {
     private void fillQuestionTable() {
         ObservableList<QuestionFx> questionFxes;
         // fil table accodring to selectedQuiz
-        questionFxes = convertQuestionToQuestionFX(dao.getQuestions(selectedQuiz.getQuizObject()));
+        questionFxes = convertQuestionToQuestionFX(questionDAO.getQuestions(selectedQuiz.getQuizObject()));
         colQuestion.setCellValueFactory(cellData -> cellData.getValue().questionProperty());
         colTotalAnswer.setCellValueFactory(cellData -> cellData.getValue().getTotalAnswer().asObject());
         colTotatlGood.setCellValueFactory(cellData -> cellData.getValue().getTotalGoodAnswer().asObject());
@@ -253,7 +258,7 @@ public class CoordinatorPanelController {
         // fill questions
         ObservableList<AnswerFx> answerFxes;
         // fil table according to selectedQuestion
-        answerFxes = convertAnswerToAnswerFX(dao.getAllAnswers(this.selectedQuestion.getQuestionObject()));
+        answerFxes = convertAnswerToAnswerFX(answerDAO.getAllAnswers(this.selectedQuestion.getQuestionObject()));
         col_Answer.setCellValueFactory(cellData -> cellData.getValue().answerProperty());
         col_validity.setCellValueFactory(cellData -> cellData.getValue().isCorrectProperty().asObject());
         addColorOnBooleanToAnswerTable();
@@ -464,8 +469,7 @@ public class CoordinatorPanelController {
                 coutGood++;
             }
         }
-        if (answers.size() <= 3 && coutGood <= 1) return true;
-        return false;
+        return answers.size() <= 3 && coutGood <= 1;
     }
 
     /**
@@ -477,7 +481,7 @@ public class CoordinatorPanelController {
                 quizzesTable.getSelectionModel().getSelectedItem().getName()
                 + " verwijderen ?");
         if (r) {
-            dao.deleteQuiz(quizFx.getQuizObject());
+            coordinatorDAO.deleteQuiz(quizFx.getQuizObject());
             refreshQuizTable();
             selectedQuiz = null;
         }
@@ -492,7 +496,7 @@ public class CoordinatorPanelController {
                 + " verwijderen ?");
         if (r) {
 
-            dao.deleteQuestion(selectedQuestion.getQuestionObject());
+            coordinatorDAO.deleteQuestion(selectedQuestion.getQuestionObject());
             selectedQuestion = null;
             refreshQuestionTable();
         }
@@ -506,7 +510,7 @@ public class CoordinatorPanelController {
                 selectedAnswer.getAnswer()
                 + " verwijderen ?");
         if (r) {
-            dao.deleteAnswer(selectedAnswer.getAnswerObject());
+            coordinatorDAO.deleteAnswer(selectedAnswer.getAnswerObject());
             selectedAnswer = null;
             int a = questionTable.getSelectionModel().getSelectedIndex();
             refreshQuestionTable();
@@ -535,14 +539,14 @@ public class CoordinatorPanelController {
                     quiz.setIdcourse(course_id);
                     quiz.setTimeLimit(timeLimit);
                     quiz.setIdquiz(0);
-                    quiz = dao.saveQuiz(quiz);
+                    quiz = quizDAO.saveQuiz(quiz);
                     // new QUiz
                 } else {
                     // update Quiz
                     selectedQuiz.setName(quizName);
                     selectedQuiz.setSuccsesDefinition(succesDefinite);
                     selectedQuiz.setTimeLimit(timeLimit);
-                    quiz = dao.saveQuiz(selectedQuiz.getQuizObject());
+                    quiz = quizDAO.saveQuiz(selectedQuiz.getQuizObject());
                 }
 
                 if (quiz != null) {
@@ -579,7 +583,7 @@ public class CoordinatorPanelController {
             question = new Question(questionString);
             question.setQuizId(this.selectedQuiz.getIdquiz());
             question.setQuestionId(0);
-            question = dao.saveQuestion(question); // save the question
+            question = questionDAO.saveQuestion(question); // save the question
 
 
 
@@ -587,7 +591,7 @@ public class CoordinatorPanelController {
         } else {
             /// UPDATE ITEM so we send update the selected question and send it to dao save method
             selectedQuestion.setQuestion(questionString);
-            question = dao.saveQuestion(this.selectedQuestion.getQuestionObject());
+            question = questionDAO.saveQuestion(this.selectedQuestion.getQuestionObject());
         }
         if (question != null) { // after succesfull add we disable the editMode
             refreshQuestionTable();
@@ -628,7 +632,7 @@ public class CoordinatorPanelController {
         selectedQuestion.addAnswer(answer);
 
         /// Send to DAO
-        answer = dao.saveAnswer(answer);
+        answer = answerDAO.saveAnswer(answer);
 
         if (answer != null) { // after succesfull add we disable the editMode
 

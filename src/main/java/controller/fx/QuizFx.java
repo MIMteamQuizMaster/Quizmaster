@@ -10,7 +10,7 @@ import model.Quiz;
 import java.util.List;
 
 public class QuizFx {
-    private Quiz quiz;
+    private final Quiz quiz;
 
 
     public QuizFx(Quiz q) {

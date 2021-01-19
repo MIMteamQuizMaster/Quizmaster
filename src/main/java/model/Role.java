@@ -11,7 +11,7 @@ public enum Role{
     ADMINISTRATOR("Administrator"),
     TECHNICAL_ADMINISTRATOR("Technical Administrator");
 
-    private String roleName;
+    private final String roleName;
 
     Role(String roleName) {
         this.roleName = roleName;

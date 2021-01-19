@@ -7,9 +7,9 @@ import java.sql.SQLException;
 public class DBAccess {
 
     private Connection connection;
-    private String databaseName;
-    private String mainUser;
-    private String mainUserPassword;
+    private final String databaseName;
+    private final String mainUser;
+    private final String mainUserPassword;
     private static final String SQL_EXCEPTION = "SQL Exception: ";
     private static final String MYSQL_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String PREFIX_CONNECTION_URL = "jdbc:mysql://localhost:3306/";

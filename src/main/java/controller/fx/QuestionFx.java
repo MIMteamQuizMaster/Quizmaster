@@ -8,7 +8,7 @@ import model.Question;
 
 
 public class QuestionFx {
-    private Question questionObject;
+    private final Question questionObject;
 
 
     public QuestionFx(Question q) {
