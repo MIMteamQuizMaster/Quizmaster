@@ -7,7 +7,7 @@ import model.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.RowId;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -23,12 +23,12 @@ public class TechnischBeheerderDAO extends AbstractDAO {
 
 
     public ObservableList<User> getAllusers() {
-        String sql = "SELECT DISTINCT u.user_id , u.firstname, u.lastname,u.studierichting FROM user u ";
-//        "left join  user_role ur on u.user_id = ur.user_id \n" +
-//                "left join role r on ur.role_id = r.id";
+        String sql = "SELECT DISTINCT u.user_id , u.firstname, u.lastname,u.studierichting FROM user u where deletionDate > ? or deletionDate is null";
+
         ObservableList<User> rList = FXCollections.observableArrayList();
         try {
             PreparedStatement ps = getStatement(sql);
+            ps.setDate(1,java.sql.Date.valueOf(java.time.LocalDate.now()));
             ResultSet resultSet = executeSelectPreparedStatement(ps);
             while (resultSet.next()) {
                 int user_id = resultSet.getInt("user_id");
@@ -143,6 +143,7 @@ public class TechnischBeheerderDAO extends AbstractDAO {
         }
     }
 
+
     public void setRoleToUser(User u, List<Role> roles) {
         HashMap<Integer, Role> userAlreadyHaveRoles = getUserRoles(u);
         List<Role> userNewRoles = u.getRoles();
@@ -191,6 +192,18 @@ public class TechnischBeheerderDAO extends AbstractDAO {
             System.out.println(throwables.getMessage() + " Somthing wrong while getting credentials");
         }
         return returnString;
+    }
+
+    public void setEnd(User u){
+        try {
+            String query = "UPDATE user set deletionDate = ? WHERE user_id = ?";
+            PreparedStatement ps = getStatement(query);
+            ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            ps.setInt(2, u.getUserId());
+            executeManipulatePreparedStatement(ps);
+        } catch (SQLException throwables) {
+            System.out.println(throwables.getMessage() + " Somthing wrong while ending user membership");
+        }
     }
 
     public void setCredential(int userID, String password) {
