@@ -5,6 +5,7 @@ import database.mysql.CreateQuizFromDatabase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import model.Answer;
 import model.Question;
@@ -28,22 +29,22 @@ public class FillOutFormMultipleAnswersController {
     private List<Question> questions = new ArrayList<>();
     private List<List<Answer>> answersListPerQuestion = new ArrayList<List<Answer>>();
     private List<List<AnswerFormFX>> answersFXListPerQuestion = new ArrayList<List<AnswerFormFX>>();
-    private List<Integer> possibleCorrectAnsers = new ArrayList<>();
-    private int countAnswers = 0;
+    private List<Integer> countPossibleAnswers = new ArrayList<>();
+    private List<Integer> countGivenAnswers = new ArrayList<>();
 
     private int questionNumber =1;
-    private int answerFXPositionNumber = 0;
 
     public void initialize()
     {
         questionLabel.setText(String.format("Vraag %d", questionNumber));
-        this.possibleCorrectAnsers.add(1);
         callCreateAndAddQuiz();
         createAndAddAnswerFormFX();
         initiateTextAreaProperty();
-        setUpTableView();
-        this.questionTextAres.setText(this.questions.get(questionNumber-1).getQuestion());
+        initiateCheckBoxPropertie();
         setActionToButton();
+        setUpTableView();
+        fillPossibleAndGivenAnswers();
+        this.questionTextAres.setText(this.questions.get(questionNumber-1).getQuestion());
     }
 
     public void onNextscreenUpdate()
@@ -53,42 +54,72 @@ public class FillOutFormMultipleAnswersController {
         setUpTableView();
     }
 
-    public void setActionToButton()
+    public void fillPossibleAndGivenAnswers()
     {
-        for (int i = 0; i < answersFXListPerQuestion.size(); i++) {
-            for (int j = 0; j < answersFXListPerQuestion.get(i).size(); j++) {
-                int finalJ = j;
-                int finalI = i;
-                answersFXListPerQuestion.get(i).get(j).getButton().setOnAction(e ->
-                {
-                    setActionButton(finalI, finalJ);
-                });
-            }
+        for (Question question: this.questions)
+        {
+            this.countPossibleAnswers.add(1);
+            this.countGivenAnswers.add(0);
         }
     }
 
-    public void setActionButton(int i, int j)
+    public void addOnePerQuestionToGivenAnswer()
     {
-        if (!answersFXListPerQuestion.get(i).get(j).getAnswer().getIsGivenAnswer() &&
-        countAnswers == 0)
+        this.countGivenAnswers.set(questionNumber-1,
+                this.countGivenAnswers.get(questionNumber-1)+1);
+    }
+
+    public void substractOnePerQuestionToGivenAnswer()
+    {
+        this.countGivenAnswers.set(questionNumber-1,
+                this.countGivenAnswers.get(questionNumber-1)-1);
+    }
+
+    private boolean compareGivenToPossibleAnswers()
+    {
+        boolean returnValue = true;
+        if (countGivenAnswers.get(questionNumber-1)==countPossibleAnswers.get(questionNumber-1))
         {
-            this.answersFXListPerQuestion.get(i).get(j).getAnswer().setGivenAnswer(true);
-            countAnswers++;
-            setUpTableView();
+            returnValue = false;
         }
 
-        else
-        {
-            this.answersFXListPerQuestion.get(i).get(j).getAnswer().setGivenAnswer(true);
-            countAnswers--;
-            setUpTableView();
+        return returnValue;
+    }
+
+    public void setActionToButton() {
+        for (int i = 0; i < answersFXListPerQuestion.size(); i++) {
+            for (int j = 0; j < answersFXListPerQuestion.get(i).size(); j++) {
+                int finalI = i;
+                int finalJ = j;
+                answersFXListPerQuestion.get(i).get(j).getButton().setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        if (!(answersFXListPerQuestion.get(finalI).get(finalJ).getAnswer().getIsGivenAnswer()) &&
+                                compareGivenToPossibleAnswers()) {
+                            answersFXListPerQuestion.get(finalI).get(finalJ).getAnswer().setGivenAnswer(true);
+                            addOnePerQuestionToGivenAnswer();
+                            initiateCheckBoxPropertie();
+                            setUpTableView();
+                        }
+                        else if (answersFXListPerQuestion.get(finalI).get(finalJ).getAnswer().getIsGivenAnswer())
+                        {
+                            answersFXListPerQuestion.get(finalI).get(finalJ).getAnswer().setGivenAnswer(false);
+                            substractOnePerQuestionToGivenAnswer();
+                            initiateCheckBoxPropertie();
+                            setUpTableView();
+                        }
+                    }
+                });
+            }
         }
     }
 
     public void initiateTextAreaProperty()
     {
         for (int i = 0; i < this.answersFXListPerQuestion.size(); i++) {
-            for (int j = 0; j < this.answersFXListPerQuestion.get(i).size(); j++) {
+            for (int j = 0; j < this.answersFXListPerQuestion.get(i).size(); j++)
+            {
+                this.answersFXListPerQuestion.get(i).get(j).getTextArea().setEditable(false);
                 this.answersFXListPerQuestion.get(i).get(j).getTextArea().setText(
                         answersFXListPerQuestion.get(i).get(j).getAnswer().getAnswer()
                 );
@@ -102,7 +133,14 @@ public class FillOutFormMultipleAnswersController {
         for (int i = 0; i < this.answersFXListPerQuestion.size(); i++) {
             for (int j = 0; j < this.answersFXListPerQuestion.get(i).size(); j++) {
                 this.answersFXListPerQuestion.get(i).get(j).getCheckBox().setDisable(true);
-                if (this.answersFXListPerQuestion.get(i).get(j).getAnswer())
+                if (this.answersFXListPerQuestion.get(i).get(j).getAnswer().getIsGivenAnswer())
+                {
+                    this.answersFXListPerQuestion.get(i).get(j).getCheckBox().setSelected(true);
+                }
+                else
+                {
+                    this.answersFXListPerQuestion.get(i).get(j).getCheckBox().setSelected(false);
+                }
             }
         }
     }
