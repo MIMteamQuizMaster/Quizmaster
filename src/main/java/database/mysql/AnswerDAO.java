@@ -1,7 +1,6 @@
 package database.mysql;
 
 import model.Answer;
-import model.Question;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,24 +13,11 @@ public class AnswerDAO extends AbstractDAO{
         super(dBaccess);
     }
 
-    public boolean convertTinyIntToBoolean(int i) {
-        // The expected boolean value
-        boolean boolValue;
-
-        // Check if it's greater than equal to 1
-        if (i == 0) {
-            boolValue = false;
-        } else {
-            boolValue = true;
-        }
-        return boolValue;
-    }
-
-    public List<Answer> getAnswersForQuestion(Question question)
+    public List<Answer> getAnswersForQuestion(int questionid)
     {
         List<Answer> answers = new ArrayList<>();
-        int questionId = question.getQuestionId();
-        String sql = String.format("SELECT * FROM answer WHERE question_id = %d", questionId);
+        String sql = String.format("SELECT * FROM answer\n" +
+                "WHERE question_id=%d;", questionid);
         try {
             PreparedStatement preparedStatement = getStatement(sql);
             Answer answer;
@@ -39,8 +25,13 @@ public class AnswerDAO extends AbstractDAO{
             while (rs.next())
             {
                 String answerToQuestion = rs.getString(4);
-                boolean correct = convertTinyIntToBoolean(rs.getInt(3));
-                answer = new Answer(correct, answerToQuestion);
+                int correct = rs.getInt(3);
+                boolean trueFalse = false;
+                if (correct == 1)
+                {
+                    trueFalse = true;
+                }
+                answer = new Answer(trueFalse, answerToQuestion);
                 answer.setId(rs.getInt(1));
                 answer.setQuestionId(rs.getInt(2));
                 answers.add(answer);
@@ -49,6 +40,26 @@ public class AnswerDAO extends AbstractDAO{
             throwables.printStackTrace();
         }
         return answers;
+    }
+
+    public void storePersonalizedAnswers(List<Answer> answers) {
+        String sql ="Insert into user_quiz_answers(user_quiz_id, question_id, answer_id, position) values(?,?,?,?) ;";
+        int answerPosition = 1;
+        for (Answer answer: answers)
+        {
+            try {
+                PreparedStatement preparedStatement = getStatementWithKey(sql);
+                preparedStatement.setInt(1, answer.getUserQuizId());
+                preparedStatement.setInt(2, answer.getQuestionId());
+                preparedStatement.setInt(3, answer.getId());
+                preparedStatement.setInt(4, answerPosition);
+                int key = executeInsertPreparedStatement(preparedStatement);
+                answer.setPersonalizedId(key);
+                answerPosition++;
+            } catch (SQLException e) {
+                System.out.println("SQL error " + e.getMessage());
+            }
+        }
     }
 
     
