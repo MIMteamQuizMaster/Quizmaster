@@ -14,11 +14,14 @@ public class LoginDAO extends AbstractDAO {
     }
 
     public boolean isValidUser(int username, String password) {
-        String sql = "select count(*) from credentials where user_id = ? and password like binary ?";
+        String sql = "select count(*) from credentials c\n" +
+                "join user u on u.user_id = c.user_id \n" +
+                "where c.user_id = ? and c.password like binary ? and (u.deletionDate > ? or u.deletionDate is null)";
         try {
             PreparedStatement ps = getStatement(sql);
             ps.setInt(1, username);
             ps.setString(2, password);
+            ps.setDate(3,java.sql.Date.valueOf(java.time.LocalDate.now()));
             ResultSet resultSet = executeSelectPreparedStatement(ps);
             while (resultSet.next()) {
                 if (resultSet.getInt("count(*)") == 1) {
