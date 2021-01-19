@@ -34,7 +34,7 @@ public class LoginDAO extends AbstractDAO {
     public User getUser(int user_id) {
         String sql = "SELECT u.*, ur.endDate , r.name as role FROM quizmaster.user u, quizmaster.user_role ur , quizmaster.role r where u.user_id = ur.user_id and ur.role_id = r.id and \n" +
                 "u.user_id = ? and\n" +
-                "( ur.endDate < ? or ur.endDate is null)";
+                "( ur.endDate > ? or ur.endDate is null)";
         try {
             PreparedStatement ps = getStatement(sql);
             ps.setInt(1, user_id);
