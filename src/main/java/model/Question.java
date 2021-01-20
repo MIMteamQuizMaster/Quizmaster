@@ -52,11 +52,6 @@ public class Question {
         answers.add(answer);
     }
 
-    public void addAnswersToQuestion(List<Answer> newAnswers)
-    {
-        this.answers = newAnswers;
-    }
-
     public List<Answer> getMixedAnswers() {
         return mixedAnswers;
     }
@@ -65,9 +60,8 @@ public class Question {
         this.mixedAnswers = mixedAnswers;
     }
 
-
     /**
-     * @should return a mixed version of answers.
+     * @should mix answer and add to result var
      */
     public void mixAnswers()
     {

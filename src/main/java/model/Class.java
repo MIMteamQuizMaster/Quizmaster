@@ -6,9 +6,9 @@ public class Class {
 
     private int dbId;
     private String name;
-    private Teacher teacher;
+    private User teacher;
 
-    public Class(int dbId, Teacher teacher) {
+    public Class(int dbId, User teacher) {
         this.dbId = dbId;
         this.teacher = teacher;
     }
