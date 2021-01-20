@@ -1,7 +1,7 @@
 package controller;
 
 import controller.fx.AnswerFormFX;
-import database.mysql.CreateQuizFromDatabase;
+import database.mysql.RetriveQuizFromDatabase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -149,7 +149,7 @@ public class FillOutFormMultipleAnswersController {
     {
         Quiz newQuiz = new Quiz("Math", 5.5);
         newQuiz.setIdquiz(3);
-        CreateQuizFromDatabase createQuiz = new CreateQuizFromDatabase();
+        RetriveQuizFromDatabase createQuiz = new RetriveQuizFromDatabase();
         this.quiz = createQuiz.returnQuizFromDatabase(newQuiz);
         for (Question question: this.quiz.getQuestions())
         {

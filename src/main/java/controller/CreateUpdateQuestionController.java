@@ -12,8 +12,8 @@ import model.Question;
 
 public class CreateUpdateQuestionController {
 
-    private final QuestionDAO questionDAO;
-    private final DBAccess dBaccess;
+    private QuestionDAO questionDAO;
+    private DBAccess dBaccess;
     private Question question;
 
     @FXML

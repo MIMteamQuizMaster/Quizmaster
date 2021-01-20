@@ -4,8 +4,6 @@ module QuizMaster {
     requires javafx.graphics;
     requires java.sql;
     requires mysql.connector.java;
-    requires lightcouch;
-    requires gson;
     requires org.controlsfx.controls;
     requires org.junit.jupiter.api;
 

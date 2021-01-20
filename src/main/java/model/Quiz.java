@@ -83,6 +83,10 @@ public class Quiz {
         this.timeLimit = timeLimit;
     }
 
+    /**
+     * @should return size of Questions list
+     * @return
+     */
     public int getTotal(){
         return getQuestions().size();
     }
