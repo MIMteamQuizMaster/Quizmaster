@@ -64,7 +64,7 @@ public class LoginDAO extends AbstractDAO {
 
             ResultSet resultSet = executeSelectPreparedStatement(ps);
             List<Role> roles = new ArrayList<>();
-            int uid = 0;
+            int uid= 0;
             String fname = "";
             String lname = "";
             String richting = "";

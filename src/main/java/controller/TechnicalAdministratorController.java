@@ -71,7 +71,6 @@ public class TechnicalAdministratorController {
         refreshTable(); // add data to table
     }
 
-
     /**
      * @author M.J. Moshiri
      * Create an ObservableList of String type and add the ToString of all Enum attributes to it
@@ -92,6 +91,7 @@ public class TechnicalAdministratorController {
      * @author M.J. Moshiri
      */
     public void refreshTable() {
+        table_users.refresh();
         table_users.getItems().clear();
         ObservableList<UserFx> tableListUsers = convertUserToUserFX(dao.getAllusers());
 
@@ -123,8 +123,7 @@ public class TechnicalAdministratorController {
                     if (r) {
                         UserFx u = getTableRow().getItem();
                         dao.setEnd(u.getUserObject());
-
-                        table_users.getItems().remove(u);
+                        refreshTable();
                     }
 
                 });
@@ -183,7 +182,6 @@ public class TechnicalAdministratorController {
                 super.updateItem(item, empty);
                 if (!empty) {
                     setGraphic(editButton);
-
                     try {
                         UserFx user = getTableRow().getItem();
                         String pass = showPasswordString(user.getUserObject());
@@ -195,8 +193,9 @@ public class TechnicalAdministratorController {
                             editButton.setText("Edit Credential");
                         }
                     } catch (NullPointerException e) {
-                        table_users.refresh();
                         System.out.println("null");
+                        return;// this will force the table to stop rendering but we refresh the table
+                               // after a successful action with btn
                     }
 
                 }
@@ -313,31 +312,32 @@ public class TechnicalAdministratorController {
 
     /**
      * takes the values in textfield and add a new user to de database
+     * the role Combobox is mandatory to fill
      *
      * @return the object of made user
      */
     public User addUser() {
-        boolean r = AlertHelper.confirmationDialog("Wilt u deze gebruiker toevoegen aan de databank?");
+        List<String> allChecked = rolesComboBox.getCheckModel().getCheckedItems();
+        List<Role> roles = new ArrayList<>();
+        for (String stringRole : allChecked) {
+            roles.add(Role.getRole(stringRole));
+        }
+        if(!(roles.size() == 0)){
+            boolean r = AlertHelper.confirmationDialog("Wilt u deze gebruiker toevoegen aan de databank?");
+            if (r) {
+                User u = new User(0,
+                        voornaamField.getText(),
+                        achternaamField.getText(),
+                        richtingField.getText(),
+                        roles);
+                u = dao.saveUser(u);
 
-        if (r) {
-            List<String> allChecked = rolesComboBox.getCheckModel().getCheckedItems();
-            List<Role> roles = new ArrayList<>();
-
-            for (String stringRole : allChecked) {
-                roles.add(Role.getRole(stringRole));
+                table_users.refresh();
+                table_users.getItems().add(new UserFx(u));
+                return u;
             }
-            User u = new User(0,
-                    voornaamField.getText(),
-                    achternaamField.getText(),
-                    richtingField.getText(),
-                    roles);
-            u = dao.saveUser(u);
-
-            table_users.refresh();
-            table_users.getItems().add(new UserFx(u));
-
-
-            return u;
+        }else {
+            new Alert(Alert.AlertType.ERROR,"een user moet altijd tenminste een role hebben.").show();
         }
         return null;
     }

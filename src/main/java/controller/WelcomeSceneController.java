@@ -12,8 +12,12 @@ import launcher.Main;
 import model.*;
 import view.SceneManager;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import org.lightcouch.CouchDbClient;
 
 public class WelcomeSceneController {
 
@@ -25,6 +29,7 @@ public class WelcomeSceneController {
     private SceneManager sceneManager;
     private Pane view;
     private User loggedInUser;
+
 
     public void initialize() {
         sceneManager = Main.getSceneManager();
@@ -43,8 +48,8 @@ public class WelcomeSceneController {
 
     public void logOutClick(ActionEvent actionEvent) {
         Main.getSceneManager().showLoginScene();
-
     }
+
 
     /**
      * @author M.J. Moshiri

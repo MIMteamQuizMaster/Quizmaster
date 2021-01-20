@@ -33,12 +33,6 @@ public class Main extends Application {
         DBAccess dbAccess = getDBaccess();
         dbAccess.openConnection();
 
-        // CDAO quick test
-        CourseDAO courseDAO = new CourseDAO(dbAccess);
-        Course course = courseDAO.getCourseById(1);
-        System.out.println(course.getName());
-
-
         Main.primaryStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setTitle("Make IT Work - Project 1");
