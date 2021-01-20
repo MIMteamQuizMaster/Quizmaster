@@ -1,14 +1,10 @@
 package database.mysql;
-
-import com.mysql.cj.xdevapi.Result;
-import model.Answer;
 import model.Course;
 import model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class CourseDAO extends AbstractDAO {
 
