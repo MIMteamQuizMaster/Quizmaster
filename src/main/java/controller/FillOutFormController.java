@@ -1,11 +1,10 @@
 package controller;
 
 import database.mysql.AnswerDAO;
-import database.mysql.CreateQuizFromDatabase;
+import database.mysql.RetriveQuizFromDatabase;
 import database.mysql.DBAccess;
 import database.mysql.QuestionDAO;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -57,7 +56,7 @@ public class FillOutFormController {
     {
         Quiz quiz = new Quiz("Math", 0.55);
         quiz.setIdquiz(1);
-        CreateQuizFromDatabase createQuiz = new CreateQuizFromDatabase();
+        RetriveQuizFromDatabase createQuiz = new RetriveQuizFromDatabase();
         this.quiz = createQuiz.returnQuizFromDatabase(quiz);
         this.questions = this.quiz.getQuestions();
         for (Question question: this.questions)

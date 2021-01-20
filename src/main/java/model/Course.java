@@ -85,6 +85,11 @@ public class Course {
         quizzes.remove(quiz);
     }
 
+
+    /**
+     * @should add a group to a course.
+     * @param group
+     */
     public void addGroup(Group group){
         groups.add(group);
     }

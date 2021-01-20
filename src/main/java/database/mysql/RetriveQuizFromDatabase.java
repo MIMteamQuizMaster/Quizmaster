@@ -11,7 +11,7 @@ import model.Quiz;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateQuizFromDatabase {
+public class RetriveQuizFromDatabase {
 
     private DBAccess dbAccess = Main.getDBaccess();
     private QuestionDAO questionDAO = new QuestionDAO(dbAccess);
