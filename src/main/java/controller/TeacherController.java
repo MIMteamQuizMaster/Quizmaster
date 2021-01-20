@@ -50,6 +50,10 @@ public class TeacherController implements Initializable {
     @FXML
     public TableColumn<UserFx, String> studentColumn;
     @FXML
+    public TableColumn<UserFx, String> studentColumnVoornaam;
+    @FXML
+    public TableColumn<UserFx, String> studentColumnAchternaam;
+    @FXML
     public TableColumn<GradeFX, Integer> quizColumn;
     @FXML
     public TableColumn<GradeFX, Double> gradeColumn;
@@ -87,7 +91,6 @@ public class TeacherController implements Initializable {
 
         //TODO: create StudentFX, use instead of UserFx
 
-
         classes = convertClassToClassFX(dao.getAllClasses(loggedInUser));
         students = convertUserToUserFX(dao.getAllStudents(loggedInUser));
         grades = convertGradeToGradeFX(gdao.getAllGradesPerTeacher(loggedInUser));
@@ -97,13 +100,12 @@ public class TeacherController implements Initializable {
         quizColumn.setCellValueFactory(cellData -> cellData.getValue().quizIdProperty().asObject());
         gradeColumn.setCellValueFactory(cellData -> cellData.getValue().gradeProperty().asObject());
 
+
+
         classTable.getItems().addAll(classes);
         quizTable.getItems().addAll(grades);
         gradeTable.getItems().addAll(grades);
 
-
-
-        studentTable.getItems().addAll(students);
 
     }
 
@@ -125,15 +127,19 @@ public class TeacherController implements Initializable {
         });
 
         groupComboBox.setOnAction((event) -> {
+            studentTable.getItems().clear();
             int selectedIndex = groupComboBox.getSelectionModel().getSelectedIndex();
             ClassFX selectedItem = groupComboBox.getSelectionModel().getSelectedItem();
-
+            System.out.println("bla"+ selectedItem.getDbId());
             students = convertUserToUserFX(dao.getStudentsPerClass(selectedItem.getClassObject()));
-
+            System.out.println("bla0"+students.get(0).getFirstName());
+            studentColumnVoornaam.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+            studentColumnAchternaam.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+            //studentColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+            studentTable.getItems().addAll(students);
             System.out.println("Selection made: [" + selectedIndex + "] " + selectedItem);
             System.out.println("   ComboBox.getValue(): " + groupComboBox.getValue());
         });
-
 
     }
 }

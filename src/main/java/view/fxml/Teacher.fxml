@@ -10,9 +10,14 @@
           <TableColumn fx:id="classColumn" prefWidth="149.0" text="Klas" />
         </columns>
       </TableView>
-       <TableView fx:id="studentTable" layoutX="250.0" layoutY="14.0" prefHeight="200.0" prefWidth="150.0">
+       <TableView fx:id="studentTable" layoutX="250.0" layoutY="14.0" onMouseClicked="#onStudentTableClick" prefHeight="200.0" prefWidth="150.0">
            <columns>
-               <TableColumn fx:id="studentColumn" prefWidth="149.0" text="Student" />
+               <TableColumn fx:id="studentColumn" prefWidth="149.0" text="Student">
+               <columns>
+                  <TableColumn fx:id="studentColumnVoornaam" prefWidth="75.0" text="Voornaam" />
+                  <TableColumn fx:id="studentColumnAchternaam" prefWidth="75.0" text="Achternaam" />
+               </columns>
+               </TableColumn>
            </columns>
        </TableView>
        <TableView fx:id="quizTable" layoutX="400.0" layoutY="14.0" prefHeight="200.0" prefWidth="150.0">
@@ -25,6 +30,6 @@
                <TableColumn fx:id="gradeColumn" prefWidth="149.0" text="Cijfer" />
            </columns>
        </TableView>
-      <ComboBox fx:id="groupComboBox" layoutX="100.0" layoutY="300.0" onAction="#groupComboBoxSelected" prefWidth="150.0" promptText="Selecteer groep" />
+      <ComboBox fx:id="groupComboBox" layoutX="100.0" layoutY="300.0" prefWidth="150.0" promptText="Selecteer groep" />
    </children>
 </AnchorPane>

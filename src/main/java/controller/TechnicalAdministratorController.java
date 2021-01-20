@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import javafx.util.Callback;
 import launcher.Main;
 import model.Role;
 import model.User;
@@ -89,6 +90,7 @@ public class TechnicalAdministratorController {
         table_users.refresh();
         table_users.getItems().clear();
         ObservableList<UserFx> tableListUsers = convertUserToUserFX(dao.getAllusers());
+
         col_id.setCellValueFactory(cellData -> cellData.getValue().userIdProperty().asObject());
         col_fname.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         col_lname.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
