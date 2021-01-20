@@ -4,25 +4,15 @@ import java.util.List;
 
 public class Group {
     private final String name;
-    private Teacher teacher;
-    private Coordinator coordinator;
-    private final List<Student> students;
+    private User teacher;
+    private User coordinator;
+    private final List<User> students;
 
-    public Group(String name, Teacher teacher, Coordinator coordinator, List<Student> students) {
+    public Group(String name, User teacher, User coordinator, List<User> students) {
         this.name = name;
         this.teacher = teacher;
         this.coordinator = coordinator;
         this.students = students;
     }
-    public void addStudentToGroup(Student s){
-        this.students.add(s);
-    }
 
-    public void setCoordinator(Coordinator coordinator) {
-        this.coordinator = coordinator;
-    }
-
-    public void setTeacher(Teacher teacher) {
-        this.teacher = teacher;
-    }
 }

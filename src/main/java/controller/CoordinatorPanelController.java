@@ -535,11 +535,7 @@ public class CoordinatorPanelController {
                 int timeLimit = Integer.parseInt(tl);
                 Quiz quiz;
                 if (this.selectedQuiz == null) {
-                    quiz = new Quiz(quizName, succesDefinite);
-                    quiz.setIdcourse(course_id);
-                    quiz.setTimeLimit(timeLimit);
-                    quiz.setIdquiz(0);
-                    quiz = quizDAO.saveQuiz(quiz);
+                    quiz = quizDAO.saveQuiz(new Quiz(quizName, succesDefinite,0,course_id,timeLimit));
                     // new QUiz
                 } else {
                     // update Quiz
@@ -548,18 +544,14 @@ public class CoordinatorPanelController {
                     selectedQuiz.setTimeLimit(timeLimit);
                     quiz = quizDAO.saveQuiz(selectedQuiz.getQuizObject());
                 }
-
                 if (quiz != null) {
                     courseTable.getSelectionModel().getSelectedItem().addQuiz(quiz);
                     refreshQuizTable();
-//                    expandTitledPane(new ActionEvent(), quizPane);
-
                 }
             } else {
                 new Alert(Alert.AlertType.ERROR, "AUB vull alle benodigde informatie").show();
             }
         } else {
-
             new Alert(Alert.AlertType.ERROR, "AUB kies een cursus").show();
         }
     }

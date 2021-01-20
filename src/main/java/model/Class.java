@@ -30,7 +30,7 @@ public class Class {
         this.name = name;
     }
 
-    public void setTeacher(Teacher teacher) {
+    public void setTeacher(User teacher) {
         this.teacher = teacher;
     }
 

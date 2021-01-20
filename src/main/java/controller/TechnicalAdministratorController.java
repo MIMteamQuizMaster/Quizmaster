@@ -66,8 +66,6 @@ public class TechnicalAdministratorController {
 
 
     public void initialize() {
-        // Initialization code can go here.
-        // The parameters url and resources can be omitted if they are not needed
         DBAccess dBaccess = Main.getDBaccess();
         this.dao = new TechnischBeheerderDAO(dBaccess);
         populateRoleMenu(); // add items to ComboBox
@@ -112,7 +110,7 @@ public class TechnicalAdministratorController {
 
     /**
      * This method add a button to each row in User table that let the technical asdministrator to end the validity
-     * of a role
+     * of a user
      *
      * @author M.J. Moshiri
      */

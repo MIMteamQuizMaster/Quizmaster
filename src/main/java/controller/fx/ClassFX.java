@@ -2,7 +2,8 @@ package controller.fx;
 
 import javafx.beans.property.*;
 import model.Class;
-import model.Teacher;
+import model.User;
+
 
 public class ClassFX {
     private Class c;
@@ -39,11 +40,11 @@ public class ClassFX {
         this.c.setName(name);
     }
 
-    public Teacher getTeacher() {
-        return (Teacher) new SimpleObjectProperty<>(this.c.getTeacher()).get();
+    public User getTeacher() {
+        return (User) new SimpleObjectProperty<>(this.c.getTeacher()).get();
     }
 
-    public void setTeacher(Teacher teacher) {
+    public void setTeacher(User teacher) {
         this.c.setTeacher(teacher);
     }
 
