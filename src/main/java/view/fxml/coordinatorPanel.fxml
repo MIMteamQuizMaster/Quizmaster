@@ -144,7 +144,7 @@
                            <TableColumn fx:id="colTotatlGood" minWidth="45.0" prefWidth="45.0" resizable="false" text="goed" />
                         </columns>
                      </TableColumn>
-                     <TableColumn fx:id="colDelQuestion" editable="false" minWidth="60.0" prefWidth="88.0" resizable="false" sortable="false" text="Actie" />
+                     <TableColumn fx:id="colActionQuestion" editable="false" minWidth="60.0" prefWidth="88.0" resizable="false" sortable="false" text="Actie" />
                  </columns>
                   <columnResizePolicy>
                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
