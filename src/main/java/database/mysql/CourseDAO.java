@@ -2,8 +2,8 @@ package database.mysql;
 
 import com.mysql.cj.xdevapi.Result;
 import model.Answer;
-import model.Coordinator;
 import model.Course;
+import model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,7 +43,7 @@ public class CourseDAO extends AbstractDAO {
             String firstName = rsCoordinator.getString(1);
             String lastName = rsCoordinator.getString(2);
 
-            Coordinator coordinator = new Coordinator(coordinatorId,firstName,lastName);
+            User coordinator = new User(coordinatorId,firstName,lastName);
             course = new Course(courseName,coordinator);
             course.setDbId(course_id);
             course.setStartDate(startDate);

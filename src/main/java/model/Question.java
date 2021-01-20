@@ -55,10 +55,7 @@ public class Question {
     /**
      * @should mix answer and add them to mixedAnswers variable so
      * that the size of Answers and mixed Answer be the same
-     */
-    /**
-     * @should mix answer and add to result var
-     */
+     **/
     public void mixAnswers()
     {
         mixedAnswers = new ArrayList<>();

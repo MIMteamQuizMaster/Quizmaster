@@ -20,6 +20,14 @@ public class Quiz {
         questions = new ArrayList<>();
     }
 
+    public Quiz(String name,double succsesDefinition,  int idquiz, int idcourse, int timeLimit) {
+        this.succsesDefinition = succsesDefinition;
+        this.name = name;
+        this.idquiz = idquiz;
+        this.idcourse = idcourse;
+        this.timeLimit = timeLimit;
+    }
+
     public List<Question> getQuestions() {
         return questions;
     }
