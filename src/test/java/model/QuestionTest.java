@@ -8,6 +8,7 @@ public class QuestionTest {
     /**
      * @verifies mix answer and add them to mixedAnswers variable so  that the size of Answers and mixed Answer be the same
      * @see Question#mixAnswers()
+     * @author M.J. Moshiri
      */
     @Test
     public void mixAnswers_shouldMixAnswerAndAddThemToMixedAnswersVariableSoThatTheSizeOfAnswersAndMixedAnswerBeTheSame() throws Exception {
