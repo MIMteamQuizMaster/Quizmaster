@@ -8,9 +8,12 @@ import model.Quiz;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class QuizDAO extends AbstractDAO{
+public class QuizDAO extends AbstractDAO {
     private QuestionDAO questionDAO;
+
     public QuizDAO(DBAccess dBaccess) {
         super(dBaccess);
         questionDAO = new QuestionDAO(dBaccess);
@@ -18,13 +21,14 @@ public class QuizDAO extends AbstractDAO{
     }
 
     /**
-     * @author M.J. Moshiri
-     *
      * @param course object that has DbId of the given Course record
      * @return An observableList of quizzes that are dedicated to the given argument
+     * It will return Null if it cant not retrieve data from Database
+     * @author M.J. Moshiri
+     * @should return null if Course argument has no id
      */
-    public ObservableList<Quiz> getQuizOfCourse(Course course) {
-        ObservableList<Quiz> quizList = FXCollections.observableArrayList();
+    public List<Quiz> getQuizOfCourse(Course course) {
+        List<Quiz> quizList = new ArrayList<>();
         String query = "SELECT * FROM quiz WHERE course_id =?";
         int courseId = course.getDbId();
         try {
@@ -53,9 +57,14 @@ public class QuizDAO extends AbstractDAO{
     }
 
     /**
-     *
-     * @param quiz
-     * @return
+     * @param quiz object
+     *             it save the given quiz Object into the databes and
+     *             based on the ID inside the given quiz object
+     *             if the given object has an ID of 0 then it will chose the INSERT query
+     *             otherwise it will chose the UPDATE query for given quiz argument
+     * @return the quiz object back with dbID
+     * @author M.J. Moshiri
+     * @should return null if insert or updating the record was unsuccessful
      */
     public Quiz saveQuiz(Quiz quiz) {
         String query;
@@ -77,7 +86,7 @@ public class QuizDAO extends AbstractDAO{
             ps.setInt(2, course_idcourse);
             ps.setDouble(3, successDefinition);
             ps.setInt(4, timelimit);
-            ps.setInt(5,id);
+            ps.setInt(5, id);
             int key = executeInsertPreparedStatement(ps);
 
             if (id == 0) {

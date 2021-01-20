@@ -5,5 +5,4 @@ public class StudentDAO extends AbstractDAO {
         super(dBaccess);
     }
 
-
 }

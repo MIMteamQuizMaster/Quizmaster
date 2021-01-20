@@ -204,7 +204,8 @@ public class CoordinatorPanelController {
     private void fillQuestionTable() {
         ObservableList<QuestionFx> questionFxes;
         // fil table accodring to selectedQuiz
-        questionFxes = convertQuestionToQuestionFX(questionDAO.getQuestions(selectedQuiz.getQuizObject()));
+        List<Question> qList = questionDAO.getQuestions(selectedQuiz.getQuizObject());
+        questionFxes = convertQuestionToQuestionFX(qList);
         colQuestion.setCellValueFactory(cellData -> cellData.getValue().questionProperty());
         colTotalAnswer.setCellValueFactory(cellData -> cellData.getValue().getTotalAnswer().asObject());
         colTotatlGood.setCellValueFactory(cellData -> cellData.getValue().getTotalGoodAnswer().asObject());
