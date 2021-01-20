@@ -13,6 +13,16 @@ public class LoginDAO extends AbstractDAO {
         super(dBaccess);
     }
 
+    /**
+     * @param username an int dedicating userID
+     * @param password a string containing the password of user
+     * @return true id the user is valid otherwise false
+     * @author M.J. Moshiri
+     * <p>
+     * Checks if the given username or password is from a valid user
+     * @should return false if the password of the user is wrong
+     * @should return false if it failed in retrieving data from db
+     */
     public boolean isValidUser(int username, String password) {
         String sql = "select count(*) from credentials c\n" +
                 "join user u on u.user_id = c.user_id \n" +
@@ -21,7 +31,7 @@ public class LoginDAO extends AbstractDAO {
             PreparedStatement ps = getStatement(sql);
             ps.setInt(1, username);
             ps.setString(2, password);
-            ps.setDate(3,java.sql.Date.valueOf(java.time.LocalDate.now()));
+            ps.setDate(3, java.sql.Date.valueOf(java.time.LocalDate.now()));
             ResultSet resultSet = executeSelectPreparedStatement(ps);
             while (resultSet.next()) {
                 if (resultSet.getInt("count(*)") == 1) {
@@ -34,6 +44,15 @@ public class LoginDAO extends AbstractDAO {
         return false;
     }
 
+    /**
+     * @param user_id an int which is the ID of the user
+     * @return a userObject with all important data for further use
+     * @author M.J. Moshiri
+     * <p>
+     * Creates a user object from the given user id with alle information that are stored in db from the databes
+     * this user object will be used furthur in thet application to for showing correct panels of retrieving appropriate date
+     * @Should return null if it failed retrieving data from DB
+     */
     public User getUser(int user_id) {
         String sql = "SELECT u.*, ur.endDate , r.name as role FROM quizmaster.user u, quizmaster.user_role ur , quizmaster.role r where u.user_id = ur.user_id and ur.role_id = r.id and \n" +
                 "u.user_id = ? and\n" +
@@ -41,11 +60,11 @@ public class LoginDAO extends AbstractDAO {
         try {
             PreparedStatement ps = getStatement(sql);
             ps.setInt(1, user_id);
-            ps.setDate(2,java.sql.Date.valueOf(java.time.LocalDate.now()));
+            ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
 
             ResultSet resultSet = executeSelectPreparedStatement(ps);
             List<Role> roles = new ArrayList<>();
-            int uid =0;
+            int uid = 0;
             String fname = "";
             String lname = "";
             String richting = "";
@@ -75,42 +94,7 @@ public class LoginDAO extends AbstractDAO {
         return null;
     }
 
-/*
-    private User makeUserObject(int uid, String fname, String lname, String richting, List<Role> roles) {
-        User returnUser = null;
-        for (Role r : roles) {
 
-        }
-        switch (r) {
-            case STUDENT:
-                returnUser = new Student(uid, fname, lname);
-                returnUser.setRoles(Role.STUDENT);
-                break;
-            case TEACHER:
-                ///
-                returnUser = new Teacher(uid, fname, lname);
-                returnUser.setRoles(Role.TEACHER);
-                break;
-            case COORDINATOR:
-                ///
-                returnUser = new Coordinator(uid, fname, lname);
-                returnUser.setRoles(Role.COORDINATOR);
-                break;
-            case ADMINISTRATOR:
-                ///
-                returnUser = new Administrator(uid, fname, lname);
-                returnUser.setRoles(Role.ADMINISTRATOR);
-                break;
-            case TECHNICAL_ADMINISTRATOR:
-                ///
-                returnUser = new User(uid, fname, lname);
-                returnUser.setRoles(Role.TECHNICAL_ADMINISTRATOR);
-                break;
-        }
-        returnUser.setStudieRichting(richting);
-        return returnUser;
-    }
-*/
 }
 
 

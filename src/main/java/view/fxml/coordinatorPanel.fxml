@@ -62,7 +62,7 @@
                                  </HBox>
                                  <HBox spacing="5.0">
                                     <children>
-                                       <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="125.0" text="tijd:" />
+                                       <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="125.0" text="tijd (Optionel) :" />
                                        <TextField fx:id="textTimeLimit" promptText="minutes" HBox.hgrow="ALWAYS" />
                                     </children>
                                  </HBox>

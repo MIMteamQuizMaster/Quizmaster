@@ -204,7 +204,8 @@ public class CoordinatorPanelController {
     private void fillQuestionTable() {
         ObservableList<QuestionFx> questionFxes;
         // fil table accodring to selectedQuiz
-        questionFxes = convertQuestionToQuestionFX(questionDAO.getQuestions(selectedQuiz.getQuizObject()));
+        List<Question> qList = questionDAO.getQuestions(selectedQuiz.getQuizObject());
+        questionFxes = convertQuestionToQuestionFX(qList);
         colQuestion.setCellValueFactory(cellData -> cellData.getValue().questionProperty());
         colTotalAnswer.setCellValueFactory(cellData -> cellData.getValue().getTotalAnswer().asObject());
         colTotatlGood.setCellValueFactory(cellData -> cellData.getValue().getTotalGoodAnswer().asObject());
@@ -530,7 +531,7 @@ public class CoordinatorPanelController {
             String quizName = textQuizName.getText();
             String sd = textSuccessDefinite.getText();
             String tl = textTimeLimit.getText();
-            if (!sd.equals("") && !tl.equals("") && !quizName.equals("")) {
+            if (!sd.equals("") && !quizName.equals("")) {
                 double succesDefinite = Double.parseDouble(sd);
                 int timeLimit = Integer.parseInt(tl);
                 Quiz quiz;

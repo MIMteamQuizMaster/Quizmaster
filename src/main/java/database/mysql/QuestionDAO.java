@@ -1,7 +1,6 @@
 package database.mysql;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import model.Answer;
 import model.Question;
 import model.Quiz;
@@ -43,8 +42,16 @@ public class QuestionDAO extends AbstractDAO {
         return questions;
     }
 
-    public ObservableList<Question> getQuestions(Quiz quiz) {
-        ObservableList<Question> questionsList = FXCollections.observableArrayList();
+    /**
+     * @param quiz object with a valid Quiz id
+     * @return a list of Question Objects
+     * @author M.J. Moshiri
+     * <p>
+     * Get all questions that are dedicated to the given argument of Quiz typo
+     * which must have a valid quizId in it
+     */
+    public List<Question> getQuestions(Quiz quiz) {
+        List<Question> questionsList = new ArrayList<>();
         int quizId = quiz.getIdquiz();
         String query = "SELECT * FROM question WHERE quiz_id=?";
         try {
@@ -69,6 +76,16 @@ public class QuestionDAO extends AbstractDAO {
         return null;
     }
 
+    /**
+     * @param question Object with valid QuizID
+     * @return the Question ID with valid QuestionID in case of INSERT
+     * @author M.J. Moshiri
+     * <p>
+     * Save a Question in the databese, A question that has valid QuizId and QuestionID
+     * although the Quuestion id can be 0 so it mean that it is a new Question and the
+     * method will pick the INSERT query
+     * @Should return null if it fails while inserting or updating.
+     */
     public Question saveQuestion(Question question) {
         int id = question.getQuestionId();
         int quizid = question.getQuizId();
