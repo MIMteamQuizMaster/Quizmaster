@@ -47,24 +47,21 @@ public class Question {
         this.quizId = quizId;
     }
 
-    public void addAnswersToQuestion(Answer answer)
-    {
-        answers.add(answer);
-    }
 
     public List<Answer> getMixedAnswers() {
         return mixedAnswers;
     }
 
-    public void setMixedAnswers(List<Answer> mixedAnswers) {
-        this.mixedAnswers = mixedAnswers;
-    }
-
+    /**
+     * @should mix answer and add them to mixedAnswers variable so
+     * that the size of Answers and mixed Answer be the same
+     */
     /**
      * @should mix answer and add to result var
      */
     public void mixAnswers()
     {
+        mixedAnswers = new ArrayList<>();
         List<Answer> unmixedAnswers = new ArrayList<>(answers);
         Collections.shuffle(unmixedAnswers);
         mixedAnswers = unmixedAnswers;

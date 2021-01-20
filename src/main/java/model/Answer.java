@@ -1,26 +1,18 @@
 
 package model;
 
-import javafx.scene.control.TextArea;
-
 public class Answer {
 
     private int id;
     private int questionId;
     private boolean isCorrect;
     private String answer;
-    private int userQuizId;
+
     private boolean isGivenAnswer = false;
-    private TextArea textAres = new TextArea();
 
     public Answer(boolean isCorrect, String answer) {
         this.isCorrect = isCorrect;
         this.answer = answer;
-    }
-
-    public void textAreaOptions()
-    {
-        this.textAres.setText(this.getAnswer());
     }
 
     public int getId() {
@@ -55,10 +47,6 @@ public class Answer {
         this.questionId = questionId;
     }
 
-    public int getUserQuizId() {
-        return userQuizId;
-    }
-
     public boolean getIsGivenAnswer() {
         return isGivenAnswer;
     }
@@ -66,7 +54,6 @@ public class Answer {
     public void setGivenAnswer(boolean givenAnswer) {
         isGivenAnswer = givenAnswer;
     }
-
 
 
         @Override
