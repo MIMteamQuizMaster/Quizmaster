@@ -4,8 +4,6 @@ import database.mysql.DBAccess;
 import database.mysql.TechnischBeheerderDAO;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,6 +22,10 @@ import java.util.TimerTask;
 
 import static controller.fx.ObjectConvertor.*;
 
+/**
+ * @author M.J. Moshiri
+ * This controller class is completly dedicated to Technical Administrator Story line
+ */
 
 public class TechnicalAdministratorController {
 
@@ -41,7 +43,7 @@ public class TechnicalAdministratorController {
     @FXML
     private TableColumn<UserFx, String> col_role;
     public TableColumn<UserFx, Void> col_actie;
-    public TableColumn<UserFx,Void> col_delete;
+    public TableColumn<UserFx, Void> col_delete;
     @FXML
     private TextField richtingField;
     @FXML
@@ -73,7 +75,9 @@ public class TechnicalAdministratorController {
 
 
     /**
-     * Get the roles fill the ComboBox for User.
+     * @author M.J. Moshiri
+     * Create an ObservableList of String type and add the ToString of all Enum attributes to it
+     * then will fill the CheckComboBox with it
      */
     public void populateRoleMenu() {
         ObservableList<String> roleList = FXCollections.observableArrayList();
@@ -85,10 +89,11 @@ public class TechnicalAdministratorController {
 
 
     /**
-     * add or refresh the table of users
+     * Empty the User table and fill it again with fresh data from dataBase
+     *
+     * @author M.J. Moshiri
      */
     public void refreshTable() {
-
         table_users.getItems().clear();
         ObservableList<UserFx> tableListUsers = convertUserToUserFX(dao.getAllusers());
         col_id.setCellValueFactory(cellData -> cellData.getValue().userIdProperty().asObject());
@@ -103,15 +108,21 @@ public class TechnicalAdministratorController {
 
     }
 
+    /**
+     * This method add a button to each row in User table that let the technical asdministrator to end the validity
+     * of a role
+     *
+     * @author M.J. Moshiri
+     */
     private void addEndBtnToUserTable() {
-        col_delete.setCellFactory(cellData -> new TableCell<UserFx,Void>(){
+        col_delete.setCellFactory(cellData -> new TableCell<UserFx, Void>() {
             private final Button delButton = new Button("Beëindigen");
 
             {
                 delButton.setOnAction(event ->
                 {
                     boolean r = AlertHelper.confirmationDialog("Wilt u de lidmaatschap ven deze gebruiker beëindigen?");
-                    if(r){
+                    if (r) {
                         UserFx u = getTableRow().getItem();
                         dao.setEnd(u.getUserObject());
 
@@ -120,6 +131,7 @@ public class TechnicalAdministratorController {
 
                 });
             }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -131,10 +143,13 @@ public class TechnicalAdministratorController {
         });
     }
 
+    /**
+     * the method add a btn and a hidden text field to eevry
+     */
     private void addSetCredentialBtnToUserTable() {
         col_actie.setCellFactory(cellData -> new TableCell<UserFx, Void>() {
-            private final Button editButton = new Button("Set Credential");
             private final TextField passwordField = new TextField("");
+            private final Button editButton = new Button("Set Credential");
             {
                 editButton.setOnAction(event -> {
                     UserFx u = getTableRow().getItem();
@@ -148,24 +163,20 @@ public class TechnicalAdministratorController {
                         @Override
                         public void run() {
                             Platform.runLater(() -> {
-
-                                    if(!passwordField.getText().equals(currentPassword)){
-                                        boolean r = AlertHelper.confirmationDialog("Wilt u de wachtwoord van user id:" +
-                                                u.getUserId()
-                                                +" te veranderen?");
-                                        if (r) {
-                                            savePassword(passwordField.getText(), u.getUserObject());
-                                            refreshTable();
-
-                                        }
+                                if (!passwordField.getText().equals(currentPassword)) {
+                                    boolean r = AlertHelper.confirmationDialog("Wilt u de wachtwoord van user id:" +
+                                            u.getUserId()
+                                            + " te veranderen?");
+                                    if (r) {
+                                        savePassword(passwordField.getText(), u.getUserObject());
+                                        refreshTable();
                                     }
+                                }
                                 setGraphic(editButton);
-
                             });
                         }
                     };
                     timer.schedule(task, 10000L);
-
                 });
             }
             @Override
@@ -174,7 +185,7 @@ public class TechnicalAdministratorController {
                 if (!empty) {
                     setGraphic(editButton);
 
-                    try{
+                    try {
                         UserFx user = getTableRow().getItem();
                         String pass = showPasswordString(user.getUserObject());
                         if (pass.equals("")) {
@@ -184,7 +195,7 @@ public class TechnicalAdministratorController {
                             editButton.setStyle("-fx-background-color: #ccffcc");
                             editButton.setText("Edit Credential");
                         }
-                    }catch (NullPointerException e){
+                    } catch (NullPointerException e) {
                         table_users.refresh();
                         UserFx user = getTableRow().getItem();
                         System.out.println("null");
