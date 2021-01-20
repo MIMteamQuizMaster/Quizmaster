@@ -25,11 +25,6 @@ public class CreateQuizFromDatabase {
         this.questions = questionDAO.getQuestions (quiz);
         for (Question question: this.questions)
         {
-            this.answers = answerDAO.getAllAnswers(question);
-            question.addAnswersToQuestion(this.answers);
-        }
-        for (Question question: this.questions)
-        {
             question.mixAnswers();
         }
         quiz.setQuestions(this.questions);
