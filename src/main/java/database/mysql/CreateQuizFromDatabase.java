@@ -22,10 +22,10 @@ public class CreateQuizFromDatabase {
 
     public Quiz returnQuizFromDatabase(Quiz quiz)
     {
-        this.questions = questionDAO.getQuestionsForQuize(quiz);
+        this.questions = questionDAO.getQuestions (quiz);
         for (Question question: this.questions)
         {
-            this.answers = answerDAO.getAnswersForQuestion(question);
+            this.answers = answerDAO.getAllAnswers(question);
             question.addAnswersToQuestion(this.answers);
         }
         for (Question question: this.questions)

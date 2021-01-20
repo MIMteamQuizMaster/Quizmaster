@@ -148,7 +148,7 @@ public class FillOutFormMultipleAnswersController {
     public void callCreateAndAddQuiz()
     {
         Quiz newQuiz = new Quiz("Math", 5.5);
-        newQuiz.setIdquiz(1);
+        newQuiz.setIdquiz(3);
         CreateQuizFromDatabase createQuiz = new CreateQuizFromDatabase();
         this.quiz = createQuiz.returnQuizFromDatabase(newQuiz);
         for (Question question: this.quiz.getQuestions())

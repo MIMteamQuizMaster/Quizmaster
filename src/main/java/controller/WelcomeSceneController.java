@@ -2,6 +2,7 @@ package controller;
 
 import javafx.event.ActionEvent;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -45,38 +46,46 @@ public class WelcomeSceneController {
 
     }
 
+    /**
+     * @author M.J. Moshiri
+     *
+     * After a successful login and retrieveing user data this method will check the dedicated roles in the user object
+     * which is the LoggedInUser
+     * and for each role it will add the appripriate tab based on their role to the TabPane
+     */
     private void setPane() {
         List<Role> roles = this.loggedInUser.getRoles();
-        for (Role r : roles) {
-            if (r == Role.TECHNICAL_ADMINISTRATOR) {
-                view = sceneManager.getPage("TechnicalAdministrator");
-                Tab tab = new Tab();
-                tab.setText("Technical Administrator");
-                tab.setContent(view);
-                tabPanel.getTabs().add(tab);
+        if(roles.size()== 0){
+            new Alert(Alert.AlertType.INFORMATION, "No role has been dedicated to you.").show();
+        }else {
+            for (Role r : roles) {
+                if (r == Role.TECHNICAL_ADMINISTRATOR) {
+                    view = sceneManager.getPage("TechnicalAdministrator");
+                    Tab tab = new Tab();
+                    tab.setText("Technical Administrator");
+                    tab.setContent(view);
+                    tabPanel.getTabs().add(tab);
 
-            }
-            else if (r == Role.STUDENT) {
-                view = sceneManager.getPage("studentSignInOut");
-                Tab tab = new Tab();
-                tab.setText("Student");
-                tab.setContent(view);
-                tabPanel.getTabs().add(tab);
+                }
+                else if (r == Role.STUDENT) {
+                    view = sceneManager.getPage("studentSignInOut");
+                    Tab tab = new Tab();
+                    tab.setText("Student");
+                    tab.setContent(view);
+                    tabPanel.getTabs().add(tab);
 
-            }
-            else if (r == Role.COORDINATOR) {
-                view = sceneManager.getPage("coordinatorPanel");
-                Tab tab = new Tab();
-                tab.setText("Coordinator");
-                tab.setContent(view);
-                tabPanel.getTabs().add(tab);
+                }
+                else if (r == Role.COORDINATOR) {
+                    view = sceneManager.getPage("coordinatorPanel");
+                    Tab tab = new Tab();
+                    tab.setText("Coordinator");
+                    tab.setContent(view);
+                    tabPanel.getTabs().add(tab);
 
+                }
             }
         }
 
     }
 
-    public void editUserInfo(ActionEvent actionEvent) {
-        // TODO: give the loged in user to
-    }
 }
