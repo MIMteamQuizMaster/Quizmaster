@@ -1,9 +1,12 @@
 package launcher;
 
+import database.mysql.CourseDAO;
 import database.mysql.DBAccess;
 import database.mysql.DbInfo;
+import database.mysql.QuestionDAO;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import model.Course;
 import view.SceneManager;
 
 public class Main extends Application {
@@ -29,6 +32,13 @@ public class Main extends Application {
         // test comment first push
         DBAccess dbAccess = getDBaccess();
         dbAccess.openConnection();
+
+        // CDAO quick test
+        CourseDAO courseDAO = new CourseDAO(dbAccess);
+        Course course = courseDAO.getCourseById(1);
+        System.out.println(course.getName());
+
+
         Main.primaryStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setTitle("Make IT Work - Project 1");

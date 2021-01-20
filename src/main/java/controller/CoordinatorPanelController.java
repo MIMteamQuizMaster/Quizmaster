@@ -138,7 +138,7 @@ public class CoordinatorPanelController {
 
 
     /**
-     * Fill the Course Table view Using CoursFX objects
+     * Fill the Course Table view Using CourseFX objects
      */
     public void fillCoursesTable() {
         ObservableList<CourseFx> courses;
