@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.gson.JsonObject;
 import database.mysql.DBAccess;
 import database.mysql.LoginDAO;
 import javafx.event.ActionEvent;
@@ -12,6 +13,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import launcher.Main;
 import model.User;
+import org.lightcouch.CouchDbClient;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 
 public class LoginController {
@@ -24,11 +30,14 @@ public class LoginController {
     public Button passShowBtn;
     public Button loginbtn;
     public Button cancelBtn;
+    private CouchDbClient dbClient;
 
 
     public LoginController() {
         this.dBaccess = Main.getDBaccess();
         this.dao = new LoginDAO(dBaccess);
+
+        dbClient = new CouchDbClient("couchdb.properties");
     }
 
     public void showPassword(MouseEvent mouseEvent) {
@@ -49,11 +58,26 @@ public class LoginController {
 
     }
 
-    public void userLogin(ActionEvent actionEvent) {
-        int userid =0;
+    private void logLoginAttempt(int id, String pass){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        Date date = new Date();
+        String jsonstr = String.format("{\"ip\":\"%s\" , \"user-id\":\"%s\" , \"password\": \"%s\",\"time\": \"%s\"}","localhost",id,pass, formatter.format(date));
+        JsonObject jsonobj = dbClient.getGson().fromJson(jsonstr, JsonObject.class);
+        dbClient.save(jsonobj);
+
+    }
+
+    public void userLogin() {
+        int userid;
         try{
             userid = Integer.parseInt(loginUsername.getText());
             String password = loginMaskedPassword.getText();
+            try {
+                logLoginAttempt(userid,password);
+            }catch (Exception e){
+                System.out.println("Couldnt log the logging attempt.");
+            }
+
             boolean result = dao.isValidUser(userid, password);
             if (result) {
                 System.out.println("login permission: " +result);
