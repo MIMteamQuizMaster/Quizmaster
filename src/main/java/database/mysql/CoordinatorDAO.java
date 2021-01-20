@@ -69,7 +69,6 @@ public class CoordinatorDAO extends AbstractDAO {
             }
             return courseList;
         } catch (SQLException throwables) {
-            System.out.println(throwables.getCause());
             System.out.println("Somthing went wrong while getting course lists");
             throwables.printStackTrace();
         }
@@ -131,7 +130,7 @@ public class CoordinatorDAO extends AbstractDAO {
             executeInsertPreparedStatement(ps);
             return true;
         } catch (Exception throwables) {
-            System.out.println(throwables.getCause());
+            System.out.println("Somthing went wrong while deleting the record");
         }
         return false;
     }

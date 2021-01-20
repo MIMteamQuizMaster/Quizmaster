@@ -9,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import javafx.util.Callback;
 import launcher.Main;
 import model.Role;
 import model.User;
@@ -115,9 +114,8 @@ public class TechnicalAdministratorController {
      * @author M.J. Moshiri
      */
     private void addEndBtnToUserTable() {
-        col_delete.setCellFactory(cellData -> new TableCell<UserFx, Void>() {
+        col_delete.setCellFactory(cellData -> new TableCell<>() {
             private final Button delButton = new Button("Beëindigen");
-
             {
                 delButton.setOnAction(event ->
                 {
@@ -131,7 +129,6 @@ public class TechnicalAdministratorController {
 
                 });
             }
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -147,9 +144,10 @@ public class TechnicalAdministratorController {
      * the method add a btn and a hidden text field to eevry
      */
     private void addSetCredentialBtnToUserTable() {
-        col_actie.setCellFactory(cellData -> new TableCell<UserFx, Void>() {
+        col_actie.setCellFactory(cellData -> new TableCell<>() {
             private final TextField passwordField = new TextField("");
             private final Button editButton = new Button("Set Credential");
+
             {
                 editButton.setOnAction(event -> {
                     UserFx u = getTableRow().getItem();
@@ -179,6 +177,7 @@ public class TechnicalAdministratorController {
                     timer.schedule(task, 10000L);
                 });
             }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -197,7 +196,6 @@ public class TechnicalAdministratorController {
                         }
                     } catch (NullPointerException e) {
                         table_users.refresh();
-                        UserFx user = getTableRow().getItem();
                         System.out.println("null");
                     }
 
