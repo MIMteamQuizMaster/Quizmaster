@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.gson.JsonObject;
 import controller.fx.ClassFX;
 import controller.fx.GradeFX;
 import controller.fx.UserFx;
@@ -87,9 +88,6 @@ public class TeacherController implements Initializable {
      * Fill each table with respective objects in TableColumn
      */
     public void fillTable() {
-
-        //TODO: create StudentFX, use instead of UserFx
-
         classes = convertClassToClassFX(dao.getAllClasses(loggedInUser));
         students = convertUserToUserFX(dao.getAllStudents(loggedInUser));
         grades = convertGradeToGradeFX(gdao.getAllGradesPerTeacher(loggedInUser));
@@ -99,12 +97,9 @@ public class TeacherController implements Initializable {
         quizColumn.setCellValueFactory(cellData -> cellData.getValue().quizIdProperty().asObject());
         gradeColumn.setCellValueFactory(cellData -> cellData.getValue().gradeProperty().asObject());
 
-
-
         classTable.getItems().addAll(classes);
         quizTable.getItems().addAll(grades);
         gradeTable.getItems().addAll(grades);
-
 
     }
 
@@ -112,7 +107,6 @@ public class TeacherController implements Initializable {
 
     public void selectStudents() {
         groupComboBox.setItems(classes);
-
         groupComboBox.setConverter(new StringConverter<ClassFX>() {
             @Override
             public String toString(ClassFX classFX) {
@@ -128,6 +122,7 @@ public class TeacherController implements Initializable {
         groupComboBox.setOnAction((event) -> {
             studentTable.getItems().clear();
             int selectedIndex = groupComboBox.getSelectionModel().getSelectedIndex();
+            // TODO: change to GroupFX
             ClassFX selectedItem = groupComboBox.getSelectionModel().getSelectedItem();
             System.out.println("bla"+ selectedItem.getDbId());
             students = convertUserToUserFX(dao.getStudentsPerClass(selectedItem.getClassObject()));

@@ -39,7 +39,11 @@ public class LoginController {
         this.dBaccess = Main.getDBaccess();
         this.dao = new LoginDAO(dBaccess);
 
-        dbClient = new CouchDbClient("couchdb.properties");
+        try {
+            dbClient = new CouchDbClient("couchdb.properties");
+        } catch (Exception e) {
+            System.out.println("CouchDB user not found or CouchDB not running");
+        }
     }
 
     public void showPassword(MouseEvent mouseEvent) {
