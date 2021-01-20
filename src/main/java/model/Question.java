@@ -60,6 +60,9 @@ public class Question {
         this.mixedAnswers = mixedAnswers;
     }
 
+    /**
+     * @should mix answer and add to result var
+     */
     public void mixAnswers()
     {
         List<Answer> unmixedAnswers = new ArrayList<>(answers);

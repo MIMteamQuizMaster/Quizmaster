@@ -30,8 +30,7 @@ public class TeacherController implements Initializable {
     private DBAccess dBaccess;
     private GroupDAO dao;
     private GradeDAO gdao;
-    private Teacher loggedInUser;
-    private User loggedInUser2;
+    private User loggedInUser;
 
 
     @FXML
@@ -77,7 +76,7 @@ public class TeacherController implements Initializable {
         this.dao = new GroupDAO(this.dBaccess);
         this.gdao = new GradeDAO(this.dBaccess);
         //loggedInUser = (User) Main.getPrimaryStage().getUserData();
-        loggedInUser = new Teacher(10040,"piet","paulusma");
+        loggedInUser = new User(10040,"piet","paulusma");
 
         fillTable();
 

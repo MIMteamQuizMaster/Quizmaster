@@ -7,6 +7,7 @@ module QuizMaster {
     requires lightcouch;
     requires gson;
     requires org.controlsfx.controls;
+    requires org.junit.jupiter.api;
 
     opens view to javafx.graphics, javafx.fxml;
     opens launcher to javafx.graphics, javafx.fxml;

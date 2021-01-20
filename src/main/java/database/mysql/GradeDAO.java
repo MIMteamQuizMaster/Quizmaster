@@ -39,7 +39,7 @@ public class GradeDAO extends AbstractDAO {
         return rList;
     }
 
-    public ObservableList<Grade> getAllGradesPerTeacher(Teacher teacher) {
+    public ObservableList<Grade> getAllGradesPerTeacher(User teacher) {
         System.out.println(teacher.getUserId());
         String sql = "SELECT q.id, g.grade FROM quiz q INNER JOIN course c ON q.course_id = c.id INNER JOIN grade g ON g.quiz_id = q.id  WHERE coordinator_user_id = " + teacher.getUserId();
         ObservableList<Grade> rList = FXCollections.observableArrayList();

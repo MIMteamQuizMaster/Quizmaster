@@ -20,6 +20,7 @@ public class CreateQuizFromDatabase {
     private List<Answer> answers = new ArrayList<>();
 
 
+
     public Quiz returnQuizFromDatabase(Quiz quiz)
     {
         this.questions = questionDAO.getQuestions (quiz);

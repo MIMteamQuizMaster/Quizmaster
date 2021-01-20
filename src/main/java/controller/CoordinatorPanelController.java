@@ -109,14 +109,13 @@ public class CoordinatorPanelController {
         selectedAnswer = null;
 
         //Close all open pane
-        if(quizPane.isExpanded()){
+        if(quizPane.isExpanded()) {
             expandTitledPane(new ActionEvent(),quizPane);
         }
-        if(questionPane.isExpanded())
-        {
+        if(questionPane.isExpanded()) {
             expandTitledPane(new ActionEvent(),questionPane);
         }
-        if(answerPane.isExpanded()){
+        if(answerPane.isExpanded()) {
             expandTitledPane(new ActionEvent(),answerPane);
         }
 
@@ -522,7 +521,7 @@ public class CoordinatorPanelController {
 
     /**
      * Save or update quiz
-     *
+     * TODO: splitsen van if statements
      * @param actionEvent
      */
     public void btnSaveQuizAction(ActionEvent actionEvent) {
@@ -567,7 +566,7 @@ public class CoordinatorPanelController {
 
     /**
      * Save or update Question
-     *
+     * TODO: splitsen van if statements
      * @param actionEvent
      */
     public void btnSaveQuestionAction(ActionEvent actionEvent) {
@@ -606,6 +605,7 @@ public class CoordinatorPanelController {
 
     /**
      * add answer to the databes according to the last selected question
+     * TODO: splitsen van if statements
      */
     public void btnSaveAnswerAction() {
         String answerString = textAnswer.getText();

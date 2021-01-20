@@ -10,7 +10,7 @@
           <TableColumn fx:id="classColumn" prefWidth="149.0" text="Klas" />
         </columns>
       </TableView>
-       <TableView fx:id="studentTable" layoutX="250.0" layoutY="14.0" onMouseClicked="#onStudentTableClick" prefHeight="200.0" prefWidth="150.0">
+       <TableView fx:id="studentTable" layoutX="250.0" layoutY="14.0" prefHeight="200.0" prefWidth="150.0">
            <columns>
                <TableColumn fx:id="studentColumn" prefWidth="149.0" text="Student">
                <columns>
