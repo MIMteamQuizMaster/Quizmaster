@@ -15,9 +15,11 @@ import launcher.Main;
 import model.User;
 import org.lightcouch.CouchDbClient;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 
 
 public class LoginController {
@@ -58,28 +60,40 @@ public class LoginController {
 
     }
 
-    private void logLoginAttempt(int id, String pass){
+    private void logLoginAttempt(int id, String pass) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date date = new Date();
-        String jsonstr = String.format("{\"ip\":\"%s\" , \"user-id\":\"%s\" , \"password\": \"%s\",\"time\": \"%s\"}","localhost",id,pass, formatter.format(date));
-        JsonObject jsonobj = dbClient.getGson().fromJson(jsonstr, JsonObject.class);
-        dbClient.save(jsonobj);
+        String ip = "";
+        try {
+            URL whatismyip = new URL("http://checkip.amazonaws.com");
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    whatismyip.openStream()));
+            ip = in.readLine();
+
+        } catch (Exception e) {
+            ip = "could not retrieve.";
+        }
+        try{
+            String jsonstr = String.format("{\"ip\":\"%s\" , \"user-id\":\"%s\" , \"password\": \"%s\",\"time\": \"%s\"}", ip, id, pass, formatter.format(date));
+            JsonObject jsonobj = dbClient.getGson().fromJson(jsonstr, JsonObject.class);
+            dbClient.save(jsonobj);
+        }catch (Exception e){
+            System.out.println("couldnt save logging attemp in NoSQL");
+        }
+
+
 
     }
 
     public void userLogin() {
         int userid;
-        try{
+        try {
             userid = Integer.parseInt(loginUsername.getText());
             String password = loginMaskedPassword.getText();
-            try {
-                logLoginAttempt(userid,password);
-            }catch (Exception e){
-                System.out.println("Couldnt log the logging attempt.");
-            }
+            logLoginAttempt(userid, password);
             boolean result = dao.isValidUser(userid, password);
             if (result) {
-                System.out.println("login permission: " +result);
+                System.out.println("login permission: " + result);
 
                 // set logedin user data to use in different pane with appropriate permision!
                 Main.getPrimaryStage().setUserData(passUser(userid));
@@ -94,8 +108,7 @@ public class LoginController {
 
             }
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             warningLabel.setVisible(true);
             warningLabel.setText("Gebruikers-ID-formaat is onjuist.");
             System.out.println(e.getMessage());
