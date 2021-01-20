@@ -1,8 +1,6 @@
 package controller.fx;
 
-import controller.FillOutFormMultipleAnswersController;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
@@ -16,6 +14,13 @@ public class AnswerFormFX {
     private Answer answer;
 
 
+    /**
+     * @author Ismael Ben Cherif
+     *Is used to add JavaFX functionality and make it compatible with the answeobject
+     * from the Answer class in Model.
+     * @param answer
+     */
+
     public AnswerFormFX(Answer answer) {
         this.answer = answer;
         CheckBox alfaCheckBox = new CheckBox();
@@ -24,7 +29,6 @@ public class AnswerFormFX {
         this.checkBox = new SimpleObjectProperty<CheckBox>(alfaCheckBox);
         this.button = new SimpleObjectProperty<Button>(alfaButton);
         this.textArea = new SimpleObjectProperty<TextArea>(alfaTextArea);
-/*        setTableViewAtrributes();*/
     }
 
     public CheckBox getCheckBox() {
