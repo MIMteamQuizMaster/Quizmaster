@@ -3,8 +3,7 @@ package database.mysql;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Grade;
-import model.Student;
-import model.Teacher;
+
 import model.User;
 
 import java.sql.PreparedStatement;

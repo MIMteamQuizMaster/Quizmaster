@@ -10,7 +10,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import launcher.Main;
-import model.Coordinator;
 import model.Course;
 import model.Role;
 import model.User;

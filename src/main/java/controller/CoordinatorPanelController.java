@@ -103,11 +103,6 @@ public class CoordinatorPanelController {
      * Empty and clear fields and selected objects
      */
     private void emptyFieldsAndSelected() {
-        selectedCourse = null;
-        selectedQuiz = null;
-        selectedQuestion = null;
-        selectedAnswer = null;
-
         //Close all open pane
         if(quizPane.isExpanded()) {
             expandTitledPane(new ActionEvent(),quizPane);
@@ -118,7 +113,17 @@ public class CoordinatorPanelController {
         if(answerPane.isExpanded()) {
             expandTitledPane(new ActionEvent(),answerPane);
         }
+        btnAnswerPanelOpen.setDisable(true);
+        btnQuestionPanelOpen.setDisable(true);
+        btnQuizPanelOpen.setDisable(true);
+        clearAll();
+    }
 
+    private void clearAll() {
+        selectedCourse = null;
+        selectedQuiz = null;
+        selectedQuestion = null;
+        selectedAnswer = null;
         // empty sub quiz lists
         answerTable.getItems().clear();
         quizzesTable.getItems().clear();
@@ -129,10 +134,6 @@ public class CoordinatorPanelController {
         textTimeLimit.clear();
         textSuccessDefinite.clear();
         textQuizName.clear();
-
-        btnAnswerPanelOpen.setDisable(true);
-        btnQuestionPanelOpen.setDisable(true);
-        btnQuizPanelOpen.setDisable(true);
     }
 
 
@@ -558,7 +559,6 @@ public class CoordinatorPanelController {
 
     /**
      * Save or update Question
-     * TODO: splitsen van if statements
      * @param actionEvent
      */
     public void btnSaveQuestionAction(ActionEvent actionEvent) {
@@ -577,9 +577,6 @@ public class CoordinatorPanelController {
             question.setQuestionId(0);
             question = questionDAO.saveQuestion(question); // save the question
 
-
-
-
         } else {
             /// UPDATE ITEM so we send update the selected question and send it to dao save method
             selectedQuestion.setQuestion(questionString);
@@ -589,10 +586,7 @@ public class CoordinatorPanelController {
             refreshQuestionTable();
             refreshAnswerTable();
             selectedQuestion = new QuestionFx(question);
-
         }
-
-
     }
 
     /**
@@ -603,7 +597,6 @@ public class CoordinatorPanelController {
         String answerString = textAnswer.getText();
         boolean isCorrect = cBoxAnswerIsCorrect.isSelected();
         Answer answer;
-
         if (selectedAnswer != null) {
             //update
             answer = selectedAnswer.getAnswerObject();
@@ -615,25 +608,19 @@ public class CoordinatorPanelController {
             answer = new Answer(isCorrect, answerString);
             answer.setQuestionId(questionId);
             answer.setId(0);
-
         }
-
         if (!limitAnswers(answer)) {
             new Alert(Alert.AlertType.ERROR, "max 4 answer and 1 good answer").show();
             return;
         }
         selectedQuestion.addAnswer(answer);
-
         /// Send to DAO
         answer = answerDAO.saveAnswer(answer);
-
         if (answer != null) { // after succesfull add we disable the editMode
-
             refreshQuestionTable();
             refreshAnswerTable();
             textAnswer.clear();
         }
-
     }
 
 
