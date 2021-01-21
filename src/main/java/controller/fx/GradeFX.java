@@ -1,9 +1,6 @@
 package controller.fx;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import model.Grade;
 
 
@@ -19,6 +16,13 @@ public class GradeFX {
         return this.grade;
     }
 
+    public String getQuizName() {
+        return new SimpleStringProperty(this.grade.getQuizName()).get();
+    }
+
+    public StringProperty quizNameProperty() {
+        return new SimpleStringProperty(this.grade.getQuizName());
+    }
 
     public int getQuizId() {
         return new SimpleIntegerProperty(this.grade.getQuizId()).get();

@@ -5,12 +5,20 @@ public class Grade {
     private int quizId;
     private double grade;
     private int studentId;
-
+    private String quizName;
 
     public Grade(int quizId, double grade, int studentId) {
         this.quizId = quizId;
         this.grade = grade;
         this.studentId = studentId;
+    }
+
+    public String getQuizName() {
+        return quizName;
+    }
+
+    public void setQuizName(String quizName) {
+        this.quizName = quizName;
     }
 
     public int getQuizId() {

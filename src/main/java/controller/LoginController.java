@@ -64,6 +64,12 @@ public class LoginController {
 
     }
 
+    /**
+     * store a jsonobject of login attempt, including IP address generated using Amazon AWS service
+     * @param id
+     * @param pass
+     * @author Everyone in Team MIM
+     */
     private void logLoginAttempt(int id, String pass) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date date = new Date();

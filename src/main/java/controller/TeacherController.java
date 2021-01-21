@@ -52,7 +52,7 @@ public class TeacherController implements Initializable {
     @FXML
     public TableColumn<UserFx, String> studentColumnAchternaam;
     @FXML
-    public TableColumn<GradeFX, Integer> quizColumn;
+    public TableColumn<GradeFX, String> quizColumn;
     @FXML
     public TableColumn<GradeFX, Double> gradeColumn;
 
@@ -101,14 +101,14 @@ public class TeacherController implements Initializable {
                     quizTable.getItems().clear();
                     gradeTable.getItems().clear();
                     grades = convertGradeToGradeFX(gradeDAO.getAllGrades(selectedItems.get(0).getUserObject()));
-                    quizColumn.setCellValueFactory(cellData -> cellData.getValue().quizIdProperty().asObject());
+                    quizColumn.setCellValueFactory(cellData -> cellData.getValue().quizNameProperty());
                     quizTable.getItems().addAll(grades);
                     double total = 0;
                     int count = 0;
                     for(GradeFX grade: grades) {
                         count++;
                     }
-                    quizTotal.setText("Aantal quizzen: " + String.valueOf(count));
+                    quizTotal.setText("Totaal: " + String.valueOf(count));
                     fillGradeTable();
                 } else {
                     quizTotal.clear();
@@ -140,7 +140,7 @@ public class TeacherController implements Initializable {
                         total = total + grade.getGrade();
                         count++;
                     }
-                    averageGrade.setText("Gemiddeld: " + String.valueOf(total / count));
+                    averageGrade.setText("Gemiddelde: " + String.valueOf(total / count));
                 } else {
                     averageGrade.clear();
                 }
