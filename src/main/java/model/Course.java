@@ -13,12 +13,14 @@ public class Course {
     private String endDate;
     private List<Quiz> quizzes;
     private List<Group> groups;
+    private List<User> users;
 
     public Course(String name, User coordinator) {
         this.name = name;
         this.coordinator = coordinator;
         quizzes = new ArrayList<>();
         groups = new ArrayList<>();
+        users = new ArrayList<>();
     }
 
     public int getDbId() {
@@ -85,6 +87,13 @@ public class Course {
         quizzes.remove(quiz);
     }
 
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 
     /**
      * @should add a group to a course.

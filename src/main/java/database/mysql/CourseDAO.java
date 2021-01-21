@@ -1,11 +1,11 @@
 package database.mysql;
-
 import model.Course;
 import model.User;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CourseDAO extends AbstractDAO {
@@ -19,11 +19,11 @@ public class CourseDAO extends AbstractDAO {
      * Build new course object.
      * @param course_id the id of the course.
      * @return the new course object created from the database.
-     * @author M.J. Alden-Montague
      */
     public Course getCourseById(int course_id) {
         String sql_course = "SELECT name, coordinator_user_id, startDate, endDate FROM course WHERE id = " + course_id;
         Course course = null;
+
         try {
             Course mpCourse;
             PreparedStatement psCourse = getStatement(sql_course);
@@ -50,13 +50,42 @@ public class CourseDAO extends AbstractDAO {
         } catch (SQLException e) {
             System.out.println("SQL error: " + e.getMessage());
         }
+
         return course;
+    }
+
+    public List<Course> getAllcoursesNotAssignedToStudent(List<String> registeredCourses)
+    {
+        List<Course> courses = new ArrayList<>();
+        String stringRegesteredCourses = String.join(", ", registeredCourses);
+        String sql;
+        if (registeredCourses.size()>0) {
+            sql = String.format("SELECT *\n" +
+                    "FROM course\n" +
+                    "WHERE id NOT IN (%s);", stringRegesteredCourses);
+        }
+        else
+        {
+            sql = "SELECT * FROM course";
+        }
+        try {
+            PreparedStatement preparedStatement = getStatement(sql);
+            ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
+            while (resultSet.next())
+            {
+
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+        return courses;
     }
 
     /**
      * Insert passed course into database, extracting each attribute from preparedStatement
      * @param mpCourse is the course passed by the user
-     * @author M.J. Alden-Montague
      */
     public void storeCourse(Course mpCourse) {
         String sql = "INSERT INTO course(coordinator_user_id, name, startDate, endDate)" + "VALUES (?,?,?,?)";
@@ -71,18 +100,25 @@ public class CourseDAO extends AbstractDAO {
             System.out.println("SQL error: " + e.getMessage());
         }
     }
-    /**
-     * Delete course from database
-     * @param course_id is the course id passed by the user
-     * @author M.J. Alden-Montague
-     */
-    public void deleteCourse(int course_id) {
-        String sql = "DELETE FROM course WHERE id = " + course_id;
+
+    public List<Course> coursesToRegisterForEachStudent(User student)
+    {
+        List<Course> courseList = new ArrayList<>();
+        student.getUserId();
+        String sql = String.format("SELECT course_id FROM user_has_group" +
+                "WHERE student_user_id = %s", student);
         try {
             PreparedStatement preparedStatement = getStatement(sql);
-            executeManipulatePreparedStatement(preparedStatement);
-        } catch (SQLException e) {
-            System.out.println("SQL error: " + e.getMessage());
+            ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
+            while (resultSet.next())
+            {
+                int course_id = resultSet.getInt(1);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+
+        return courseList;
     }
+
 }
