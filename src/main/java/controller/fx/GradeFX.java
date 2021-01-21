@@ -1,15 +1,13 @@
 package controller.fx;
 
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import model.Grade;
 
 
 public class GradeFX {
-
-//    private int quizId;
-//    private double grade;
-//    private int studentId;
-
 
     private Grade grade;
 

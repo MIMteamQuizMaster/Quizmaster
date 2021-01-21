@@ -6,12 +6,12 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.WelcomeSceneController">
-    <VBox maxHeight="1.7976931348623157E308" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #cce2ef; -fx-border-color: black; -fx-border-width: 1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <VBox maxHeight="1.7976931348623157E308" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #eaeaea; -fx-border-color: black; -fx-border-width: 1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="800.0" spacing="10.0">
             <children>
-                <Label fx:id="welcomeLabel" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Welcome User!" textAlignment="CENTER" textFill="#b55353e3">
+                <Label fx:id="welcomeLabel" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Welcome User!" textAlignment="CENTER" textFill="#050404">
                     <font>
-                        <Font name="Impact" size="18.0" />
+                        <Font name="Tahoma" size="18.0" />
                     </font>
                     <opaqueInsets>
                         <Insets />

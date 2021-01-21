@@ -88,6 +88,14 @@ public class WelcomeSceneController {
                     tabPanel.getTabs().add(tab);
 
                 }
+                else if (r == Role.TEACHER) {
+                    view = sceneManager.getPage("Teacher");
+                    Tab tab = new Tab();
+                    tab.setText("Teacher");
+                    tab.setContent(view);
+                    tabPanel.getTabs().add(tab);
+
+                }
             }
         }
 

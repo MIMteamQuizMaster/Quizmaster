@@ -3,8 +3,6 @@ package controller.fx;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.*;
-import model.Class;
-import model.Grade;
 
 import java.util.List;
 
@@ -86,14 +84,15 @@ public class ObjectConvertor {
     }
 
     /**
-     * Convert Class objects to ClassFX objects
+     * Convert Class objects to GroupFX objects
      * @param userObservableList list of Class objects
-     * @return a observableList ClassFX objects
+     * @return a observableList GroupFX objects
+     * @author M.J Alden-Montague
      */
-    public static ObservableList<ClassFX> convertClassToClassFX(ObservableList<Class> userObservableList){
-        ObservableList<ClassFX> listedClasses = FXCollections.observableArrayList();
-        for (Class c:userObservableList) {
-            listedClasses.add(new ClassFX(c));
+    public static ObservableList<GroupFX> convertGroupToGroupFX(ObservableList<Group> userObservableList){
+        ObservableList<GroupFX> listedClasses = FXCollections.observableArrayList();
+        for (Group c:userObservableList) {
+            listedClasses.add(new GroupFX(c));
         }
         return listedClasses;
     }
@@ -102,6 +101,7 @@ public class ObjectConvertor {
      * Convert Class objects to ClassFX objects
      * @param userObservableList list of Class objects
      * @return a observableList ClassFX objects
+     * @author M.J Alden-Montague
      */
     public static ObservableList<GradeFX> convertGradeToGradeFX(ObservableList<Grade> userObservableList){
         ObservableList<GradeFX> listedClasses = FXCollections.observableArrayList();
