@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+
 
 public class Question {
     private int questionId;
@@ -53,8 +53,10 @@ public class Question {
     }
 
     /**
+     * @author Ismael Ben Cherif
      * @should mix answer and add them to mixedAnswers variable so
      * that the size of Answers and mixed Answer be the same
+     *
      **/
     public void mixAnswers()
     {

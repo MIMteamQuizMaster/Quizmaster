@@ -20,32 +20,11 @@ public class QuestionDAO extends AbstractDAO {
 
     }
 
-    public List<Question> getQuestionsForCourse(int courseId) {
-        List<Question> questions = new ArrayList<>();
-        String sql = String.format("SELECT * FROM question\n" +
-                "WHERE quiz_id=%d;", courseId);
-        try {
-            PreparedStatement preparedStatement = getStatement(sql);
-            Question question;
-            ResultSet rs = executeSelectPreparedStatement(preparedStatement);
-            while (rs.next()) {
-                String questionToCourse = rs.getString(3);
-                int correct = rs.getInt(3);
-                question = new Question(questionToCourse);
-                question.setQuestionId(rs.getInt(1));
-                question.setQuizId(2);
-                questions.add(question);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return questions;
-    }
 
     /**
      * @param quiz object with a valid Quiz id
      * @return a list of Question Objects
-     * @author M.J. Moshiri
+     * @author M.J. Moshiri and Ismael Ben Cherif
      * <p>
      * Get all questions that are dedicated to the given argument of Quiz typo
      * which must have a valid quizId in it

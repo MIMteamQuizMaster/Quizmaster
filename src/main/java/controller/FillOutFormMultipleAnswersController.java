@@ -14,6 +14,12 @@ import model.Quiz;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Ismael Ben Cherif
+ * This class is used to provide functionality to the U.I the student sees when
+ * he or she choose a quiz to answer.
+ */
+
 public class FillOutFormMultipleAnswersController {
 
     public Label questionLabel;
@@ -34,6 +40,12 @@ public class FillOutFormMultipleAnswersController {
 
     private int questionNumber =1;
 
+    /**
+     * When initialized a text is set to the question label, the quiz is added, the answers are created
+     * as objects in the AnswerFormFX so use of JavaFX atrributes can be used like buttons, text fields
+     * and checkboxes.
+     * Properties are assigned to the attributes.
+     */
     public void initialize()
     {
         questionLabel.setText(String.format("Vraag %d", questionNumber));
@@ -47,6 +59,11 @@ public class FillOutFormMultipleAnswersController {
         this.questionTextAres.setText(this.questions.get(questionNumber-1).getQuestion());
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * When a student goes to the next question the label, textarea and tableview are updated
+     * so the student sees the current questions and answers.
+     */
     public void onNextscreenUpdate()
     {
         questionLabel.setText(String.format("Vraag %d", questionNumber));
@@ -54,6 +71,12 @@ public class FillOutFormMultipleAnswersController {
         setUpTableView();
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Is used to see how many answers a question has an set it to 1, because
+     * every question can only have one correct answer.
+     * An other array is filled to see if an answer is chosen.
+     */
     public void fillPossibleAndGivenAnswers()
     {
         for (Question question: this.questions)
@@ -63,18 +86,32 @@ public class FillOutFormMultipleAnswersController {
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * If the student selects an answer, 1 is added to the countgivenanswers.
+     */
     public void addOnePerQuestionToGivenAnswer()
     {
         this.countGivenAnswers.set(questionNumber-1,
                 this.countGivenAnswers.get(questionNumber-1)+1);
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * If the student cklicks an already selected answer, 1 is substracted for the
+     * countgivenanswes, so another answer can be selected.
+     */
     public void substractOnePerQuestionToGivenAnswer()
     {
         this.countGivenAnswers.set(questionNumber-1,
                 this.countGivenAnswers.get(questionNumber-1)-1);
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Checks if an answer has already been given to a question.
+     * @return
+     */
     private boolean compareGivenToPossibleAnswers()
     {
         boolean returnValue = true;
@@ -86,6 +123,14 @@ public class FillOutFormMultipleAnswersController {
         return returnValue;
     }
 
+    /**
+     * @author Ismael Ben Cherif.
+     * Ads the following action to the button:
+     * If a answer is not selected, the student can select one and the choice is saved in the answer
+     * object.
+     * A student can deselct an gevin answer, after wich the answer is decelected and the student can
+     * pick another answer.
+     */
     public void setActionToButton() {
         for (int i = 0; i < answersFXListPerQuestion.size(); i++) {
             for (int j = 0; j < answersFXListPerQuestion.get(i).size(); j++) {
@@ -114,6 +159,11 @@ public class FillOutFormMultipleAnswersController {
         }
     }
 
+    /**
+     * @author IsmaelBen Cherif
+     * The textarea's of the answers are filled with the answers of the answer objects
+     * and are set to not editable
+     */
     public void initiateTextAreaProperty()
     {
         for (int i = 0; i < this.answersFXListPerQuestion.size(); i++) {
@@ -128,6 +178,12 @@ public class FillOutFormMultipleAnswersController {
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Checkboxes are set to disabled.
+     * If an answer is selected the checkbox will be checked, if not the checkbox
+     * will be unchexked.
+     */
     public void initiateCheckBoxPropertie()
     {
         for (int i = 0; i < this.answersFXListPerQuestion.size(); i++) {
@@ -145,6 +201,11 @@ public class FillOutFormMultipleAnswersController {
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif.
+     * Retrieves question and answers data from the database and ads it to a quiz object.
+     * From this object the mixed answers are entered in a List.
+     */
     public void callCreateAndAddQuiz()
     {
         Quiz newQuiz = new Quiz("Math", 5.5);
@@ -161,6 +222,11 @@ public class FillOutFormMultipleAnswersController {
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * the answers are entered in rhe answerformFX so JavaFX functionality can be used
+     * like buttons, textarea and checkbox.
+     */
     public void createAndAddAnswerFormFX()
     {
         for (List<Answer> answers: this.answersListPerQuestion)
@@ -175,6 +241,10 @@ public class FillOutFormMultipleAnswersController {
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * The tableview is loaded with the attributes it should display.
+     */
     public void setUpTableView()
     {
         checkBoxColumn.setCellValueFactory(cellData -> cellData.getValue().checkBoxProperty());
@@ -184,6 +254,12 @@ public class FillOutFormMultipleAnswersController {
         answerTableView.setItems(answerFormFXObservableList());
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * An list is created called observable list to make it possible for
+     * the tablevieuw to read the attributes.
+     * @return
+     */
     public ObservableList<AnswerFormFX> answerFormFXObservableList()
     {
         ObservableList<AnswerFormFX> answerFormFXES = FXCollections.observableArrayList();
@@ -199,6 +275,12 @@ public class FillOutFormMultipleAnswersController {
 
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * When the return button is pressed an number is substracted and the previous question
+     * and answers are loaded, as long as you're not at question 1. Else the button is disabled.
+     * @param actionEvent
+     */
     public void returnButtonAction(ActionEvent actionEvent) {
         if (this.questionNumber!=1)
         {
@@ -211,6 +293,12 @@ public class FillOutFormMultipleAnswersController {
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * When the next button is pressed an number is added and the next question
+     * and answers are loaded, as long as there are questions. Else the button is disabled.
+     * @param actionEvent
+     */
     public void nextButtonAction(ActionEvent actionEvent) {
         if (questionNumber<questions.size())
         {

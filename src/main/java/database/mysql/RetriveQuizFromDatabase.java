@@ -19,6 +19,12 @@ public class RetriveQuizFromDatabase {
     private List<Question> questions = new ArrayList<>();
     private List<Answer> answers = new ArrayList<>();
 
+    /**
+     * @author Ismael Ben Cherif
+     * Returns a quiz qith the answers mixed.
+     * @param quiz
+     * @return
+     */
 
 
     public Quiz returnQuizFromDatabase(Quiz quiz)

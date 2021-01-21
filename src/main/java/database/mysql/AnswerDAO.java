@@ -17,7 +17,7 @@ public class AnswerDAO extends AbstractDAO {
     /**
      * @param question a question Object with valid question id
      * @return a list containd all possible answers dedicated to the Question
-     * @author M.J. Moshiri
+     * @author M.J. Moshiri and Ismael Ben Cherif
      * Get all answers dedicated to given arugument which must be of question Type with valid Question ID
      * The answer have a Getter for their validity
      */
