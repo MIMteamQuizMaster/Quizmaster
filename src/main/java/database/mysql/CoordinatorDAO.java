@@ -135,5 +135,31 @@ public class CoordinatorDAO extends AbstractDAO {
         return false;
     }
 
+    public User getCoordibatorById(int coordinatorId)
+    {
+        User coordinator_user = null;
+        String sql = String.format("SELECT * FROM user\n" +
+                "WHERE user_id=%s;", coordinatorId);
+        try {
+            PreparedStatement preparedStatement = getStatement(sql);
+            ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
+            if (resultSet.next())
+            {
+                int user_id = resultSet.getInt(1);
+                String firstName = resultSet.getString(2);
+                String lastName = resultSet.getString(3);
+                coordinator_user = new User(user_id, firstName, lastName);
+            }
+            else
+            {
+                System.out.println("There is no Coordinator to select.");
+            }
+            return coordinator_user;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+
+    }
 
 }
