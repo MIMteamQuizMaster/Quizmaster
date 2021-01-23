@@ -88,11 +88,9 @@ public class QuizDAO extends AbstractDAO {
             ps.setInt(4, timelimit);
             ps.setInt(5, id);
             int key = executeInsertPreparedStatement(ps);
-
             if (id == 0) {
                 quiz.setIdquiz(key);
             }
-            quiz.setIdquiz(key);
             return quiz;
         } catch (SQLException throwables) {
             System.out.println("Somthing went wrong while adding quiz");

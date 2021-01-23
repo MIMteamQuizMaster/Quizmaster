@@ -5,236 +5,218 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CoordinatorPanelController">
-    <HBox layoutX="126.0" layoutY="187.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="335.0" HBox.hgrow="NEVER">
-            <TableView fx:id="courseTable" onMouseClicked="#courseTableOnClick" prefHeight="267.0" VBox.vgrow="NEVER">
-                <columns>
-                    <TableColumn fx:id="col_course_name" prefWidth="70.0" text="Course" />
-                    <TableColumn prefWidth="140.0" text="Period">
-                        <columns>
-                            <TableColumn fx:id="col_sdate" prefWidth="70.0" text="Start" />
-                            <TableColumn fx:id="col_edate" prefWidth="70.0" text="End" />
-                        </columns>
-                    </TableColumn>
-                </columns>
-                <columnResizePolicy>
-                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                </columnResizePolicy>
-            <VBox.margin>
-               <Insets />
-            </VBox.margin>
-            </TableView>
-         <Pane prefHeight="178.0" prefWidth="325.0" VBox.vgrow="ALWAYS">
-            <children>
-               <TableView fx:id="quizzesTable" layoutY="31.0" onMouseClicked="#quizTableOnClick" prefHeight="200.0" prefWidth="323.0">
-                 <columns>
-                   <TableColumn fx:id="colNameQuizTable" prefWidth="102.0" text="Name" />
-                   <TableColumn fx:id="colSuccessQuizTable" prefWidth="118.0" text="Success Definition" />
-                     <TableColumn fx:id="colTimeLimitQuizTable" prefWidth="94.0" text="Time Limit" />
-                     <TableColumn fx:id="col_Delete_Quiz" editable="false" prefWidth="94.0" sortable="false" text="Actie" />
-                 </columns>
-                  <columnResizePolicy>
-                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                  </columnResizePolicy>
+<AnchorPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CoordinatorPanelController">
+   <HBox fx:id="rootHPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+           <VBox fx:id="leftVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="588.0" prefWidth="300.0">
+               <TableView fx:id="courseTable" fixedCellSize="0.0" onMouseClicked="#courseTableOnClick" prefHeight="267.0" VBox.vgrow="ALWAYS">
+                   <columns>
+                       <TableColumn fx:id="col_course_name" editable="false" minWidth="150.0" prefWidth="-1.0" resizable="false" text="Course" />
+                       <TableColumn editable="false" minWidth="150.0" prefWidth="-1.0" resizable="false" text="Period">
+                           <columns>
+                               <TableColumn fx:id="col_sdate" editable="false" minWidth="75.0" prefWidth="-1.0" resizable="false" text="Start" />
+                               <TableColumn fx:id="col_edate" editable="false" minWidth="75.0" prefWidth="-1.0" resizable="false" text="End" />
+                           </columns>
+                       </TableColumn>
+                   </columns>
+                   <VBox.margin>
+                       <Insets />
+                   </VBox.margin>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
                </TableView>
-                  <TitledPane fx:id="quizPane" collapsible="false" expanded="false" prefHeight="17.0" prefWidth="323.0">
-                  <content>
-                     <HBox style="-fx-border-color: green;">
+            <StackPane VBox.vgrow="ALWAYS">
+               <children>
+                      <TableView fx:id="quizzesTable" onMouseClicked="#quizTableOnClick" prefHeight="200.0" prefWidth="323.0" StackPane.alignment="TOP_CENTER">
+                          <columns>
+                              <TableColumn fx:id="colNameQuizTable" minWidth="108.0" prefWidth="-1.0" resizable="false" text="Name" />
+                              <TableColumn fx:id="colSuccessQuizTable" editable="false" minWidth="108.0" prefWidth="-1.0" resizable="false" text="Success Definition" />
+                              <TableColumn fx:id="colTimeLimitQuizTable" prefWidth="94.0" text="Time Limit" visible="false" />
+                              <TableColumn fx:id="col_Action_Quiz" editable="false" minWidth="108.0" prefWidth="-1.0" resizable="false" sortable="false" text="Actie" />
+                          </columns>
+                     <StackPane.margin>
+                        <Insets top="33.0" />
+                     </StackPane.margin>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                      </TableView>
+                      <TitledPane fx:id="quizPane" collapsible="false" prefHeight="116.0" prefWidth="323.0" StackPane.alignment="TOP_CENTER">
+                          <graphic>
+                              <HBox fx:id="quizPaneHbox" alignment="CENTER" prefHeight="25.0" prefWidth="270.0">
+                                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0" text="Quizen" HBox.hgrow="ALWAYS" />
+                                  <Button fx:id="btnQuizPanelOpen" mnemonicParsing="false" onAction="#btnQuizPanelOpenAction" style="-fx-background-color: green;" text="Nieuw" textFill="WHITE" />
+                              </HBox>
+                          </graphic>
+                     <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
                         <children>
-                           <VBox prefHeight="79.0" prefWidth="231.0" spacing="5.0">
-                              <children>
-                                     <HBox prefHeight="25.0" prefWidth="271.0" spacing="5.0">
-                                    <children>
-                                       <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="125.0" text="Quiz naam:" HBox.hgrow="ALWAYS" />
-                                       <TextField fx:id="textQuizName" promptText="Naam van quiz" HBox.hgrow="ALWAYS">
-                                          <HBox.margin>
-                                             <Insets />
-                                          </HBox.margin>
-                                       </TextField>
-                                    </children>
+                                 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="231.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                                     <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="221.0" spacing="5.0" VBox.vgrow="ALWAYS">
+                                         <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="125.0" text="Quiz naam:" HBox.hgrow="ALWAYS" />
+                                         <TextField fx:id="textQuizName" maxWidth="1.7976931348623157E308" promptText="Naam van quiz" HBox.hgrow="ALWAYS">
+                                             <HBox.margin>
+                                                 <Insets />
+                                             </HBox.margin>
+                                         </TextField>
+                                     </HBox>
+                                     <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="32.0" prefWidth="221.0" spacing="5.0" VBox.vgrow="ALWAYS">
+                                         <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="25.0" prefWidth="125.0" text="Success defenitie:" HBox.hgrow="ALWAYS" />
+                                         <TextField fx:id="textSuccessDefinite" maxWidth="1.7976931348623157E308" promptText="Success definite" HBox.hgrow="ALWAYS" />
+                                     </HBox>
+                                 </VBox>
+                                 <VBox maxHeight="1.7976931348623157E308" maxWidth="110.0" minWidth="80.0" spacing="2.0" HBox.hgrow="ALWAYS">
+                                     <children>
+                                         <Button fx:id="btnSaveQuiz" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnSaveQuizAction" text="Opslaan" VBox.vgrow="ALWAYS" />
+                                         <Button fx:id="btnCancelNewQuiz" cancelButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelQuizBtnAction" text="Annuleren" VBox.vgrow="ALWAYS" />
+                                     </children>
+                                 </VBox>
+                        </children>
+                     </HBox>
+                      </TitledPane>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+            </StackPane>
+               <padding>
+                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+           </VBox>
+             <VBox fx:id="rightVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="588.0" prefWidth="600.0">
+                 <HBox>
+                     <Label text="Geselecteerde cursus:" />
+                     <Label fx:id="labelCourse" prefWidth="90.0" text="Cursus">
+                         <font>
+                             <Font name="System Bold" size="12.0" />
+                         </font>
+                         <HBox.margin>
+                             <Insets left="5.0" />
+                         </HBox.margin>
+                     </Label>
+                     <Label text="Aantal quizen:">
+                         <HBox.margin>
+                             <Insets left="5.0" />
+                         </HBox.margin>
+                     </Label>
+                     <Label fx:id="labelTotalQuizen" text="0">
+                         <font>
+                             <Font name="System Bold" size="12.0" />
+                         </font>
+                         <HBox.margin>
+                             <Insets left="5.0" />
+                         </HBox.margin>
+                     </Label>
+                     <padding>
+                         <Insets bottom="5.0" />
+                     </padding>
+                 </HBox>
+            <StackPane prefHeight="353.0" prefWidth="500.0">
+               <children>
+                         <TableView fx:id="questionTable" maxWidth="1.7976931348623157E308" onMouseClicked="#questionTableOnClick" prefHeight="218.0" prefWidth="453.0" StackPane.alignment="TOP_CENTER">
+                             <columns>
+                                 <TableColumn fx:id="colQuestion" minWidth="188.0" prefWidth="259.0" resizable="false" text="Vraag" />
+                                 <TableColumn minWidth="42.0" prefWidth="96.0" resizable="false" text="Antwoorden">
+                                     <columns>
+                                         <TableColumn fx:id="colTotalAnswer" minWidth="45.0" prefWidth="45.0" resizable="false" text="aantal" />
+                                         <TableColumn fx:id="colTotatlGood" minWidth="45.0" prefWidth="45.0" resizable="false" text="goed" />
+                                     </columns>
+                                 </TableColumn>
+                                 <TableColumn fx:id="colActionQuestion" editable="false" minWidth="60.0" prefWidth="88.0" resizable="false" sortable="false" text="Actie" />
+                             </columns>
+                             <columnResizePolicy>
+                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                             </columnResizePolicy>
+                     <StackPane.margin>
+                        <Insets top="33.0" />
+                     </StackPane.margin>
+                         </TableView>
+                         <TitledPane fx:id="questionPane" collapsible="false" expanded="false" maxWidth="1.7976931348623157E308" prefWidth="453.0" StackPane.alignment="TOP_CENTER">
+                             <content>
+                                 <HBox prefHeight="49.0" prefWidth="451.0" spacing="5.0" style="-fx-border-color: green;">
+                                     <children>
+                                         <TextArea fx:id="textQuestion" prefHeight="73.0" prefWidth="265.0" HBox.hgrow="ALWAYS" />
+                                         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                 <StackPane />
+                                                 <Button fx:id="btnSaveQuestion" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnSaveQuestionAction" text="Opslaan" VBox.vgrow="ALWAYS" />
+                                                 <Button fx:id="btnCancelQuestion" cancelButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelQuestionBtnAction" text="annuleren" VBox.vgrow="ALWAYS" />
+                                             </children>
+                                         </VBox>
+                                     </children>
+                                     <padding>
+                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                     </padding>
                                  </HBox>
-                                 <HBox prefHeight="24.0" prefWidth="272.0" spacing="5.0">
-                                    <children>
-                                       <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="25.0" prefWidth="125.0" text="Success defenitie:" />
-                                       <TextField fx:id="textSuccessDefinite" promptText="Success definite" HBox.hgrow="ALWAYS" />
-                                    </children>
+                             </content>
+                             <graphic>
+                                 <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="544.0">
+                                     <children>
+                                         <Label fx:id="questionPaneHbox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="468.0" text="Vragen" HBox.hgrow="ALWAYS" />
+                                         <Button fx:id="btnQuestionPanelOpen" mnemonicParsing="false" onAction="#btnQuestionPanelAction" style="-fx-background-color: green;" text="Nieuw" textFill="WHITE" />
+                                     </children>
                                  </HBox>
-                                 <HBox spacing="5.0">
-                                    <children>
-                                       <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="125.0" text="tijd (Optionel) :" />
-                                       <TextField fx:id="textTimeLimit" promptText="minutes" HBox.hgrow="ALWAYS" />
-                                    </children>
+                             </graphic>
+                         </TitledPane>
+               </children>
+            </StackPane>
+            <StackPane VBox.vgrow="ALWAYS">
+               <children>
+                         <TableView fx:id="answerTable" onMouseClicked="#answerTableOnClick" prefHeight="166.0" prefWidth="746.0" StackPane.alignment="CENTER">
+                             <columns>
+                                 <TableColumn fx:id="col_Answer" editable="false" prefWidth="296.0" resizable="false" text="Antwoord" />
+                                 <TableColumn fx:id="col_validity" editable="false" minWidth="0.0" prefWidth="1.0" resizable="false" sortable="false" />
+                                 <TableColumn fx:id="col_Delete_Answer" editable="false" prefWidth="302.0" resizable="false" sortable="false" text="Actie" />
+                             </columns>
+                             <columnResizePolicy>
+                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                             </columnResizePolicy>
+                     <StackPane.margin>
+                        <Insets top="33.0" />
+                     </StackPane.margin>
+                         </TableView>
+                         <TitledPane fx:id="answerPane" collapsible="false" contentDisplay="CENTER" expanded="false" prefWidth="453.0" StackPane.alignment="TOP_CENTER">
+                             <content>
+                                 <HBox prefHeight="100.0" spacing="5.0" style="-fx-border-color: green;">
+                                     <children>
+                                         <TextArea fx:id="textAnswer" prefHeight="52.0" prefWidth="326.0" />
+                                         <VBox prefHeight="52.0" prefWidth="119.0" spacing="5.0">
+                                             <children>
+                                                 <CheckBox fx:id="cBoxAnswerIsCorrect" mnemonicParsing="false" text="Juist antwoord" />
+                                                 <Button fx:id="btnNewAnswer" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnSaveAnswerAction" text="Opslaan" textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS" />
+                                                 <Button fx:id="btnCancelNewAnswer" cancelButton="true" layoutX="15.0" layoutY="37.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelNewAnswerAction" text="Annuleren" textAlignment="CENTER" wrapText="true" />
+                                             </children>
+                                             <padding>
+                                                 <Insets left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                         </VBox>
+                                     </children>
+                                     <padding>
+                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                     </padding>
                                  </HBox>
-                              </children>
-                              <HBox.margin>
-                                 <Insets right="5.0" />
-                              </HBox.margin>
-                           </VBox>
-                           <VBox maxWidth="1.7976931348623157E308" prefHeight="52.0" prefWidth="85.0" spacing="2.0" HBox.hgrow="ALWAYS">
-                              <children>
-                                 <Button fx:id="btnSaveQuiz" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnSaveQuizAction" prefHeight="51.0" text="Opslaan" VBox.vgrow="ALWAYS" />
-                                 <Button fx:id="btnCancelNewQuiz" cancelButton="true" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#cancelQuizBtnAction" prefHeight="23.0" prefWidth="82.0" text="Annuleren" VBox.vgrow="ALWAYS" />
-                              </children>
-                           </VBox>
-                        </children>
-                        <padding>
-                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                        </padding>
-                     </HBox>
-                  </content>
-                  <graphic>
-                     <HBox prefHeight="25.0" prefWidth="300.0">
-                        <children>
-                           <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Quizen" HBox.hgrow="ALWAYS" />
-                           <Button fx:id="btnQuizPanelOpen" mnemonicParsing="false" onAction="#btnQuizPanelOpenAction" style="-fx-background-color: green;" text="Nieuw" textFill="WHITE" />
-                        </children>
-                     </HBox>
-                  </graphic>
-      
-                  </TitledPane>
-            </children>
-            <VBox.margin>
-               <Insets top="5.0" />
-            </VBox.margin>
-         </Pane>
-
-         <HBox.margin>
-            <Insets />
-         </HBox.margin>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
-        </VBox>
-         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="526.0" prefWidth="463.0" HBox.hgrow="ALWAYS">
-             <HBox>
-                 <Label text="Geselecteerde cursus:" />
-                 <Label fx:id="labelCourse" prefWidth="90.0" text="Cursus">
-                     <font>
-                         <Font name="System Bold" size="12.0" />
-                     </font>
-                     <HBox.margin>
-                         <Insets left="5.0" />
-                     </HBox.margin>
-                 </Label>
-                 <Label text="Aantal quizen:">
-               <HBox.margin>
-                  <Insets left="5.0" />
-               </HBox.margin></Label>
-                 <Label fx:id="labelTotalQuizen" text="0">
-                     <font>
-                         <Font name="System Bold" size="12.0" />
-                     </font>
-                     <HBox.margin>
-                         <Insets left="5.0" />
-                     </HBox.margin>
-                 </Label>
-            <padding>
-               <Insets bottom="5.0" />
-            </padding>
-             </HBox>
-         <Pane prefWidth="453.0">
-            <children>
-               <TableView fx:id="questionTable" layoutY="33.0" maxWidth="1.7976931348623157E308" onMouseClicked="#questionTableOnClick" prefHeight="218.0" prefWidth="453.0">
-                 <columns>
-                   <TableColumn fx:id="colQuestion" minWidth="188.0" prefWidth="259.0" resizable="false" text="Vraag" />
-                     <TableColumn minWidth="42.0" prefWidth="96.0" resizable="false" text="Antwoorden">
-                        <columns>
-                         <TableColumn fx:id="colTotalAnswer" minWidth="45.0" prefWidth="45.0" resizable="false" text="aantal" />
-                           <TableColumn fx:id="colTotatlGood" minWidth="45.0" prefWidth="45.0" resizable="false" text="goed" />
-                        </columns>
-                     </TableColumn>
-                     <TableColumn fx:id="colActionQuestion" editable="false" minWidth="60.0" prefWidth="88.0" resizable="false" sortable="false" text="Actie" />
-                 </columns>
-                  <columnResizePolicy>
-                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                  </columnResizePolicy>
-               </TableView>
-                  <TitledPane fx:id="questionPane" collapsible="false" expanded="false" maxWidth="1.7976931348623157E308" prefWidth="453.0">
-                  <content>
-                     <HBox prefHeight="49.0" prefWidth="451.0" spacing="5.0" style="-fx-border-color: green;">
-                        <children>
-                           <TextArea fx:id="textQuestion" prefHeight="73.0" prefWidth="265.0" HBox.hgrow="ALWAYS" />
-                           <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
-                              <children>
-                                 <StackPane />
-                                 <Button fx:id="btnSaveQuestion" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnSaveQuestionAction" text="Opslaan" VBox.vgrow="ALWAYS" />
-                                 <Button fx:id="btnCancelQuestion" cancelButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelQuestionBtnAction" text="annuleren" VBox.vgrow="ALWAYS" />
-                              </children>
-                           </VBox>
-                        </children>
-                        <padding>
-                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                        </padding>
-                     </HBox>
-                  </content>
-                  <graphic>
-                     <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="431.0">
-                        <children>
-                           <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Vragen" HBox.hgrow="ALWAYS" />
-                           <Button fx:id="btnQuestionPanelOpen" mnemonicParsing="false" onAction="#btnQuestionPanelAction" style="-fx-background-color: green;" text="Nieuw" textFill="WHITE" />
-                        </children>
-                     </HBox>
-                  </graphic>
-                  </TitledPane>
-            </children>
-            <VBox.margin>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </VBox.margin>
-         </Pane>
-         <Pane>
-            <children>
-               <TableView fx:id="answerTable" layoutY="33.0" onMouseClicked="#answerTableOnClick" prefHeight="181.0" prefWidth="453.0">
-                 <columns>
-                   <TableColumn fx:id="col_Answer" editable="false" prefWidth="296.0" resizable="false" text="Antwoord" />
-                   <TableColumn fx:id="col_validity" editable="false" minWidth="0.0" prefWidth="0.0" resizable="false" sortable="false" />
-                     <TableColumn fx:id="col_Delete_Answer" editable="false" prefWidth="139.0" resizable="false" sortable="false" text="Actie" />
-                 </columns>
-                  <columnResizePolicy>
-                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                  </columnResizePolicy>
-               </TableView>
-               <TitledPane fx:id="answerPane" collapsible="false" contentDisplay="CENTER" expanded="false" prefWidth="453.0">
-                  <content>
-                     <HBox prefHeight="100.0" spacing="5.0" style="-fx-border-color: green;">
-                        <children>
-                           <TextArea fx:id="textAnswer" prefHeight="52.0" prefWidth="326.0" />
-                           <VBox prefHeight="52.0" prefWidth="119.0" spacing="5.0">
-                              <children>
-                                 <CheckBox fx:id="cBoxAnswerIsCorrect" mnemonicParsing="false" text="Juist antwoord" />
-                                 <Button fx:id="btnNewAnswer" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnSaveAnswerAction" text="Opslaan" textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS" />
-                                 <Button fx:id="btnCancelNewAnswer" cancelButton="true" layoutX="15.0" layoutY="37.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelNewAnswerAction" text="Annuleren" textAlignment="CENTER" wrapText="true" />
-                              </children>
-                              <padding>
-                                 <Insets left="5.0" right="5.0" top="5.0" />
-                              </padding>
-                           </VBox>
-                        </children>
-                        <padding>
-                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                        </padding>
-                     </HBox>
-                  </content>
-                  <graphic>
-                     <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="431.0">
-                        <children>
-                           <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="333.0" text="Antwoorden" HBox.hgrow="ALWAYS" />
-                           <Button fx:id="btnAnswerPanelOpen" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#btnAnswerPanelOpenAction" style="-fx-background-color: green;" text="Nieuw" textFill="WHITE" />
-                        </children>
-                     </HBox>
-                  </graphic>
-               </TitledPane>
-            </children>
-            <VBox.margin>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </VBox.margin>
-         </Pane>
-         <HBox.margin>
-            <Insets />
-         </HBox.margin>
-         <padding>
-            <Insets top="5.0" />
-         </padding>
-         </VBox>
-    </HBox>
+                             </content>
+                             <graphic>
+                                 <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="551.0">
+                                     <children>
+                                         <Label fx:id="answerPaneHbox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="435.0" text="Antwoorden" HBox.hgrow="ALWAYS" />
+                                         <Button fx:id="btnAnswerPanelOpen" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#btnAnswerPanelOpenAction" style="-fx-background-color: green;" text="Nieuw" textFill="WHITE" />
+                                     </children>
+                                 </HBox>
+                             </graphic>
+                         </TitledPane>
+               </children>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+            </StackPane>
+                 <padding>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                 </padding>
+             </VBox>
+      </children>
+   </HBox>
 </AnchorPane>

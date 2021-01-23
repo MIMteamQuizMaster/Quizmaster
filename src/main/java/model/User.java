@@ -23,7 +23,10 @@ public class User {
         this.lastName = lastName;
         this.studieRichting = studieRichting;
         this.roles = r;
+    }
 
+    public User(int userId) {
+        this.userId = userId;
     }
 
     public void setUserId(int userId) {

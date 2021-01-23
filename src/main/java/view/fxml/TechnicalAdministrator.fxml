@@ -5,82 +5,86 @@
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.*?>
 
-<Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="800.0"
-      xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.TechnicalAdministratorController">
-    <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-        <Pane>
-            <children>
-                <TitledPane animated="false" collapsible="false" expanded="false" maxWidth="1.7976931348623157E308"
-                            prefHeight="133.0" prefWidth="800.0" text="Gebruiker"/>
-                <HBox alignment="CENTER" layoutY="26.0" prefHeight="107.0" prefWidth="798.0">
-                    <children>
-                        <VBox alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="595.0" spacing="10.0"
-                              HBox.hgrow="NEVER">
-                            <children>
-                                <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="592.0" spacing="20.0">
-                                    <children>
-                                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="100.0"
-                                               text="Voornaam:" textAlignment="CENTER" HBox.hgrow="ALWAYS"/>
-                                        <TextField fx:id="voornaamField" alignment="CENTER"/>
-                                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="100.0"
-                                               text="Achternaam:" textAlignment="CENTER" HBox.hgrow="ALWAYS"/>
-                                        <TextField fx:id="achternaamField"/>
-                                    </children>
-                                </HBox>
-                                <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="703.0" spacing="20.0">
-                                    <children>
-                                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="100.0"
-                                               text="Studie richting:" textAlignment="CENTER" HBox.hgrow="ALWAYS"/>
-                                        <TextField fx:id="richtingField" alignment="CENTER"/>
-                                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="100.0"
-                                               text="Role:" textAlignment="CENTER"/>
-                                        <CheckComboBox fx:id="rolesComboBox" prefHeight="25.0" prefWidth="149.0"/>
-                                    </children>
-                                </HBox>
-                            </children>
-                        </VBox>
-                        <VBox alignment="CENTER" prefHeight="75.0" prefWidth="131.0" spacing="10.0">
-                            <children>
-                                <Button fx:id="updateUserbtn" disable="true" maxWidth="1.7976931348623157E308"
-                                        mnemonicParsing="false" onAction="#updateUser"
-                                        style="-fx-background-color: #a7ff96;" text="Opslaan" visible="false"/>
-                                <Pane>
-                                    <children>
-                                        <Button fx:id="cancelBtn" alignment="BOTTOM_CENTER" cancelButton="true"
-                                                maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                                                onAction="#cancelUpdate" prefHeight="25.0" prefWidth="131.0"
-                                                style="-fx-background-color: #ff8080;" text="Annuleren"
-                                                visible="false"/>
-                                        <Button fx:id="addUserbtn" maxWidth="1.7976931348623157E308"
-                                                mnemonicParsing="false" onAction="#addUser" prefHeight="25.0"
-                                                prefWidth="131.0" style="-fx-background-color: #8ad3fc;"
-                                                text="Toevoegen"/>
-                                    </children>
-                                </Pane>
-                            </children>
-                        </VBox>
-                    </children>
-                </HBox>
-            </children>
-        </Pane>
-        <TableView fx:id="table_users" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                   onMouseClicked="#tableSelected" onSort="#clearSelectionOnSort" prefHeight="366.0" prefWidth="790.0">
-            <columns>
-                <TableColumn fx:id="col_id" prefWidth="80.0" text="GebruikerID"/>
-                <TableColumn fx:id="col_fname" prefWidth="107.0" text="Voornaam"/>
-                <TableColumn fx:id="col_lname" prefWidth="110.0" text="Achternaam"/>
-                <TableColumn fx:id="col_richting" prefWidth="112.0" text="Richting"/>
-                <TableColumn fx:id="col_role" prefWidth="130.0" text="Role"/>
-                <TableColumn fx:id="col_actie" prefWidth="115.0" text="Credentials"/>
-                <TableColumn fx:id="col_delete" prefWidth="100.0" text="End membership"/>
-            </columns>
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </VBox.margin>
-            <padding>
-                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
-            </padding>
-        </TableView>
-    </VBox>
-</Pane>
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TechnicalAdministratorController">
+    <GridPane fx:id="gridPane" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" />
+      </columnConstraints>
+      <rowConstraints>
+          <RowConstraints minHeight="10.0" percentHeight="100.0" vgrow="ALWAYS" />
+      </rowConstraints>
+        <children>
+          <StackPane prefHeight="604.0" prefWidth="739.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+              <children>
+                  <TableView fx:id="table_users" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#onTableClick" onSort="#clearSelectionOnSort" StackPane.alignment="TOP_CENTER">
+                      <columns>
+                          <TableColumn fx:id="col_id" prefWidth="80.0" text="GebruikerID" />
+                          <TableColumn fx:id="col_fname" prefWidth="107.0" text="Voornaam" />
+                          <TableColumn fx:id="col_lname" prefWidth="110.0" text="Achternaam" />
+                          <TableColumn fx:id="col_richting" prefWidth="112.0" text="Richting" />
+                          <TableColumn fx:id="col_role" prefWidth="130.0" text="Role" />
+                          <TableColumn fx:id="col_actie" prefWidth="115.0" text="Credentials" />
+                          <TableColumn fx:id="col_delete" prefWidth="100.0" text="Acties" />
+                      </columns>
+                      <StackPane.margin>
+                          <Insets top="33.0" />
+                      </StackPane.margin>
+                  </TableView>
+                  <TitledPane fx:id="newUserPane" alignment="CENTER" animated="false" collapsible="false" contentDisplay="RIGHT" expanded="false" graphicTextGap="0.0" StackPane.alignment="TOP_CENTER">
+                      <content>
+                          <HBox>
+                              <children>
+                                  <FlowPane vgap="15.0" HBox.hgrow="ALWAYS">
+                                      <children>
+                                          <HBox>
+                                              <children>
+                                                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="100.0" text="Voornaam:" textAlignment="CENTER" />
+                                                  <TextField fx:id="voornaamField" alignment="CENTER" />
+                                              </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT">
+                                              <children>
+                                                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="100.0" text="Achternaam:" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                                                  <TextField fx:id="achternaamField" />
+                                              </children>
+                                          </HBox>
+                                          <HBox>
+                                              <children>
+                                                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="100.0" text="Studie richting:" textAlignment="CENTER" />
+                                                  <TextField fx:id="richtingField" alignment="CENTER" />
+                                              </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT">
+                                              <children>
+                                                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="100.0" text="Role:" textAlignment="CENTER" />
+                                                  <CheckComboBox fx:id="rolesComboBox" prefHeight="25.0" prefWidth="149.0" />
+                                              </children>
+                                          </HBox>
+                                      </children>
+                                  </FlowPane>
+                                  <VBox maxWidth="150.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                                      <children>
+                                          <Button fx:id="updateUserbtn" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnSaveUser" text="Opslaan" VBox.vgrow="ALWAYS" />
+                                          <Button fx:id="cancelBtn" alignment="CENTER" cancelButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelUpdate" prefHeight="25.0" prefWidth="163.0" text="Annuleren" />
+                                      </children>
+                                  </VBox>
+                              </children>
+                          </HBox>
+                      </content>
+                      <graphic>
+                          <HBox fx:id="hboxInsidePane" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="740.0">
+                              <children>
+                                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="605.0" text="Gebruikers" HBox.hgrow="ALWAYS" />
+                                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openPaneVoorNewUser" style="-fx-background-color: green;" text="Nieuw" textFill="WHITE" />
+                              </children>
+                          </HBox>
+                      </graphic>
+                  </TitledPane>
+              </children>
+          </StackPane>
+        </children>
+        <padding>
+          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+        </padding>
+    </GridPane>
+</AnchorPane>

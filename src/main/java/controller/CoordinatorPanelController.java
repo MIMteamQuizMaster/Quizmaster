@@ -5,12 +5,13 @@ import controller.fx.CourseFx;
 import controller.fx.QuestionFx;
 import controller.fx.QuizFx;
 import database.mysql.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import launcher.Main;
 import model.Answer;
 import model.Question;
@@ -38,13 +39,13 @@ public class CoordinatorPanelController {
     public TextField textQuizName;
     public TextField textSuccessDefinite;
     public TextArea textQuestion;
-    public TextField textTimeLimit;
+
 
     public TableView<QuizFx> quizzesTable;
     public TableColumn<QuizFx, String> colNameQuizTable;
     public TableColumn<QuizFx, Double> colSuccessQuizTable;
     public TableColumn<QuizFx, Integer> colTimeLimitQuizTable;
-    public TableColumn<QuizFx, Void> col_Delete_Quiz;
+    public TableColumn<QuizFx, Void> col_Action_Quiz;
 
     public TableView<QuestionFx> questionTable;
     public TableColumn<QuestionFx, String> colQuestion;
@@ -56,6 +57,16 @@ public class CoordinatorPanelController {
     public TableColumn<AnswerFx, String> col_Answer;
     public TableColumn<AnswerFx, Boolean> col_validity;
     public TableColumn<AnswerFx, Void> col_Delete_Answer;
+
+    public VBox leftVBox;
+    public VBox rightVBox;
+
+    public Label questionPaneHbox;
+    public Label answerPaneHbox;
+    public HBox quizPaneHbox;
+    public HBox rootHPane;
+    public AnchorPane rootPane;
+
 
     @FXML
     private TableView<CourseFx> courseTable;
@@ -87,6 +98,33 @@ public class CoordinatorPanelController {
         System.out.println("initialize");
         fillCoursesTable();
         emptyFieldsAndSelected();
+        Main.getPrimaryStage().widthProperty().addListener( data -> bindSizeProperty());
+
+
+    }
+
+    private void bindSizeProperty() {
+        rootPane.prefWidthProperty().bind(Main.getPrimaryStage().widthProperty());
+
+        leftVBox.prefWidthProperty().bind(rootHPane.widthProperty().divide(3));
+        rightVBox.prefWidthProperty().bind(rootHPane.widthProperty().divide(2));
+
+        questionTable.prefWidthProperty().bind(rightVBox.widthProperty().subtract(20));
+
+        // 3 bane to bind to its table
+        quizPane.prefHeightProperty().bind(quizzesTable.widthProperty());
+        questionPane.prefHeightProperty().bind(questionTable.widthProperty());
+        answerPane.prefHeightProperty().bind(answerTable.widthProperty());
+
+        // tables in 2 column
+        courseTable.prefWidthProperty().bind(quizzesTable.widthProperty());
+        questionTable.prefWidthProperty().bind(answerTable.widthProperty());
+        questionPaneHbox.prefWidthProperty().bind(questionPane.widthProperty().subtract(20));
+        answerPaneHbox.prefWidthProperty().bind(answerPane.widthProperty().subtract(20));
+        quizPaneHbox.prefWidthProperty().bind(quizPane.widthProperty().subtract(20));
+
+
+
     }
 
     /**
@@ -128,7 +166,7 @@ public class CoordinatorPanelController {
         // empty text area and checkbox
         textQuestion.clear();
         textAnswer.clear();
-        textTimeLimit.clear();
+
         textSuccessDefinite.clear();
         textQuizName.clear();
     }
@@ -145,7 +183,13 @@ public class CoordinatorPanelController {
         col_course_name.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         col_sdate.setCellValueFactory(cellData -> cellData.getValue().startDateProperty());
         col_edate.setCellValueFactory(cellData -> cellData.getValue().endDateProperty());
+
+        col_course_name.prefWidthProperty().bind(courseTable.widthProperty().divide(2));
+        col_sdate.prefWidthProperty().bind(courseTable.widthProperty().divide(4));
+        col_edate.prefWidthProperty().bind(courseTable.widthProperty().divide(4));
+
         courseTable.setItems(courses);
+        courseTable.refresh();
     }
 
     /**
@@ -159,8 +203,13 @@ public class CoordinatorPanelController {
         quizFxes = convertQuizToQuizFX(quizDAO.getQuizOfCourse(selectedCourse.getCourseObject()));
         colNameQuizTable.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         colSuccessQuizTable.setCellValueFactory(cellData -> cellData.getValue().succsesDefinitionProperty().asObject());
-        colTimeLimitQuizTable.setCellValueFactory(cellData -> cellData.getValue().timeLimitProperty().asObject());
+//        colTimeLimitQuizTable.setCellValueFactory(cellData -> cellData.getValue().timeLimitProperty().asObject());
         addActionBtnToQuizTable();
+
+        col_course_name.prefWidthProperty().bind(quizzesTable.widthProperty().divide(3));
+        colSuccessQuizTable.prefWidthProperty().bind(quizzesTable.widthProperty().divide(3));
+        col_Action_Quiz.prefWidthProperty().bind(quizzesTable.widthProperty().divide(3));
+
         quizzesTable.setItems(quizFxes);
 
         this.labelCourse.setText(selectedCourse.getName());
@@ -175,10 +224,10 @@ public class CoordinatorPanelController {
      * Add 2 btn to Quiz table for delet or edit Row
      */
     private void addActionBtnToQuizTable() {
-        col_Delete_Quiz.setCellFactory(cellData -> new TableCell<>() {
+        col_Action_Quiz.setCellFactory(cellData -> new TableCell<>() {
             private final Button editButton = new Button("bijwerken");
             private final Button deleteButton = new Button("Verwijderen");
-            private final VBox pane = new VBox(deleteButton, editButton);
+            private final TilePane pane = new TilePane(deleteButton, editButton);
 
             {
                 deleteButton.setOnAction(event -> {
@@ -362,7 +411,7 @@ public class CoordinatorPanelController {
 
         textQuizName.clear();
         textSuccessDefinite.clear();
-        textTimeLimit.clear();
+
     }
 
     /**
@@ -416,7 +465,6 @@ public class CoordinatorPanelController {
         /// open panel  and fill selected item valuses to fields
         textQuizName.setText(selectedQuiz.getName());
         textSuccessDefinite.setText(String.valueOf(selectedQuiz.getSuccsesDefinition()));
-        textTimeLimit.setText(String.valueOf(selectedQuiz.getTimeLimit()));
         expandTitledPane(quizPane);
 
     }
@@ -598,19 +646,18 @@ public class CoordinatorPanelController {
             int course_id = courseTable.getSelectionModel().getSelectedItem().getDbId();
             String quizName = textQuizName.getText();
             String sd = textSuccessDefinite.getText();
-            String tl = textTimeLimit.getText();
+
             if (!sd.equals("") && !quizName.equals("")) {
                 double succesDefinite = Double.parseDouble(sd);
-                int timeLimit = Integer.parseInt(tl);
+
                 Quiz quiz;
                 if (this.selectedQuiz == null) {
-                    quiz = quizDAO.saveQuiz(new Quiz(quizName, succesDefinite, 0, course_id, timeLimit));
+                    quiz = quizDAO.saveQuiz(new Quiz(quizName, succesDefinite, 0, course_id));
                     // new QUiz
                 } else {
                     // update Quiz
                     selectedQuiz.setName(quizName);
                     selectedQuiz.setSuccsesDefinition(succesDefinite);
-                    selectedQuiz.setTimeLimit(timeLimit);
                     quiz = quizDAO.saveQuiz(selectedQuiz.getQuizObject());
                 }
                 if (quiz != null) {
@@ -694,6 +741,7 @@ public class CoordinatorPanelController {
             refreshAnswerTable();
             textAnswer.clear();
         }
+
     }
 
 
@@ -704,7 +752,6 @@ public class CoordinatorPanelController {
     public void cancelQuizBtnAction() {
         btnQuizPanelOpenAction();
         textQuizName.clear();
-        textTimeLimit.clear();
         textSuccessDefinite.clear();
     }
 
@@ -734,7 +781,6 @@ public class CoordinatorPanelController {
      */
     public void btnQuizPanelOpenAction() {
         selectedQuiz = null;
-        textTimeLimit.clear();
         textQuizName.clear();
         textSuccessDefinite.clear();
         expandTitledPane(quizPane);
@@ -769,7 +815,7 @@ public class CoordinatorPanelController {
      * this method is responsible for opening or closing a titledPane and changing the btn color and text
      * inside
      */
-    private void expandTitledPane(TitledPane selectedPane) {
+    public static void expandTitledPane(TitledPane selectedPane) {
         HBox n = (HBox) selectedPane.getGraphic();
         Button b = new Button();
         if (n.getChildren().get(1) instanceof Button) {

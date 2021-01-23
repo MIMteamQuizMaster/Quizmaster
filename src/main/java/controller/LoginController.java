@@ -1,6 +1,5 @@
 package controller;
 
-import com.google.gson.JsonObject;
 import database.mysql.DBAccess;
 import database.mysql.LoginDAO;
 import javafx.event.ActionEvent;
@@ -12,6 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import launcher.Main;
+import model.LoginAttempt;
 import model.User;
 import org.lightcouch.CouchDbClient;
 
@@ -64,7 +64,7 @@ public class LoginController {
 
     }
 
-    private void logLoginAttempt(int id, String pass) {
+    private void logLoginAttempt(int id) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date date = new Date();
         String ip = "";
@@ -75,17 +75,15 @@ public class LoginController {
             ip = in.readLine();
 
         } catch (Exception e) {
-            ip = "could not retrieve.";
+            ip = "could not retrieve ip.";
         }
         try{
-            String jsonstr = String.format("{\"ip\":\"%s\" , \"user-id\":\"%s\" , \"password\": \"%s\",\"time\": \"%s\"}", ip, id, pass, formatter.format(date));
-            JsonObject jsonobj = dbClient.getGson().fromJson(jsonstr, JsonObject.class);
-            dbClient.save(jsonobj);
+            LoginAttempt la = new LoginAttempt(id,ip,formatter.format(date));
+            dbClient.save(la);
         }catch (Exception e){
             System.out.println("couldnt save logging attemp in NoSQL");
         }
-
-
+//        List<LoginAttempt> docs =  dbClient.view("_all_docs").includeDocs(true);
 
     }
 
@@ -94,7 +92,7 @@ public class LoginController {
         try {
             userid = Integer.parseInt(loginUsername.getText());
             String password = loginMaskedPassword.getText();
-            logLoginAttempt(userid, password);
+            logLoginAttempt(userid);
             boolean result = dao.isValidUser(userid, password);
             if (result) {
                 System.out.println("login permission: " + result);
@@ -122,7 +120,8 @@ public class LoginController {
 
     public void loginCancel(ActionEvent actionEvent) {
         dBaccess.closeConnection();
-        Main.getSceneManager().setWindowTool();
+
+        Main.getPrimaryStage().close();
 
     }
 

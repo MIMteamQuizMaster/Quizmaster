@@ -58,11 +58,24 @@ public class SceneManager {
     }
 
     public void showLoginScene() {
+        primaryStage.setFullScreen(false);
+        primaryStage.setMinWidth(380);
+        primaryStage.setMinHeight(200);
+        primaryStage.setWidth(380);
+        primaryStage.setHeight(200);
+        primaryStage.setMaxWidth(380);
+        primaryStage.setMaxHeight(200);
+        primaryStage.setResizable(false);
         getScene("/view/fxml/login.fxml");
     }
 
 
     public void showWelcome() {
+        primaryStage.setResizable(true);
+        primaryStage.setMinWidth(1100);
+        primaryStage.setMinHeight(700);
+        primaryStage.setMaxHeight(8000);
+        primaryStage.setMaxWidth(8000);
         getScene("/view/fxml/welcomeScene.fxml");
     }
 
