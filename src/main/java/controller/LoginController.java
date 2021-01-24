@@ -1,7 +1,7 @@
 package controller;
 
 import database.mysql.DBAccess;
-import database.mysql.LoginDAO;
+import database.mysql.UserDAO;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,7 +25,7 @@ import java.util.Date;
 public class LoginController {
     private final DBAccess dBaccess;
     public Label warningLabel;
-    private final LoginDAO dao;
+    private final UserDAO dao;
     public TextField loginUsername;
     public TextField loginUnMaskedPassword;
     public PasswordField loginMaskedPassword;
@@ -37,7 +37,7 @@ public class LoginController {
 
     public LoginController() {
         this.dBaccess = Main.getDBaccess();
-        this.dao = new LoginDAO(dBaccess);
+        this.dao = new UserDAO(dBaccess);
 
         try {
             dbClient = new CouchDbClient("couchdb.properties");

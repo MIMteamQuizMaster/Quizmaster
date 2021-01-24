@@ -95,6 +95,9 @@ public class CourseFx {
     public ListProperty<Group> groupsProperty() {
         return new SimpleListProperty<>(FXCollections.observableList(this.course.getGroups()));
     }
+    public IntegerProperty getTotalGroups(){
+        return new SimpleIntegerProperty(getGroups().size());
+    }
 
     public void setGroups(ObservableList<Group> groups) {
         this.course.setGroups(groups);

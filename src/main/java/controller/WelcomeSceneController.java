@@ -79,6 +79,14 @@ public class WelcomeSceneController {
                     tabPanel.getTabs().add(tab);
 
                 }
+                else if (r == Role.ADMINISTRATOR) {
+                    view = sceneManager.getPage("Administrator");
+                    Tab tab = new Tab();
+                    tab.setText("Administrator");
+                    tab.setContent(view);
+                    tabPanel.getTabs().add(tab);
+
+                }
             }
         }
 

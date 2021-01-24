@@ -5,22 +5,22 @@ import database.mysql.TechnischBeheerderDAO;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import launcher.Main;
 import model.Role;
 import model.User;
 import controller.fx.UserFx;
 import org.controlsfx.control.CheckComboBox;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 import java.util.*;
 
@@ -49,7 +49,7 @@ public class TechnicalAdministratorController {
     @FXML
     private TableColumn<UserFx, String> col_role;
     public TableColumn<UserFx, Void> col_actie;
-    public TableColumn<UserFx, Void> col_delete;
+    public TableColumn<UserFx, Void> col_action;
     @FXML
     private TextField richtingField;
     @FXML
@@ -63,6 +63,8 @@ public class TechnicalAdministratorController {
     private TechnischBeheerderDAO dao;
     private UserFx selectedUser;
 
+    private GlyphFont glyphFont;
+
 
 
     public void initialize() {
@@ -70,7 +72,7 @@ public class TechnicalAdministratorController {
         this.dao = new TechnischBeheerderDAO(dBaccess);
         populateRoleMenu(); // add items to ComboBox
         refreshTable(); // add data to table
-
+        glyphFont = GlyphFontRegistry.font("FontAwesome");
         bindSizeProperty();
 
     }
@@ -88,7 +90,7 @@ public class TechnicalAdministratorController {
         col_lname.prefWidthProperty().bind(table_users.widthProperty().divide(8)); // w * 1/8
         col_richting.prefWidthProperty().bind(table_users.widthProperty().divide(7)); // w * 1/7
         col_role.prefWidthProperty().bind(table_users.widthProperty().divide(5));
-        col_delete.prefWidthProperty().bind(table_users.widthProperty().divide(7));
+//        col_action.prefWidthProperty().bind(table_users.widthProperty().divide(7));
         col_actie.prefWidthProperty().bind(table_users.widthProperty().divide(7));
     }
 
@@ -134,12 +136,16 @@ public class TechnicalAdministratorController {
      * @author M.J. Moshiri
      */
     private void addEndBtnToUserTable() {
-        col_delete.setCellFactory(cellData -> new TableCell<>() {
-            private final Button delButton = new Button("Beëindigen");
-            private final Button editButton = new Button("bijwerken");
+        col_action.setCellFactory(cellData -> new TableCell<>() {
+            private final Button delButton = new Button("");
+            private final Button editButton = new Button("");
             private final HBox pane = new HBox(editButton, delButton);
 
             {
+                col_action.prefWidthProperty().bind(pane.widthProperty().add(5));
+                delButton.setGraphic(glyphFont.create(FontAwesome.Glyph.REMOVE).color(Color.RED));
+                editButton.setGraphic(glyphFont.create(FontAwesome.Glyph.PENCIL).color(Color.BLUE));
+
                 delButton.setOnAction(event ->
                 {
                     boolean r = AlertHelper.confirmationDialog("Wilt u de lidmaatschap ven deze gebruiker beëindigen?");
@@ -192,7 +198,7 @@ public class TechnicalAdministratorController {
 
 
             {
-                setPassBtn.setMaxHeight(Double.MAX_VALUE);
+                setPassBtn.prefWidthProperty().bind(col_actie.widthProperty().subtract(5));
                 setPassBtn.setOnAction(event -> {
                     UserFx u = getTableRow().getItem();
                     this.setGraphic(passwordField);
@@ -232,9 +238,11 @@ public class TechnicalAdministratorController {
                         String pass = showPasswordString(user.getUserObject());
                         if (pass.equals("")) {
                             setPassBtn.setStyle("-fx-background-color: #f6a3a3");
+                            setPassBtn.setGraphic(glyphFont.create(FontAwesome.Glyph.PLUS_CIRCLE).color(Color.GREEN));
                             setPassBtn.setText("Set Credential");
                         } else {
                             setPassBtn.setStyle("-fx-background-color: #ccffcc");
+                            setPassBtn.setGraphic(glyphFont.create(FontAwesome.Glyph.EDIT).color(Color.RED));
                             setPassBtn.setText("Edit Credential");
                         }
                     }

@@ -24,7 +24,7 @@
                           <TableColumn fx:id="col_richting" prefWidth="112.0" text="Richting" />
                           <TableColumn fx:id="col_role" prefWidth="130.0" text="Role" />
                           <TableColumn fx:id="col_actie" prefWidth="115.0" text="Credentials" />
-                          <TableColumn fx:id="col_delete" prefWidth="100.0" text="Acties" />
+                          <TableColumn fx:id="col_action" prefWidth="100.0" text="Acties" />
                       </columns>
                       <StackPane.margin>
                           <Insets top="33.0" />

@@ -3,6 +3,7 @@ package model;
 import javafx.beans.property.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class User {
@@ -11,6 +12,7 @@ public class User {
     private String lastName;
     private String studieRichting;
     private List<Role> roles;
+    private Date delitionDate;
 
 
     public User(int userId, String firstName, String lastName) {
@@ -69,14 +71,21 @@ public class User {
         return roles;
     }
 
+    public boolean isValid() {
+        //tODO add body
+        return true;
+    }
+
+    public Date getDelitionDate() {
+        return delitionDate;
+    }
+
+    public void setDelitionDate(Date delitionDate) {
+        this.delitionDate = delitionDate;
+    }
     @Override
     public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", firstName=" + firstName +
-                ", lastName=" + lastName +
-                ", studieRichting=" + studieRichting +
-                ", role=" + roles +
-                '}';
+        return  firstName +" "+ lastName;
+
     }
 }

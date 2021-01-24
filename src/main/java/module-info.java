@@ -13,4 +13,5 @@ module QuizMaster {
     opens launcher to javafx.graphics, javafx.fxml;
     opens controller to javafx.fxml;
     opens model to gson, javafx.base;
+    exports view to org.controlsfx.controls;
 }

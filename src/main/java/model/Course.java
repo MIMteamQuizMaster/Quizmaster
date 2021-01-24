@@ -14,11 +14,20 @@ public class Course {
     private List<Quiz> quizzes;
     private List<Group> groups;
 
+
     public Course(String name, User coordinator) {
         this.name = name;
         this.coordinator = coordinator;
         quizzes = new ArrayList<>();
         groups = new ArrayList<>();
+    }
+
+    public Course(int dbId, String name, User coordinator, String startDate, String endDate) {
+        this.dbId = dbId;
+        this.name = name;
+        this.coordinator = coordinator;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public int getDbId() {

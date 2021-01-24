@@ -41,6 +41,21 @@ public class ObjectConvertor {
     }
 
     /**
+     * @param groupList list of Group objects
+     * @return a observableList GroupFx objects
+     * @author M.J. Moshiri
+     * <p>
+     * Convert Group objects to GroupFX objects
+     */
+    public static ObservableList<GroupFx> convertGrouptoGroupFX(List<Group> groupList) {
+        ObservableList<GroupFx> list = FXCollections.observableArrayList();
+        for (Group c : groupList) {
+            list.add(new GroupFx(c));
+        }
+        return list;
+    }
+
+    /**
      * @param userObservableList list of Quiz objects
      * @return an observableList QuizFx objects
      * @author M.J. Moshiri
@@ -87,12 +102,13 @@ public class ObjectConvertor {
 
     /**
      * Convert Class objects to ClassFX objects
+     *
      * @param userObservableList list of Class objects
      * @return a observableList ClassFX objects
      */
-    public static ObservableList<ClassFX> convertClassToClassFX(ObservableList<Class> userObservableList){
+    public static ObservableList<ClassFX> convertClassToClassFX(ObservableList<Class> userObservableList) {
         ObservableList<ClassFX> listedClasses = FXCollections.observableArrayList();
-        for (Class c:userObservableList) {
+        for (Class c : userObservableList) {
             listedClasses.add(new ClassFX(c));
         }
         return listedClasses;
@@ -100,12 +116,13 @@ public class ObjectConvertor {
 
     /**
      * Convert Class objects to ClassFX objects
+     *
      * @param userObservableList list of Class objects
      * @return a observableList ClassFX objects
      */
-    public static ObservableList<GradeFX> convertGradeToGradeFX(ObservableList<Grade> userObservableList){
+    public static ObservableList<GradeFX> convertGradeToGradeFX(ObservableList<Grade> userObservableList) {
         ObservableList<GradeFX> listedClasses = FXCollections.observableArrayList();
-        for (Grade g:userObservableList) {
+        for (Grade g : userObservableList) {
             listedClasses.add(new GradeFX(g));
         }
         return listedClasses;

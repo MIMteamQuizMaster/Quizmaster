@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="625.0" prefWidth="852.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdministratorController">
+   <children>
+      <SplitPane fx:id="splitPane" dividerPositions="0.38127090301003347" orientation="VERTICAL" prefHeight="375.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" SplitPane.resizableWithParent="false">
+               <children>
+                  <TableView fx:id="courseDetailsTable" layoutX="24.0" layoutY="50.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                      <TableColumn fx:id="col_CourseName" prefWidth="75.0" text="Naam" />
+                      <TableColumn prefWidth="75.0" text="period">
+                           <columns>
+                              <TableColumn fx:id="col_CourseStart" prefWidth="75.0" text="start" />
+                              <TableColumn fx:id="col_CourseEnd" prefWidth="75.0" text="end" />
+                           </columns>
+                      </TableColumn>
+                      <TableColumn fx:id="col_CourseGroup" prefWidth="75.0" text="Groeps" />
+                        <TableColumn fx:id="col_CourseCoordinator" prefWidth="89.0" text="Coordinatoor" />
+                    </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Button fx:id="backtoCourse" cancelButton="true" maxHeight="1.7976931348623157E308" maxWidth="60.0" mnemonicParsing="false" prefHeight="295.0" prefWidth="60.0" text="Back to Courses" wrapText="true" HBox.hgrow="ALWAYS" />
+                        <TableView fx:id="groupTable" prefHeight="378.0" prefWidth="353.0">
+                          <columns>
+                            <TableColumn fx:id="col_groupName" prefWidth="75.0" text="Name" />
+                            <TableColumn fx:id="col_totalStudents" prefWidth="75.0" text="student" />
+                              <TableColumn fx:id="col_groupTeacher" prefWidth="75.0" text="Docent" />
+                          </columns>
+                        </TableView>
+                        <ListView fx:id="totalAvailable" prefHeight="378.0" prefWidth="188.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+        </items>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </SplitPane>
+   </children>
+</AnchorPane>
