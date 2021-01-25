@@ -6,11 +6,6 @@ import model.Grade;
 
 public class GradeFX {
 
-//    private int quizId;
-//    private double grade;
-//    private int studentId;
-
-
     private Grade grade;
 
     public GradeFX(Grade grade) {
@@ -21,6 +16,13 @@ public class GradeFX {
         return this.grade;
     }
 
+    public String getQuizName() {
+        return new SimpleStringProperty(this.grade.getQuizName()).get();
+    }
+
+    public StringProperty quizNameProperty() {
+        return new SimpleStringProperty(this.grade.getQuizName());
+    }
 
     public int getQuizId() {
         return new SimpleIntegerProperty(this.grade.getQuizId()).get();
