@@ -23,7 +23,7 @@ public class GroupDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public ObservableList<Group> getAllGroups(User teacher) {
-        String sql = "SELECT uhg.group_id, g.name, uhg.teacher_user_id FROM user_has_group uhg INNER JOIN quizmaster.group g ON uhg.group_id = g.id WHERE uhg.teacher_user_id = " + teacher.getUserId();
+        String sql = "SELECT uhg.group_id, g.name, uhg.teacher_user_id FROM student_has_group uhg INNER JOIN quizmaster.group g ON uhg.group_id = g.id WHERE uhg.teacher_user_id = " + teacher.getUserId();
         ObservableList<Group> rList = FXCollections.observableArrayList();
         try {
             PreparedStatement ps = getStatement(sql);
@@ -34,7 +34,7 @@ public class GroupDAO extends AbstractDAO {
                 rList.add(new Group(groupId,groupName,teacher));
             }
         } catch (SQLException throwables) {
-            System.out.println(throwables.getMessage() + "Unable to retrieve classes for the selected teacher");
+            System.out.println(throwables.getMessage() + " Unable to retrieve classes for the selected teacher");
             System.out.println(throwables.getMessage());
         }
         return rList;
@@ -47,7 +47,7 @@ public class GroupDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public ObservableList<User> getStudentsPerGroup(Group group) {
-        String sql = "SELECT ug.student_user_id, u.firstname, u.lastname FROM user_has_group ug INNER JOIN user u ON ug.student_user_id = u.user_id WHERE ug.group_id = " + group.getDbId();
+        String sql = "SELECT ug.student_user_id, u.firstname, u.lastname FROM student_has_group ug INNER JOIN user u ON ug.student_user_id = u.user_id WHERE ug.group_id = " + group.getDbId();
         ObservableList<User> rList = FXCollections.observableArrayList();
         try {
             PreparedStatement ps = getStatement(sql);
@@ -59,7 +59,7 @@ public class GroupDAO extends AbstractDAO {
                 rList.add(new User(studentId,firstName,lastName));
             }
         } catch (SQLException throwables) {
-            System.out.println(throwables.getMessage() + "Unable to retrieve students for selected group");
+            System.out.println(throwables.getMessage() + " Unable to retrieve students for selected group");
             System.out.println(throwables.getMessage());
         }
         return rList;

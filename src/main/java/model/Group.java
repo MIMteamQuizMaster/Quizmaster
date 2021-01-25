@@ -68,4 +68,13 @@ public class Group {
     public void setStudents(List<User> students) {
         this.students = students;
     }
+
+    public boolean addStudent(User student){
+        this.students.add(student);
+        return students.contains(student);
+    }
+    public boolean removeStudent(User student){
+        if(students.contains(student))this.students.remove(student);
+        return !(students.contains(student));
+    }
 }

@@ -37,6 +37,11 @@ public class DomainClass implements GenericDAO {
     }
 
     @Override
+    public boolean deleteCourse(Course c) {
+        return false;
+    }
+
+    @Override
     public List<Group> getGroupsOfCourse(Course course) {
         return courseDAO.getGroupsOfCourse(course);
     }
