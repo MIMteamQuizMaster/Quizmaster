@@ -1,0 +1,152 @@
+package database.mysql;
+
+import model.Course;
+import model.User;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class StudentSignInOutDAO extends AbstractDAO {
+
+    /**
+     * @author Ismael Ben Cherif
+     * Returns the Courses a student is signed in for and the student hasn't signed in for.
+     *
+     */
+
+    private User student;
+    private CourseDAO courseDAO;
+    private CoordinatorDAO coordinatorDAO;
+    private QuizDAO quizDAO;
+
+    public StudentSignInOutDAO(DBAccess dBaccess) {
+        super(dBaccess);
+        this.courseDAO = new CourseDAO(dBaccess);
+        this.coordinatorDAO = new CoordinatorDAO(dBaccess);
+        this.quizDAO = new QuizDAO(dBaccess);
+    }
+
+    public User getStudent() {
+        return student;
+    }
+
+    public void setStudent(User student) {
+        this.student = student;
+    }
+
+    /**
+     * @author Ismael Ben Cherif
+     * Returns a list of courses with the quizzes, questions and
+     * answers objects in it that the student hasn't registered for.
+     * @return
+     */
+    public List<Course> returnCoursesToRegisterFor()
+    {
+        List<Course> returnValue = new ArrayList<>();
+        List<String> courseIds = courseDAO.courseIdsToRegisterForEachStudent(this.student);
+        List<Course> courseList = getAllcoursesNotAssignedToStudent(courseIds);
+        returnValue = returnListOfFilledCourses(courseList);
+        return returnValue;
+    }
+
+    /**
+     * @author Ismael Ben Cherif
+     * Returns a list of courses with the quizzes, questions and
+     * answers objects in it that the student has registered for.
+     * @return
+     */
+    public List<Course> returnCoursesAllreadyRegisterFor()
+    {
+        List<Course> returnValue = new ArrayList<>();
+        List<String> courseIds = courseDAO.courseIdsToRegisterForEachStudent(this.student);
+        List<Course> courseList = getAllcoursesAssignedToStudent(courseIds);
+        returnValue = returnListOfFilledCourses(courseList);
+        return returnValue;
+    }
+
+    /**
+     * @author Ismael Ben Cherif
+     * Gets all courses the student hasn't signed in for yet.
+     * @param registeredCourses
+     * @return
+     */
+    public List<Course> getAllcoursesNotAssignedToStudent(List<String> registeredCourses)
+    {
+        List<Course> courses = new ArrayList<>();
+        String stringRegesteredCourses = String.join(", ", registeredCourses);
+        String sql;
+        if (registeredCourses.size()!=0) {
+            sql = String.format("SELECT *\n" +
+                    "FROM course\n" +
+                    "WHERE id NOT IN (%s);", stringRegesteredCourses);
+        }
+        else
+        {
+            sql = "SELECT * FROM course";
+        }
+        try {
+            PreparedStatement preparedStatement = getStatement(sql);
+            ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
+            Course newCourse;
+            while (resultSet.next())
+            {
+                int coordinator_id = resultSet.getInt(2);
+                String name = resultSet.getString(3);
+                courses.add(new Course(name, coordinatorDAO.getCoordibatorById(coordinator_id)));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return courses;
+    }
+
+    /**
+     * @author Ismael Ben Cherif
+     * Adds the objects of quizzes, questions and answers to the courses.
+     * @param courseList
+     * @return
+     */
+    public List<Course> returnListOfFilledCourses(List<Course> courseList)
+    {
+        List<Course> returnValue= new ArrayList<>();
+        for (Course course : courseList)
+        {
+            course.setQuizzes(quizDAO.getQuizOfCourse(course));
+            returnValue.add(course);
+        }
+        return returnValue;
+    }
+
+    /**
+     * @author Ismael Ben Cherif
+     * Gets all courses the student has signed in for.
+     * @param registeredCourses
+     * @return
+     */
+    public List<Course> getAllcoursesAssignedToStudent(List<String> registeredCourses)
+    {
+        List<Course> courses = new ArrayList<>();
+        String stringRegesteredCourses = String.join(", ", registeredCourses);
+        String sql;
+            sql = String.format("SELECT *\n" +
+                    "FROM course\n" +
+                    "WHERE id IN (%s);", stringRegesteredCourses);
+        try {
+            PreparedStatement preparedStatement = getStatement(sql);
+            ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
+            Course newCourse;
+            while (resultSet.next())
+            {
+                int coordinator_id = resultSet.getInt(2);
+                String name = resultSet.getString(3);
+                courses.add(new Course(name, coordinatorDAO.getCoordibatorById(coordinator_id)));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return courses;
+    }
+}

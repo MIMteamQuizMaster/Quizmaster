@@ -54,35 +54,6 @@ public class CourseDAO extends AbstractDAO {
         return course;
     }
 
-    public List<Course> getAllcoursesNotAssignedToStudent(List<String> registeredCourses)
-    {
-        List<Course> courses = new ArrayList<>();
-        String stringRegesteredCourses = String.join(", ", registeredCourses);
-        String sql;
-        if (registeredCourses.size()>0) {
-            sql = String.format("SELECT *\n" +
-                    "FROM course\n" +
-                    "WHERE id NOT IN (%s);", stringRegesteredCourses);
-        }
-        else
-        {
-            sql = "SELECT * FROM course";
-        }
-        try {
-            PreparedStatement preparedStatement = getStatement(sql);
-            ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
-            while (resultSet.next())
-            {
-
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-
-        return courses;
-    }
-
     /**
      * Insert passed course into database, extracting each attribute from preparedStatement
      * @param mpCourse is the course passed by the user
@@ -101,9 +72,9 @@ public class CourseDAO extends AbstractDAO {
         }
     }
 
-    public List<Course> coursesToRegisterForEachStudent(User student)
+    public List<String> courseIdsToRegisterForEachStudent(User student)
     {
-        List<Course> courseList = new ArrayList<>();
+        List<String> courseIdsList = new ArrayList<>();
         student.getUserId();
         String sql = String.format("SELECT course_id FROM user_has_group" +
                 "WHERE student_user_id = %s", student);
@@ -112,13 +83,14 @@ public class CourseDAO extends AbstractDAO {
             ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
             while (resultSet.next())
             {
-                int course_id = resultSet.getInt(1);
+                String course_id = String.valueOf(resultSet.getInt(1));
+                courseIdsList.add(course_id);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
-        return courseList;
+        return courseIdsList;
     }
 
 }
