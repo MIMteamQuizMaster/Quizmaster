@@ -19,6 +19,7 @@ public class CourseDAO extends AbstractDAO {
      * Build new course object.
      * @param course_id the id of the course.
      * @return the new course object created from the database.
+     * @author M.J. Alden-Montague
      */
     public Course getCourseById(int course_id) {
         String sql_course = "SELECT name, coordinator_user_id, startDate, endDate FROM course WHERE id = " + course_id;
@@ -57,6 +58,7 @@ public class CourseDAO extends AbstractDAO {
     /**
      * Insert passed course into database, extracting each attribute from preparedStatement
      * @param mpCourse is the course passed by the user
+     * @author M.J. Alden-Montague
      */
     public void storeCourse(Course mpCourse) {
         String sql = "INSERT INTO course(coordinator_user_id, name, startDate, endDate)" + "VALUES (?,?,?,?)";
