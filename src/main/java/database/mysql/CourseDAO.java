@@ -12,12 +12,11 @@ import java.util.List;
 
 
 public class CourseDAO extends AbstractDAO {
-    private UserDAO userDAO;
+    UserDAO userDAO;
 
     public CourseDAO(DBAccess dBaccess) {
         super(dBaccess);
         userDAO = new UserDAO(dBaccess);
-
     }
 
     /**
@@ -25,6 +24,7 @@ public class CourseDAO extends AbstractDAO {
      * Build new course object.
      * @param course_id the id of the course.
      * @return the new course object created from the database.
+     * @author M.J. Alden-Montague
      */
     public Course getCourseById(int course_id) {
         String sql_course = "SELECT name, coordinator_user_id, startDate, endDate FROM course WHERE id = " + course_id;
@@ -63,6 +63,7 @@ public class CourseDAO extends AbstractDAO {
     /**
      * Insert passed course into database, extracting each attribute from preparedStatement
      * @param mpCourse is the course passed by the user
+     * @author M.J. Alden-Montague
      */
     public void storeCourse(Course mpCourse) {
         String sql = "INSERT INTO course(coordinator_user_id, name, startDate, endDate)" + "VALUES (?,?,?,?)";
@@ -77,6 +78,28 @@ public class CourseDAO extends AbstractDAO {
             System.out.println("SQL error: " + e.getMessage());
         }
     }
+
+    public List<String> courseIdsToRegisterForEachStudent(User student)
+    {
+        List<String> courseIdsList = new ArrayList<>();
+        student.getUserId();
+        String sql = String.format("SELECT course_id FROM user_has_group" +
+                "WHERE student_user_id = %s", student);
+        try {
+            PreparedStatement preparedStatement = getStatement(sql);
+            ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
+            while (resultSet.next())
+            {
+                String course_id = String.valueOf(resultSet.getInt(1));
+                courseIdsList.add(course_id);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return courseIdsList;
+    }
+
 
     /**
      * @author M.J. Moshiri
@@ -148,7 +171,7 @@ public class CourseDAO extends AbstractDAO {
         String query = "SELECT * FROM student_has_group WHERE group_id = ?";
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setInt(1,g.getDbID());
+            ps.setInt(1,g.getDbId());
             ResultSet rs = executeSelectPreparedStatement(ps);
             while(rs.next()){
                 int student_id = rs.getInt("student_user_id");

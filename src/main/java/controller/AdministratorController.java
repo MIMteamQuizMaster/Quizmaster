@@ -1,7 +1,8 @@
 package controller;
 
 import controller.fx.CourseFx;
-import controller.fx.GroupFx;
+import controller.fx.GroupFX;
+import controller.fx.GroupFX;
 import controller.fx.ObjectConvertor;
 import controller.fx.UserFx;
 import database.mysql.CourseDAO;
@@ -55,10 +56,10 @@ public class AdministratorController implements Initializable {
 
     public SplitPane splitPane;
 
-    public TableView<GroupFx> groupTable;
-    public TableColumn<GroupFx, String> col_groupName;
-    public TableColumn<GroupFx, Integer> col_totalStudents;
-    public TableColumn<GroupFx, Void> col_groupTeacher;
+    public TableView<GroupFX> groupTable;
+    public TableColumn<GroupFX, String> col_groupName;
+    public TableColumn<GroupFX, Integer> col_totalStudents;
+    public TableColumn<GroupFX, Void> col_groupTeacher;
     public Button backtoCourse;
     public ListView<UserFx> totalAvailable;
     public ListView studentInGroup;
@@ -249,7 +250,7 @@ public class AdministratorController implements Initializable {
 
     private void fillGroupTable(CourseFx courseFx) {
         List<Group> s = courseFx.getGroups();
-        ObservableList<GroupFx> courseFxes = ObjectConvertor.convertGrouptoGroupFX(s);
+        ObservableList<GroupFX> courseFxes = ObjectConvertor.convertGroupToGroupFX(s);
         col_groupName.setCellValueFactory(data -> data.getValue().nameProperty());
         col_totalStudents.setCellValueFactory(data -> data.getValue().getTotalStudents().asObject());
         col_groupTeacher.setCellFactory(data -> getTeacherTableCell());
@@ -257,16 +258,16 @@ public class AdministratorController implements Initializable {
         fillAvailableList(courseFx);
     }
 
-    private TableCell<GroupFx, Void> getTeacherTableCell() {
+    private TableCell<GroupFX, Void> getTeacherTableCell() {
         return new TableCell<>() {
             private final Button btn = new Button();
 
             {
                 btn.prefWidthProperty().bind(col_CourseCoordinator.widthProperty().subtract(5));
                 btn.setOnAction(event -> {
-                    GroupFx groupFx = getTableRow().getItem();
+                    GroupFX GroupFX = getTableRow().getItem();
                     //TODO assign teacher to group
-                    PopOver popOver = groupsPopOver(groupFx);
+                    PopOver popOver = groupsPopOver(GroupFX);
                     popOver.show(btn);
 //                    PopOver popOver = creatCoordinatorPopOver(courseFx);
 //                    popOver.show(btn);
@@ -279,9 +280,9 @@ public class AdministratorController implements Initializable {
 
                 if (!empty) {
                     setGraphic(btn);
-                    GroupFx groupFx = getTableRow().getItem();
-                    if (groupFx != null) {
-                        User teacher = groupFx.getTeacher();
+                    GroupFX GroupFX = getTableRow().getItem();
+                    if (GroupFX != null) {
+                        User teacher = GroupFX.getTeacher();
                         getbtn(teacher, btn);
                     }
                 }
@@ -317,7 +318,7 @@ public class AdministratorController implements Initializable {
         return listView;
     }
 
-    private PopOver groupsPopOver(GroupFx group) {
+    private PopOver groupsPopOver(GroupFX group) {
         PopOver popOver = new PopOver();
         Tooltip tp = new Tooltip("Double click to add to group");
         Label labelAssign = new Label("Students with no group:");
