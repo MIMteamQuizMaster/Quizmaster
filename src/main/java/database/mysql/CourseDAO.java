@@ -75,15 +75,18 @@ public class CourseDAO extends AbstractDAO {
     public List<String> courseIdsToRegisterForEachStudent(User student)
     {
         List<String> courseIdsList = new ArrayList<>();
-        student.getUserId();
-        String sql = String.format("SELECT course_id FROM user_has_group" +
-                "WHERE student_user_id = %s", student);
+        String sql = String.format("SELECT course_id FROM user_has_group " +
+                "WHERE student_user_id = %d", student.getUserId());
         try {
             PreparedStatement preparedStatement = getStatement(sql);
             ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
             while (resultSet.next())
             {
                 String course_id = String.valueOf(resultSet.getInt(1));
+                if (course_id.equalsIgnoreCase("0"))
+                {
+                    continue;
+                }
                 courseIdsList.add(course_id);
             }
         } catch (SQLException throwables) {

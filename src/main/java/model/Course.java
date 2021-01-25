@@ -103,4 +103,8 @@ public class Course {
         groups.add(group);
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s", this.name);
+    }
 }

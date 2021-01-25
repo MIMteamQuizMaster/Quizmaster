@@ -1,6 +1,8 @@
 package database.mysql;
 
 import model.Course;
+import model.Question;
+import model.Quiz;
 import model.User;
 
 import java.sql.PreparedStatement;
@@ -49,13 +51,23 @@ public class StudentSignInOutDAO extends AbstractDAO {
         List<String> courseIds = courseDAO.courseIdsToRegisterForEachStudent(this.student);
         List<Course> courseList = getAllcoursesNotAssignedToStudent(courseIds);
         returnValue = returnListOfFilledCourses(courseList);
+        for (Course course: returnValue)
+        {
+            for (Quiz quiz: course.getQuizzes())
+            {
+                for (Question question: quiz.getQuestions())
+                {
+                    question.mixAnswers();
+                }
+            }
+        }
         return returnValue;
     }
 
     /**
      * @author Ismael Ben Cherif
      * Returns a list of courses with the quizzes, questions and
-     * answers objects in it that the student has registered for.
+     * mixed answers objects in it that the student has registered for.
      * @return
      */
     public List<Course> returnCoursesAllreadyRegisterFor()
@@ -64,6 +76,16 @@ public class StudentSignInOutDAO extends AbstractDAO {
         List<String> courseIds = courseDAO.courseIdsToRegisterForEachStudent(this.student);
         List<Course> courseList = getAllcoursesAssignedToStudent(courseIds);
         returnValue = returnListOfFilledCourses(courseList);
+        for (Course course: returnValue)
+        {
+            for (Quiz quiz: course.getQuizzes())
+            {
+                for (Question question: quiz.getQuestions())
+                {
+                    question.mixAnswers();
+                }
+            }
+        }
         return returnValue;
     }
 
@@ -79,8 +101,8 @@ public class StudentSignInOutDAO extends AbstractDAO {
         String stringRegesteredCourses = String.join(", ", registeredCourses);
         String sql;
         if (registeredCourses.size()!=0) {
-            sql = String.format("SELECT *\n" +
-                    "FROM course\n" +
+            sql = String.format("SELECT * " +
+                    "FROM course " +
                     "WHERE id NOT IN (%s);", stringRegesteredCourses);
         }
         else
@@ -128,11 +150,15 @@ public class StudentSignInOutDAO extends AbstractDAO {
      */
     public List<Course> getAllcoursesAssignedToStudent(List<String> registeredCourses)
     {
+        if (registeredCourses.size()==0)
+        {
+            return new ArrayList<>();
+        }
         List<Course> courses = new ArrayList<>();
         String stringRegesteredCourses = String.join(", ", registeredCourses);
         String sql;
-            sql = String.format("SELECT *\n" +
-                    "FROM course\n" +
+            sql = String.format("SELECT * " +
+                    "FROM course " +
                     "WHERE id IN (%s);", stringRegesteredCourses);
         try {
             PreparedStatement preparedStatement = getStatement(sql);
