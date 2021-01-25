@@ -1,14 +1,11 @@
 package controller;
 
 import controller.fx.CourseFx;
-import controller.fx.GroupFX;
-import controller.fx.GroupFX;
 import controller.fx.ObjectConvertor;
 import controller.fx.UserFx;
 import database.mysql.CourseDAO;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -19,13 +16,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import javafx.util.StringConverter;
 import launcher.Main;
 import model.Course;
@@ -46,37 +43,25 @@ import java.util.ResourceBundle;
 
 public class AdministratorController implements Initializable {
 
-    public TableView<CourseFx> courseDetailsTable;
+    public TableView<CourseFx> courseTableView;
     public TableColumn<CourseFx, String> col_CourseName;
     public TableColumn<CourseFx, String> col_CourseStart;
     public TableColumn<CourseFx, String> col_CourseEnd;
-    public TableColumn<CourseFx, Integer> col_CourseGroup;
+    public TableColumn<CourseFx, Void> col_CourseGroup;
     public TableColumn<CourseFx, User> col_CourseCoordinator;
     public TableColumn<CourseFx, Void> col_CourseActions;
 
     public SplitPane splitPane;
-
-    public TableView<GroupFX> groupTable;
-    public TableColumn<GroupFX, String> col_groupName;
-    public TableColumn<GroupFX, Integer> col_totalStudents;
-    public TableColumn<GroupFX, Void> col_groupTeacher;
-    public Button backtoCourse;
-    public ListView<UserFx> totalAvailable;
-    public ListView studentInGroup;
     public Button newCourseBtn;
     private CourseDAO courseDAO;
     private GlyphFont glyphFont;
-
-    private CourseFx selectedCourseFx;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         glyphFont = GlyphFontRegistry.font("FontAwesome");
         courseDAO = new CourseDAO(Main.getDBaccess());
-        backtoCourse.setCancelButton(true);
-        backtoCourse.setOnAction(actionEvent -> showGroupPanel(false));
-        fillTable();
+        fillCourseTable();
     }
 
     /**
@@ -85,35 +70,149 @@ public class AdministratorController implements Initializable {
      * and show the coordinator assigned to the course
      * the coordinator must be a valid user
      */
-    private void fillTable() {
+    private void fillCourseTable() {
         List<Course> s = courseDAO.getAllCourses();
         ObservableList<CourseFx> courseFxes = ObjectConvertor.convertCoursetoCourseFX(s);
         col_CourseName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         col_CourseStart.setCellValueFactory(cellData -> cellData.getValue().startDateProperty());
         col_CourseEnd.setCellValueFactory(cellData -> cellData.getValue().endDateProperty());
-        col_CourseGroup.setCellValueFactory(cellData -> cellData.getValue().getTotalGroups().asObject());
-//        col_CourseCoordinator.setCellFactory(cellData -> getCoordinatorTableCell());
+//        col_CourseGroup.setCellValueFactory(cellData -> cellData.getValue().getTotalGroups().asObject());
+        col_CourseGroup.setCellFactory(cellData -> createCourseGroupCell());
         col_CourseCoordinator.setCellValueFactory(cellData -> cellData.getValue().coordinatorProperty());
-        col_CourseActions.setCellFactory(cellData -> createCourseActionCel());
-
-        courseDetailsTable.setItems(courseFxes);
-        courseDetailsTable.refresh();
-        courseDetailsTable.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 1) showGroupPanel(false);
-            else if (event.getClickCount() == 2) {
-                onTableClick();
-            }
+        col_CourseActions.setCellFactory(cellData -> createCourseActionCell());
+        courseTableView.setItems(courseFxes);
+        courseTableView.refresh();
+        courseTableView.setOnMouseClicked(event -> {
+//            if (event.getClickCount() == 1) showGroupPanel(false);
+//            else if (event.getClickCount() == 2) {
+//                onTableClick();
+//            }
 
         });
-        courseDetailsTable.getColumns().addListener((ListChangeListener) change -> {
+        courseTableView.getColumns().addListener((ListChangeListener) change -> {
             change.next();
             if (change.wasReplaced()) {
-                courseDetailsTable.refresh();
+                courseTableView.refresh();
             }
         }); // on coloums re ordering or resizing fix the rendering bug by refreshing the table
+        col_CourseName.prefWidthProperty().bind(courseTableView.widthProperty().divide(6));
+        col_CourseStart.prefWidthProperty().bind(courseTableView.widthProperty().divide(10));
+        col_CourseEnd.prefWidthProperty().bind(courseTableView.widthProperty().divide(10));
+        col_CourseGroup.prefWidthProperty().bind(courseTableView.widthProperty().divide(3));
+        col_CourseCoordinator.prefWidthProperty().bind(courseTableView.widthProperty().divide(5));
+        createCourseTableContextMenu();
     }
 
-    private TableCell<CourseFx, Void> createCourseActionCel() {
+    private void createCourseTableContextMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem item1 = new MenuItem("Refresh");
+        item1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                courseTableView.getItems().clear();
+                fillCourseTable();
+                courseTableView.refresh();
+            }
+        });
+        MenuItem item2 = new MenuItem("Edit");
+        item2.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println(courseTableView.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        // Add MenuItem to ContextMenu
+        contextMenu.getItems().addAll(item1, item2);
+
+
+        courseTableView.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+            @Override
+            public void handle(ContextMenuEvent contextMenuEvent) {
+                contextMenu.show(courseTableView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+            }
+        });
+    }
+
+    private TableCell<CourseFx, Void> createCourseGroupCell() {
+        return new TableCell<>() {
+            private final Button add = new Button();
+            private final HBox pane = new HBox();
+
+            {
+                add.setGraphic(glyphFont.create(FontAwesome.Glyph.PLUS).color(Color.RED));
+                pane.setSpacing(2);
+                pane.getChildren().add(add);
+
+            }
+
+            @Override
+            protected void updateItem(Void unused, boolean b) {
+                super.updateItem(unused, b);
+                if (!b) {
+                    if (getTableRow() != null) {
+                        CourseFx c = getTableRow().getItem();
+                        if (c != null) {
+                            ObservableList<Group> groups = c.getGroups();
+                            for (Group g : groups) {
+                                pane.getChildren().add(groupHolder(c.getCourseObject(), g));
+                            }
+                        }
+                        setGraphic(pane);
+                    }
+
+                }
+            }
+        };
+    }
+
+    private Button groupHolder(Course c, Group g) {
+        Button holder = new Button();
+        holder.setText(g.getName() + " (" + g.getStudents().size() + ")");
+        holder.setStyle("-fx-background-color: #6ff34b");
+
+
+        holder.setGraphic(glyphFont.create(FontAwesome.Glyph.USERS).color(Color.BLUE));
+        holder.setOnAction(actionEvent -> {
+                    PopOver popOver = groupsPopOver(c, g);
+                    popOver.show(holder);
+                }
+        );
+        return holder;
+    }
+
+    private PopOver groupsPopOver(Course c, Group group) {
+        PopOver popOver = new PopOver();
+        GridPane gridPane = new GridPane();
+        // TODO  complete
+        Tooltip tp = new Tooltip("Double click to add to group");
+        Label labelAssign = new Label("Students with no group:");
+        Label labelAssigned = new Label("Students in " + group.getName() + ":");
+        ListView listAssign = fillAvailableList(c);
+        ListView listAssigned = new ListView();
+        VBox leftside = new VBox(labelAssign, listAssign);
+        Tooltip.install(leftside, tp);
+        Button add = new Button(), addall = new Button(), remove = new Button(), removeall = new Button();
+        VBox midBox = new VBox(add, addall, remove, removeall);
+        midBox.setAlignment(Pos.CENTER);
+        midBox.setSpacing(10);
+        VBox rightside = new VBox(labelAssigned, listAssigned);
+        leftside.setSpacing(5);
+        rightside.setSpacing(5);
+        HBox hBox = new HBox(leftside, midBox, rightside);
+        hBox.setPadding(new Insets(5, 5, 5, 5));
+        popOver.setContentNode(hBox);
+        return popOver;
+    }
+
+
+    /**
+     * @return counfigured cell
+     * @author M.J. Moshiri
+     * create a cell with 2 btn responsible for edditing of removing CourseFX object type
+     */
+    private TableCell<CourseFx, Void> createCourseActionCell() {
         return new TableCell<>() {
             private final Button delButton = new Button("");
             private final Button editButton = new Button("");
@@ -129,6 +228,7 @@ public class AdministratorController implements Initializable {
 //                        UserFx u = getTableRow().getItem();
 //                        dao.setEnd(u.getUserObject());
 //                        refreshTable();
+                        // TODO delete action on Course table
                         System.out.println(this.getTableColumn().getWidth());
                         System.out.println(this.getWidth());
                     }
@@ -153,44 +253,6 @@ public class AdministratorController implements Initializable {
         };
     }
 
-//    private TableCell<CourseFx, Void> getCoordinatorTableCell() {
-//        return new TableCell<>() {
-//            private final Button btn = new Button();
-//
-//            {
-//                btn.prefWidthProperty().bind(col_CourseCoordinator.widthProperty().subtract(5));
-//                btn.setOnAction(event -> {
-//                    CourseFx courseFx = getTableRow().getItem();
-//                    PopOver popOver = creatCoordinatorPopOver(courseFx);
-//                    popOver.show(btn);
-//                });
-//            }
-//
-//            @Override
-//            protected void updateItem(Void s, boolean empty) {
-//                super.updateItem(s, empty);
-//
-//                if (!empty) {
-//                    setGraphic(btn);
-//                    CourseFx courseFx = getTableRow().getItem();
-//                    if (courseFx != null) {
-//                        User coordinator = courseFx.getCoordinator();
-//                        getbtn(coordinator, btn);
-//                    }
-//                }
-//            }
-//        };
-//    }
-
-    public void onTableClick() {
-        if (courseDetailsTable.getSelectionModel().getSelectedItem() != null) {
-//            splitPane.setDividerPosition(0, 0.4);
-            showGroupPanel(true);
-            selectedCourseFx = courseDetailsTable.getSelectionModel().getSelectedItem();
-            fillGroupTable(courseDetailsTable.getSelectionModel().getSelectedItem());
-
-        }
-    }
 
     /**
      * @param course object from tableView
@@ -248,51 +310,10 @@ public class AdministratorController implements Initializable {
         return popOver;
     }
 
-    private void fillGroupTable(CourseFx courseFx) {
-        List<Group> s = courseFx.getGroups();
-        ObservableList<GroupFX> courseFxes = ObjectConvertor.convertGroupToGroupFX(s);
-        col_groupName.setCellValueFactory(data -> data.getValue().nameProperty());
-        col_totalStudents.setCellValueFactory(data -> data.getValue().getTotalStudents().asObject());
-        col_groupTeacher.setCellFactory(data -> getTeacherTableCell());
-        groupTable.setItems(courseFxes);
-        fillAvailableList(courseFx);
-    }
 
-    private TableCell<GroupFX, Void> getTeacherTableCell() {
-        return new TableCell<>() {
-            private final Button btn = new Button();
-
-            {
-                btn.prefWidthProperty().bind(col_CourseCoordinator.widthProperty().subtract(5));
-                btn.setOnAction(event -> {
-                    GroupFX GroupFX = getTableRow().getItem();
-                    //TODO assign teacher to group
-                    PopOver popOver = groupsPopOver(GroupFX);
-                    popOver.show(btn);
-//                    PopOver popOver = creatCoordinatorPopOver(courseFx);
-//                    popOver.show(btn);
-                });
-            }
-
-            @Override
-            protected void updateItem(Void s, boolean empty) {
-                super.updateItem(s, empty);
-
-                if (!empty) {
-                    setGraphic(btn);
-                    GroupFX GroupFX = getTableRow().getItem();
-                    if (GroupFX != null) {
-                        User teacher = GroupFX.getTeacher();
-                        getbtn(teacher, btn);
-                    }
-                }
-            }
-        };
-    }
-
-    private ListView fillAvailableList(CourseFx courseFx) {
+    private ListView fillAvailableList(Course course) {
         ListView listView = new ListView();
-        List<User> userList = courseDAO.getStudentsWithNoGroupAssigned(courseFx.getCourseObject());
+        List<User> userList = courseDAO.getStudentsWithNoGroupAssigned(course);
         if (userList != null) {
             ObservableList<UserFx> userFxes = ObjectConvertor.convertUserToUserFX(userList);
 //            ObservableList<User> userFxes1 = FXCollections.observableArrayList(userList);
@@ -318,27 +339,6 @@ public class AdministratorController implements Initializable {
         return listView;
     }
 
-    private PopOver groupsPopOver(GroupFX group) {
-        PopOver popOver = new PopOver();
-        Tooltip tp = new Tooltip("Double click to add to group");
-        Label labelAssign = new Label("Students with no group:");
-        Label labelAssigned = new Label("Students in " + group.getName() + ":");
-        ListView listAssign = fillAvailableList(selectedCourseFx);
-        ListView listAssigned = new ListView();
-        VBox leftside = new VBox(labelAssign, listAssign);
-        Tooltip.install(leftside, tp);
-        Button add = new Button(), addall = new Button(), remove = new Button(), removeall = new Button();
-        VBox midBox = new VBox(add, addall, remove, removeall);
-        midBox.setAlignment(Pos.CENTER);
-        midBox.setSpacing(10);
-        VBox rightside = new VBox(labelAssigned, listAssigned);
-        leftside.setSpacing(5);
-        rightside.setSpacing(5);
-        HBox hBox = new HBox(leftside, midBox, rightside);
-        hBox.setPadding(new Insets(5, 5, 5, 5));
-        popOver.setContentNode(hBox);
-        return popOver;
-    }
 
     private Button getbtn(User teacher, Button btn) {
         if (teacher == null) {
@@ -354,12 +354,13 @@ public class AdministratorController implements Initializable {
         return btn;
     }
 
-    private void showGroupPanel(Boolean expand) {
-        KeyValue keyValue = new KeyValue(splitPane.getDividers().get(0).positionProperty(), (expand ? 0.01 : 0.99));
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500), keyValue));
-        timeline.play();
-    }
-
+    /**
+     * @param courseInHand which can be a new Course object or a reference to a Course object
+     *                     if the id of object be 0 then the method will describe it as new entry
+     * @return PopOver with values
+     * @author M.J. Moshiri
+     * This is a PopOver pane contain needed information for creating or editing a Course object
+     */
     private PopOver coursePanelPopOver(Course courseInHand) {
         PopOver popOver = new PopOver();
         popOver.setArrowSize(0);
@@ -374,11 +375,11 @@ public class AdministratorController implements Initializable {
         gridPane.addRow(0, courseLableName, courseNameTxt);
 
         Label startDateLable = new Label("Start Date:");
-        DatePicker startDP = getDp();
+        DatePicker startDP = makeDatePicker();
         gridPane.addRow(1, startDateLable, startDP);
 
         Label endDateLable = new Label("End Date:");
-        DatePicker endDP = getDp();
+        DatePicker endDP = makeDatePicker();
         gridPane.addRow(2, endDateLable, endDP);
 
         Label coordinatorLable = new Label("Coordinator:");
@@ -390,16 +391,28 @@ public class AdministratorController implements Initializable {
         });
         gridPane.addRow(3, coordinatorLable, setCoordinator);
 
-        Button savebtn = new Button("add");
-        /// TODO make update courseInHand
+        Button savebtn = new Button();
+        savebtn.setText("Save");
+
         savebtn.setOnAction(actionEvent -> {
             courseInHand.setName(courseNameTxt.getText());
-            courseInHand.setStartDate(startDP.getValue().toString());
-            courseInHand.setEndDate(endDP.getValue().toString());
-            courseDetailsTable.refresh();
+            LocalDate startdate = startDP.getValue();
+            LocalDate enddate = endDP.getValue();
+            courseInHand.setStartDate(startdate == null ? null : startdate.toString());
+            courseInHand.setEndDate(enddate == null ? null : enddate.toString());
+            boolean newEntry;
+            if ((courseInHand.getDbId() == 0)) {
+                newEntry = true;
+            } else {
+                newEntry = false;
+            }
+            courseTableView.refresh();
             boolean result = courseInHand.saveToDB();
-//            if (result) {
-//            }
+            if (result) {
+                if (newEntry) courseTableView.getItems().add(new CourseFx(courseInHand));
+                courseTableView.refresh();
+                popOver.hide();
+            }
         });
         Button cancelbtn = new Button("cancel");
         cancelbtn.setOnAction(actionEvent -> popOver.hide());
@@ -432,11 +445,10 @@ public class AdministratorController implements Initializable {
      *
      * @return configured datepicker
      */
-    private DatePicker getDp() {
+    private DatePicker makeDatePicker() {
         DatePicker datePicker = new DatePicker();
         String pattern = "yyyy-MM-dd";
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
-
         datePicker.setConverter(new StringConverter<LocalDate>() {
             @Override
             public String toString(LocalDate localDate) {
@@ -447,11 +459,26 @@ public class AdministratorController implements Initializable {
             }
 
             @Override
-            public LocalDate fromString(String s) {
-                if (s != null && !s.isEmpty()) {
-                    return LocalDate.parse(s, dateFormatter);
+            public LocalDate fromString(String dateString) {
+                if (dateString == null || dateString.trim().isEmpty())
+                    return null;
+                try {
+                    return LocalDate.parse(dateString, dateFormatter);
+                } catch (Exception e) {
+                    /// bad format
+                    datePicker.setValue(null);
+                    datePicker.getEditor().clear();
+                    return null;
                 }
-                return null;
+            }
+        });
+        datePicker.setPromptText("yyyy-MM-dd");
+        datePicker.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                if (!t1) {
+                    datePicker.setValue(datePicker.getConverter().fromString(datePicker.getEditor().getText()));
+                }
             }
         });
         return datePicker;

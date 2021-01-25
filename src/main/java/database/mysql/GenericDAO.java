@@ -11,5 +11,6 @@ public interface GenericDAO<T> {
     boolean isValidUser(int u , String pass);
     User getUser(int user_id);
     boolean saveCourse(Course c);
+    boolean deleteCourse(Course c);
     List<Group> getGroupsOfCourse(Course course);
 }

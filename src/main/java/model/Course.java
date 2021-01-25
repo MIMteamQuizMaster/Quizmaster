@@ -18,7 +18,7 @@ public class Course {
     private GenericDAO genericDAO;
 
     public Course() {
-        this(0,"",null,"","");
+        this(0,"",null,null,null);
     }
     public Course(String name, User coordinator) {
         this(0,name,coordinator,"","");
