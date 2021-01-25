@@ -2,6 +2,8 @@ package database.mysql;
 import model.Course;
 import model.Group;
 import model.User;
+
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -143,7 +145,7 @@ public class CourseDAO extends AbstractDAO {
      */
     public List<User> getStudentsOfGroup(Group g){
         List<User> userList = new ArrayList<>();
-        String query = "SELECT * FROM user_has_group WHERE group_id = ?";
+        String query = "SELECT * FROM student_has_group WHERE group_id = ?";
         try {
             PreparedStatement ps = getStatement(query);
             ps.setInt(1,g.getDbID());
@@ -217,7 +219,7 @@ public class CourseDAO extends AbstractDAO {
         String query = "SELECT * FROM student_has_course\n" +
                 "where course_id = ?\n" +
                 "and student_user_id not in \n" +
-                "(select student_user_id from user_has_group where group_id in (SELECT id FROM `group` where course_id = ?))";
+                "(select student_user_id from student_has_group where group_id in (SELECT id FROM `group` where course_id = ?))";
         try {
             PreparedStatement ps = getStatement(query);
             ps.setInt(1,course.getDbId());
@@ -235,6 +237,28 @@ public class CourseDAO extends AbstractDAO {
             throwables.printStackTrace();
         }
         return null;
+    }
+    public boolean saveCourse(Course c){
+        String query;
+        if(c.getDbId()==0){// INSERT
+            query = "INSERT INTO course (coordinator_user_id,name,startDate,endDate,id) values (?,?,?,?,?)";
+        }else { // UPDATE
+            query = "UPDATE course SET coordinator_user_id = ? , name =? ,startDate = ? ,endDate = ? WHERE id = ?";
+        }
+        try {
+            PreparedStatement ps = getStatementWithKey(query);
+            ps.setInt(1,c.getCoordinator().getUserId());
+            ps.setString(2,c.getName());
+            ps.setDate(3, Date.valueOf(c.getStartDate()));
+            ps.setDate(4, Date.valueOf(c.getEndDate()));
+            ps.setInt(5,c.getDbId());
+            int key = executeInsertPreparedStatement(ps);
+            if(c.getDbId()==0)c.setDbId(key);
+            return true;
+        } catch (SQLException throwables) {
+            System.out.println(throwables.getMessage() + " Somthing went wrong while saving course object");
+        }
+        return false;
     }
 
 }

@@ -1,4 +1,6 @@
 package model;
+import database.mysql.DomainClass;
+import database.mysql.GenericDAO;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import java.sql.Date;
@@ -13,22 +15,25 @@ public class Course {
     private String endDate;
     private List<Quiz> quizzes;
     private List<Group> groups;
+    private GenericDAO genericDAO;
 
-
-    public Course(String name, User coordinator) {
-        this.name = name;
-        this.coordinator = coordinator;
-        quizzes = new ArrayList<>();
-        groups = new ArrayList<>();
+    public Course() {
+        this(0,"",null,"","");
     }
-
+    public Course(String name, User coordinator) {
+        this(0,name,coordinator,"","");
+    }
     public Course(int dbId, String name, User coordinator, String startDate, String endDate) {
         this.dbId = dbId;
         this.name = name;
         this.coordinator = coordinator;
         this.startDate = startDate;
         this.endDate = endDate;
+        quizzes = new ArrayList<>();
+        groups = new ArrayList<>();
+        genericDAO = new DomainClass();
     }
+
 
     public int getDbId() {
         return dbId;
@@ -94,6 +99,9 @@ public class Course {
         quizzes.remove(quiz);
     }
 
+    public void getGroupsFromDb(){
+        this.groups = genericDAO.getGroupsOfCourse(this);
+    }
 
     /**
      * @should add a group to a course.
@@ -101,6 +109,13 @@ public class Course {
      */
     public void addGroup(Group group){
         groups.add(group);
+    }
+
+    public boolean saveToDB(){
+        return genericDAO.saveCourse(this);
+    }
+    public boolean deleteMe(){
+        return false;
     }
 
 }

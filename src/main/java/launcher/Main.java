@@ -1,9 +1,6 @@
 package launcher;
 
-import database.mysql.CourseDAO;
-import database.mysql.DBAccess;
-import database.mysql.DbInfo;
-import database.mysql.QuestionDAO;
+import database.mysql.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import model.Course;
@@ -14,6 +11,7 @@ public class Main extends Application {
     private static SceneManager sceneManager = null;
     private static Stage primaryStage = null;
     private static DBAccess db = null;
+    public GenericDAO genericDAO;
 
     public static DBAccess getDBaccess() {
         if (db == null) {
@@ -32,7 +30,6 @@ public class Main extends Application {
         // test comment first push
         DBAccess dbAccess = getDBaccess();
         dbAccess.openConnection();
-
         Main.primaryStage = primaryStage;
         primaryStage.setResizable(false);
         primaryStage.setTitle("Make IT Work - Project 1");

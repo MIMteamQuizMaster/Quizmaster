@@ -1,5 +1,7 @@
 package model;
 
+import database.mysql.DomainClass;
+import database.mysql.GenericDAO;
 import javafx.beans.property.*;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ public class User {
     private String studieRichting;
     private List<Role> roles;
     private Date delitionDate;
+    private GenericDAO genericDAO;
 
 
     public User(int userId, String firstName, String lastName) {
@@ -25,6 +28,7 @@ public class User {
         this.lastName = lastName;
         this.studieRichting = studieRichting;
         this.roles = r;
+//        this.genericDAO = new DomainClass();
     }
 
     public User(int userId) {
@@ -72,8 +76,7 @@ public class User {
     }
 
     public boolean isValid() {
-        //tODO add body
-        return true;
+        return genericDAO.isValidUser(userId , "");
     }
 
     public Date getDelitionDate() {

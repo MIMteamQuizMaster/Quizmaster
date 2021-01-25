@@ -1,5 +1,8 @@
 package model;
 
+import database.mysql.DomainClass;
+import database.mysql.GenericDAO;
+
 import java.util.List;
 
 public class Group {
@@ -7,6 +10,7 @@ public class Group {
     private String name;
     private User teacher;
     private List<User> students;
+
 
     public Group(String name, User teacher, List<User> students) {
         this.name = name;

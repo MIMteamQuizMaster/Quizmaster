@@ -9,7 +9,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -17,20 +19,26 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 import launcher.Main;
 import model.Course;
 import model.Group;
 import model.User;
 
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.*;
 
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -42,7 +50,9 @@ public class AdministratorController implements Initializable {
     public TableColumn<CourseFx, String> col_CourseStart;
     public TableColumn<CourseFx, String> col_CourseEnd;
     public TableColumn<CourseFx, Integer> col_CourseGroup;
-    public TableColumn<CourseFx, Void> col_CourseCoordinator;
+    public TableColumn<CourseFx, User> col_CourseCoordinator;
+    public TableColumn<CourseFx, Void> col_CourseActions;
+
     public SplitPane splitPane;
 
     public TableView<GroupFx> groupTable;
@@ -52,6 +62,7 @@ public class AdministratorController implements Initializable {
     public Button backtoCourse;
     public ListView<UserFx> totalAvailable;
     public ListView studentInGroup;
+    public Button newCourseBtn;
     private CourseDAO courseDAO;
     private GlyphFont glyphFont;
 
@@ -80,7 +91,10 @@ public class AdministratorController implements Initializable {
         col_CourseStart.setCellValueFactory(cellData -> cellData.getValue().startDateProperty());
         col_CourseEnd.setCellValueFactory(cellData -> cellData.getValue().endDateProperty());
         col_CourseGroup.setCellValueFactory(cellData -> cellData.getValue().getTotalGroups().asObject());
-        col_CourseCoordinator.setCellFactory(cellData -> getCoordinatorTableCell());
+//        col_CourseCoordinator.setCellFactory(cellData -> getCoordinatorTableCell());
+        col_CourseCoordinator.setCellValueFactory(cellData -> cellData.getValue().coordinatorProperty());
+        col_CourseActions.setCellFactory(cellData -> createCourseActionCel());
+
         courseDetailsTable.setItems(courseFxes);
         courseDetailsTable.refresh();
         courseDetailsTable.setOnMouseClicked(event -> {
@@ -90,37 +104,82 @@ public class AdministratorController implements Initializable {
             }
 
         });
+        courseDetailsTable.getColumns().addListener((ListChangeListener) change -> {
+            change.next();
+            if (change.wasReplaced()) {
+                courseDetailsTable.refresh();
+            }
+        }); // on coloums re ordering or resizing fix the rendering bug by refreshing the table
     }
 
-
-    private TableCell<CourseFx, Void> getCoordinatorTableCell() {
+    private TableCell<CourseFx, Void> createCourseActionCel() {
         return new TableCell<>() {
-            private final Button btn = new Button();
+            private final Button delButton = new Button("");
+            private final Button editButton = new Button("");
+            private final HBox pane = new HBox(editButton, delButton);
 
             {
-                btn.prefWidthProperty().bind(col_CourseCoordinator.widthProperty().subtract(5));
-                btn.setOnAction(event -> {
+                delButton.setGraphic(glyphFont.create(FontAwesome.Glyph.REMOVE).color(Color.RED));
+                editButton.setGraphic(glyphFont.create(FontAwesome.Glyph.PENCIL).color(Color.BLUE));
+                delButton.setOnAction(event ->
+                {
+                    boolean r = AlertHelper.confirmationDialog("Wilt u de lidmaatschap ven deze gebruiker beëindigen?");
+                    if (r) {
+//                        UserFx u = getTableRow().getItem();
+//                        dao.setEnd(u.getUserObject());
+//                        refreshTable();
+                        System.out.println(this.getTableColumn().getWidth());
+                        System.out.println(this.getWidth());
+                    }
+                });
+
+                editButton.setOnAction(event -> {
                     CourseFx courseFx = getTableRow().getItem();
-                    PopOver popOver = creatCoordinatorPopOver(courseFx);
-                    popOver.show(btn);
+                    PopOver popOver = coursePanelPopOver(courseFx.getCourseObject());
+                    popOver.show(editButton);
                 });
             }
 
             @Override
-            protected void updateItem(Void s, boolean empty) {
-                super.updateItem(s, empty);
-
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
                 if (!empty) {
-                    setGraphic(btn);
-                    CourseFx courseFx = getTableRow().getItem();
-                    if (courseFx != null) {
-                        User coordinator = courseFx.getCoordinator();
-                        getbtn(coordinator, btn);
-                    }
+                    setGraphic(pane);
+
                 }
+
             }
         };
     }
+
+//    private TableCell<CourseFx, Void> getCoordinatorTableCell() {
+//        return new TableCell<>() {
+//            private final Button btn = new Button();
+//
+//            {
+//                btn.prefWidthProperty().bind(col_CourseCoordinator.widthProperty().subtract(5));
+//                btn.setOnAction(event -> {
+//                    CourseFx courseFx = getTableRow().getItem();
+//                    PopOver popOver = creatCoordinatorPopOver(courseFx);
+//                    popOver.show(btn);
+//                });
+//            }
+//
+//            @Override
+//            protected void updateItem(Void s, boolean empty) {
+//                super.updateItem(s, empty);
+//
+//                if (!empty) {
+//                    setGraphic(btn);
+//                    CourseFx courseFx = getTableRow().getItem();
+//                    if (courseFx != null) {
+//                        User coordinator = courseFx.getCoordinator();
+//                        getbtn(coordinator, btn);
+//                    }
+//                }
+//            }
+//        };
+//    }
 
     public void onTableClick() {
         if (courseDetailsTable.getSelectionModel().getSelectedItem() != null) {
@@ -133,14 +192,14 @@ public class AdministratorController implements Initializable {
     }
 
     /**
-     * @param courseFx object from tableView
+     * @param course object from tableView
      * @return a popOver
      * @author M.J. Moshiri
      * create a popOver to assign new coordinator to to course, it also show the momentory coordinator of the
      * course
      * the listView in the popOver has a listener to update the new value of the coordinator for course
      */
-    private PopOver creatCoordinatorPopOver(CourseFx courseFx) {
+    private PopOver creatCoordinatorPopOver(Course course) {
         PopOver popOver = new PopOver();
         ObservableList<User> coordinators = FXCollections.observableArrayList(courseDAO.getALlValidCoordinators());
         Label lb = new Label("Double click om te kiezen.");
@@ -160,9 +219,12 @@ public class AdministratorController implements Initializable {
                 } else {
                     setContentDisplay(ContentDisplay.RIGHT);
                     setText(name.toString());
-                    if (courseFx.getCoordinator().getUserId() == name.getUserId()) {
-                        setGraphic(glyphFont.create(FontAwesome.Glyph.CHECK).color(Color.GREEN));
+                    if (course.getCoordinator() != null) {
+                        if (course.getCoordinator().getUserId() == name.getUserId()) {
+                            setGraphic(glyphFont.create(FontAwesome.Glyph.CHECK).color(Color.GREEN));
+                        }
                     }
+
                 }
             }
         });
@@ -172,10 +234,11 @@ public class AdministratorController implements Initializable {
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getClickCount() == 2) {
                     User u = listView.getSelectionModel().getSelectedItem();
-                    Course c = courseFx.getCourseObject();
-                    courseFx.setCoordinator(u);
-                    courseDAO.assignCoordinatorToCourse(u, c);
-                    courseDetailsTable.refresh();
+                    course.setCoordinator(u);
+                    Button owner = (Button) popOver.getOwnerNode();
+                    owner.setText(u.toString());
+                    owner.setGraphic(glyphFont.create(FontAwesome.Glyph.PENCIL).color(Color.GREEN));
+                    popOver.hide();
                 }
             }
         });
@@ -294,5 +357,107 @@ public class AdministratorController implements Initializable {
         KeyValue keyValue = new KeyValue(splitPane.getDividers().get(0).positionProperty(), (expand ? 0.01 : 0.99));
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500), keyValue));
         timeline.play();
+    }
+
+    private PopOver coursePanelPopOver(Course courseInHand) {
+        PopOver popOver = new PopOver();
+        popOver.setArrowSize(0);
+        popOver.setDetachable(false);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+        gridPane.setVgap(5);
+        gridPane.setHgap(5);
+        Label courseLableName = new Label("Naam van Cursus:");
+        TextField courseNameTxt = TextFields.createClearableTextField();
+        gridPane.addRow(0, courseLableName, courseNameTxt);
+
+        Label startDateLable = new Label("Start Date:");
+        DatePicker startDP = getDp();
+        gridPane.addRow(1, startDateLable, startDP);
+
+        Label endDateLable = new Label("End Date:");
+        DatePicker endDP = getDp();
+        gridPane.addRow(2, endDateLable, endDP);
+
+        Label coordinatorLable = new Label("Coordinator:");
+        Button setCoordinator = new Button("Assign");
+        setCoordinator.setGraphic(glyphFont.create(FontAwesome.Glyph.PLUS_CIRCLE).color(Color.GREEN));
+        setCoordinator.setOnAction(event -> {
+            PopOver pop = creatCoordinatorPopOver(courseInHand);
+            pop.show(setCoordinator);
+        });
+        gridPane.addRow(3, coordinatorLable, setCoordinator);
+
+        Button savebtn = new Button("add");
+        /// TODO make update courseInHand
+        savebtn.setOnAction(actionEvent -> {
+            courseInHand.setName(courseNameTxt.getText());
+            courseInHand.setStartDate(startDP.getValue().toString());
+            courseInHand.setEndDate(endDP.getValue().toString());
+            courseDetailsTable.refresh();
+            boolean result = courseInHand.saveToDB();
+//            if (result) {
+//            }
+        });
+        Button cancelbtn = new Button("cancel");
+        cancelbtn.setOnAction(actionEvent -> popOver.hide());
+
+        savebtn.setMaxWidth(Double.MAX_VALUE);
+        cancelbtn.setMaxWidth(Double.MAX_VALUE);
+
+        HBox btnBox = new HBox(savebtn, cancelbtn);
+        btnBox.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(savebtn, Priority.ALWAYS);
+        HBox.setHgrow(cancelbtn, Priority.ALWAYS);
+        btnBox.setSpacing(5);
+        gridPane.add(btnBox, 1, 4);
+
+        popOver.setContentNode(gridPane);
+        // fill data
+        courseNameTxt.setText(courseInHand.getName());
+        if (courseInHand.getStartDate() != null) startDP.setValue(LocalDate.parse(courseInHand.getStartDate()));
+        if (courseInHand.getEndDate() != null) endDP.setValue(LocalDate.parse(courseInHand.getEndDate()));
+        if (courseInHand.getCoordinator() != null) {
+            setCoordinator.setText(courseInHand.getCoordinator().toString());
+            setCoordinator.setGraphic(glyphFont.create(FontAwesome.Glyph.PENCIL).color(Color.GREEN));
+        }
+        return popOver;
+    }
+
+    /**
+     * Create a dataPicker with the format we use
+     * which is yyyy-MM-dd
+     *
+     * @return configured datepicker
+     */
+    private DatePicker getDp() {
+        DatePicker datePicker = new DatePicker();
+        String pattern = "yyyy-MM-dd";
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate localDate) {
+                if (localDate != null) {
+                    return dateFormatter.format(localDate);
+                }
+                return "";
+            }
+
+            @Override
+            public LocalDate fromString(String s) {
+                if (s != null && !s.isEmpty()) {
+                    return LocalDate.parse(s, dateFormatter);
+                }
+                return null;
+            }
+        });
+        return datePicker;
+    }
+
+    public void newCourse(ActionEvent actionEvent) {
+        PopOver popOver = coursePanelPopOver(new Course());
+        popOver.show(newCourseBtn);
     }
 }

@@ -1,8 +1,11 @@
 package controller;
 
 import database.mysql.DBAccess;
+import database.mysql.DomainClass;
+import database.mysql.GenericDAO;
 import database.mysql.UserDAO;
 import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -20,12 +23,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 
 public class LoginController {
-    private final DBAccess dBaccess;
+
     public Label warningLabel;
-    private final UserDAO dao;
     public TextField loginUsername;
     public TextField loginUnMaskedPassword;
     public PasswordField loginMaskedPassword;
@@ -33,12 +36,11 @@ public class LoginController {
     public Button loginbtn;
     public Button cancelBtn;
     private CouchDbClient dbClient;
+    private GenericDAO genericDao;
 
 
     public LoginController() {
-        this.dBaccess = Main.getDBaccess();
-        this.dao = new UserDAO(dBaccess);
-
+        this.genericDao = new DomainClass();
         try {
             dbClient = new CouchDbClient("couchdb.properties");
         } catch (Exception e) {
@@ -81,7 +83,7 @@ public class LoginController {
             LoginAttempt la = new LoginAttempt(id,ip,formatter.format(date));
             dbClient.save(la);
         }catch (Exception e){
-            System.out.println("couldnt save logging attemp in NoSQL");
+            System.out.println("couldnt syncWithdb logging attemp in NoSQL");
         }
 //        List<LoginAttempt> docs =  dbClient.view("_all_docs").includeDocs(true);
 
@@ -93,7 +95,8 @@ public class LoginController {
             userid = Integer.parseInt(loginUsername.getText());
             String password = loginMaskedPassword.getText();
             logLoginAttempt(userid);
-            boolean result = dao.isValidUser(userid, password);
+            boolean result = genericDao.isValidUser(userid, password);
+
             if (result) {
                 System.out.println("login permission: " + result);
 
@@ -119,15 +122,13 @@ public class LoginController {
     }
 
     public void loginCancel(ActionEvent actionEvent) {
-        dBaccess.closeConnection();
-
         Main.getPrimaryStage().close();
 
     }
 
     public User passUser(int userId) {
         // get appropriate user object
-        return dao.getUser(userId);
+        return genericDao.getUser(userId);
     }
 
     public void passfieldInputChanged(KeyEvent inputMethodEvent) {
@@ -144,4 +145,10 @@ public class LoginController {
                 keyEvent.getCode().isArrowKey());
         warningLabel.setVisible(false);
     }
+//
+//    public void passGenericDao(GenericDAO g) {
+//        System.out.println("pff method");
+//        this.genericDao = g;
+//    }
+
 }

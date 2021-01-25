@@ -58,7 +58,7 @@ public class QuizDAO extends AbstractDAO {
 
     /**
      * @param quiz object
-     *             it save the given quiz Object into the databes and
+     *             it syncWithdb the given quiz Object into the databes and
      *             based on the ID inside the given quiz object
      *             if the given object has an ID of 0 then it will chose the INSERT query
      *             otherwise it will chose the UPDATE query for given quiz argument

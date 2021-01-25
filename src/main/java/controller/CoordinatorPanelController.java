@@ -472,7 +472,7 @@ public class CoordinatorPanelController {
     /**
      * @author M.J. Moshiri
      *
-     * Open the pane and set qustion ready to edit and save
+     * Open the pane and set qustion ready to edit and syncWithdb
      */
     private void editQuestionPreSetup() {
         textQuestion.setText(selectedQuestion.getQuestion());
@@ -692,10 +692,10 @@ public class CoordinatorPanelController {
             question = new Question(questionString);
             question.setQuizId(this.selectedQuiz.getIdquiz());
             question.setQuestionId(0);
-            question = questionDAO.saveQuestion(question); // save the question
+            question = questionDAO.saveQuestion(question); // syncWithdb the question
 
         } else {
-            /// UPDATE ITEM so we send update the selected question and send it to dao save method
+            /// UPDATE ITEM so we send update the selected question and send it to dao syncWithdb method
             selectedQuestion.setQuestion(questionString);
             question = questionDAO.saveQuestion(this.selectedQuestion.getQuestionObject());
         }
