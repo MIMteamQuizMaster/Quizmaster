@@ -3,41 +3,65 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TeacherController">
+
+<GridPane alignment="CENTER" hgap="2.0" vgap="2.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TeacherController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <TableView fx:id="classTable" layoutX="100.0" layoutY="208.0" prefHeight="200.0" prefWidth="150.0">
+      <TableView fx:id="classTable" GridPane.rowIndex="1">
         <columns>
-          <TableColumn fx:id="groupColumn" prefWidth="149.0" text="Jouw groepen">
+          <TableColumn fx:id="groupColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="-1.0" text="Jouw groepen">
                <columns>
-                  <TableColumn fx:id="groupColumnID" prefWidth="75.0" text="ID" />
-                  <TableColumn fx:id="groupColumnName" prefWidth="75.0" text="Naam" />
+                  <TableColumn fx:id="groupColumnID" maxWidth="-1.0" minWidth="50.0" prefWidth="-1.0" text="ID" />
+                  <TableColumn fx:id="groupColumnName" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Naam" />
                </columns>
           </TableColumn>
         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
-       <TableView fx:id="studentTable" layoutX="250.0" layoutY="208.0" prefHeight="200.0" prefWidth="150.0">
+       <TableView fx:id="studentTable" GridPane.columnIndex="1" GridPane.rowIndex="1">
            <columns>
-               <TableColumn fx:id="studentColumn" prefWidth="149.0" text="Student">
+               <TableColumn fx:id="studentColumn" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Student">
                <columns>
-                  <TableColumn fx:id="studentColumnVoornaam" prefWidth="75.0" text="Voornaam" />
-                  <TableColumn fx:id="studentColumnAchternaam" prefWidth="75.0" text="Achternaam" />
+                  <TableColumn fx:id="studentColumnVoornaam" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Voornaam" />
+                  <TableColumn fx:id="studentColumnAchternaam" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Achternaam" />
                </columns>
                </TableColumn>
            </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
        </TableView>
-       <TableView fx:id="quizTable" layoutX="400.0" layoutY="208.0" prefHeight="200.0" prefWidth="150.0">
+       <TableView fx:id="quizTable" GridPane.columnIndex="2" GridPane.rowIndex="1">
            <columns>
-               <TableColumn fx:id="quizColumn" prefWidth="149.0" text="Quiz">
+               <TableColumn fx:id="quizColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Quiz">
                </TableColumn>
            </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
        </TableView>
-       <TableView fx:id="gradeTable" layoutX="550.0" layoutY="208.0" prefHeight="200.0" prefWidth="150.0">
+       <TableView fx:id="gradeTable" GridPane.columnIndex="3" GridPane.rowIndex="1">
            <columns>
-               <TableColumn fx:id="gradeColumn" prefWidth="149.0" text="Cijfer" />
+               <TableColumn fx:id="gradeColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Cijfer" />
            </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
        </TableView>
-      <ComboBox fx:id="groupComboBox" layoutX="100.0" layoutY="81.0" prefHeight="25.0" prefWidth="185.0" promptText="Selecteer groep" />
-      <TextField fx:id="averageGrade" layoutX="551.0" layoutY="408.0" text="Selecteer student" />
-       <TextField fx:id="quizTotal" layoutX="401.0" layoutY="408.0" text="" />
+      <TextField fx:id="averageGrade" prefWidth="247.0" text="Selecteer student" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+       <TextField fx:id="quizTotal" prefWidth="247.0" text="" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <ComboBox fx:id="groupComboBox" prefHeight="25.0" prefWidth="185.0" promptText="Selecteer groep" />
    </children>
-</AnchorPane>
+</GridPane>

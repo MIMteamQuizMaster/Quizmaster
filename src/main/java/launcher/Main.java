@@ -34,9 +34,16 @@ public class Main extends Application {
         dbAccess.openConnection();
 
         Main.primaryStage = primaryStage;
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         primaryStage.setTitle("Make IT Work - Project 1");
-        getSceneManager().setWindowTool();
+
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(600);
+        primaryStage.setMaxWidth(1920);
+        primaryStage.setMaxHeight(1080);
+
+
+    getSceneManager().setWindowTool();
         primaryStage.show();
     }
 
