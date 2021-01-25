@@ -1,35 +1,48 @@
 package model;
 
-import database.mysql.DomainClass;
-import database.mysql.GenericDAO;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class Group {
-    private int dbID;
+
+    private int dbId;
     private String name;
     private User teacher;
+    private User coordinator;
     private List<User> students;
-
-
-    public Group(String name, User teacher, List<User> students) {
+    public Group(int dbId, String name, User teacher, User coordinator, List<User> students) {
+        this.dbId = dbId;
         this.name = name;
         this.teacher = teacher;
+        this.coordinator = coordinator;
         this.students = students;
     }
 
-    public Group(int dbID, String name, User teacher) {
-        this.dbID = dbID;
+
+    public Group(int dbId, String name, User teacher) {
+        this.dbId = dbId;
         this.name = name;
         this.teacher = teacher;
+        this.coordinator = new User(0,null,null);
+        List<User> emptyUser = new ArrayList<>();
+        this.students = emptyUser;
     }
 
-    public Group(String name) {
-        this.name = name;
+
+    public int getDbId() {
+        return dbId;
+    }
+
+    public void setDbId(int dbId) {
+        this.dbId = dbId;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public User getTeacher() {
@@ -40,8 +53,12 @@ public class Group {
         this.teacher = teacher;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public User getCoordinator() {
+        return coordinator;
+    }
+
+    public void setCoordinator(User coordinator) {
+        this.coordinator = coordinator;
     }
 
     public List<User> getStudents() {
@@ -50,13 +67,5 @@ public class Group {
 
     public void setStudents(List<User> students) {
         this.students = students;
-    }
-
-    public int getDbID() {
-        return dbID;
-    }
-
-    public void setDbID(int dbID) {
-        this.dbID = dbID;
     }
 }

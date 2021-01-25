@@ -3,8 +3,6 @@ package controller.fx;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.*;
-import model.Class;
-import model.Grade;
 
 import java.util.List;
 
@@ -38,21 +36,6 @@ public class ObjectConvertor {
             listedCourses.add(new CourseFx(c));
         }
         return listedCourses;
-    }
-
-    /**
-     * @param groupList list of Group objects
-     * @return a observableList GroupFx objects
-     * @author M.J. Moshiri
-     * <p>
-     * Convert Group objects to GroupFX objects
-     */
-    public static ObservableList<GroupFx> convertGrouptoGroupFX(List<Group> groupList) {
-        ObservableList<GroupFx> list = FXCollections.observableArrayList();
-        for (Group c : groupList) {
-            list.add(new GroupFx(c));
-        }
-        return list;
     }
 
     /**
@@ -101,28 +84,28 @@ public class ObjectConvertor {
     }
 
     /**
-     * Convert Class objects to ClassFX objects
-     *
-     * @param userObservableList list of Class objects
-     * @return a observableList ClassFX objects
+     * Convert Class objects to GroupFX objects
+     * @param list of Class objects
+     * @return a observableList GroupFX objects
+     * @author M.J Alden-Montague
      */
-    public static ObservableList<ClassFX> convertClassToClassFX(ObservableList<Class> userObservableList) {
-        ObservableList<ClassFX> listedClasses = FXCollections.observableArrayList();
-        for (Class c : userObservableList) {
-            listedClasses.add(new ClassFX(c));
+    public static ObservableList<GroupFX> convertGroupToGroupFX(List<Group> list){
+        ObservableList<GroupFX> listedClasses = FXCollections.observableArrayList();
+        for (Group c:list) {
+            listedClasses.add(new GroupFX(c));
         }
         return listedClasses;
     }
 
     /**
      * Convert Class objects to ClassFX objects
-     *
-     * @param userObservableList list of Class objects
+     * @param list of Class objects
      * @return a observableList ClassFX objects
+     * @author M.J Alden-Montague
      */
-    public static ObservableList<GradeFX> convertGradeToGradeFX(ObservableList<Grade> userObservableList) {
+    public static ObservableList<GradeFX> convertGradeToGradeFX(List<Grade> list){
         ObservableList<GradeFX> listedClasses = FXCollections.observableArrayList();
-        for (Grade g : userObservableList) {
+        for (Grade g:list) {
             listedClasses.add(new GradeFX(g));
         }
         return listedClasses;

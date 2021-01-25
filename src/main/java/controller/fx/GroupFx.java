@@ -1,37 +1,39 @@
 package controller.fx;
 
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import model.Group;
 import model.User;
 
-public class GroupFx {
+
+public class GroupFX {
     private Group group;
 
-    public GroupFx(Group group) {
+    public GroupFX(Group group) {
         this.group = group;
     }
 
-
-    public int getDbID() {
-        return new SimpleIntegerProperty(group.getDbID()).get();
+    public Group getGroupObject(){
+        return this.group;
     }
 
-    public IntegerProperty dbIDProperty() {
-        return new SimpleIntegerProperty(group.getDbID());
+    public int getDbId() {
+        return new SimpleIntegerProperty(this.group.getDbId()).get();
     }
 
-    public void setDbID(int dbID) {
-        this.group.setDbID(dbID);
+    public IntegerProperty dbIdProperty() {
+        return new SimpleIntegerProperty(this.group.getDbId());
+    }
+
+    public void setDbId(int dbId) {
+        this.group.setDbId(dbId);
     }
 
     public String getName() {
-        return new SimpleStringProperty(group.getName()).get();
+        return new SimpleStringProperty(this.group.getName()).get();
     }
 
     public StringProperty nameProperty() {
-        return new SimpleStringProperty(group.getName());
+        return new SimpleStringProperty(this.group.getName());
     }
 
     public void setName(String name) {
@@ -39,30 +41,14 @@ public class GroupFx {
     }
 
     public User getTeacher() {
-        return new SimpleObjectProperty<User>(group.getTeacher()).get();
-    }
-
-    public ObjectProperty teacherProperty() {
-        return new SimpleObjectProperty<>(group.getTeacher());
+        return (User) new SimpleObjectProperty<>(this.group.getTeacher()).get();
     }
 
     public void setTeacher(User teacher) {
-        this.group.setTeacher( teacher);
+        this.group.setTeacher(teacher);
     }
 
-    public ObservableList<User> getStudents() {
-        return new SimpleListProperty<>(FXCollections.observableList(this.group.getStudents())).get();
-    }
-
-    public ListProperty<User> studentsProperty() {
-        return new SimpleListProperty<>(FXCollections.observableList(this.group.getStudents()));
-    }
-
-    public void setStudents(ObservableList<User> students) {
-        this.group.setStudents(students);
-    }
-
-    public IntegerProperty getTotalStudents(){
+    public IntegerProperty getTotalStudents() {
         return new SimpleIntegerProperty(group.getStudents().size());
     }
 }
