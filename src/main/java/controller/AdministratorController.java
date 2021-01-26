@@ -2,7 +2,6 @@ package controller;
 
 import controller.fx.CourseFx;
 import controller.fx.GroupFX;
-import controller.fx.GroupFX;
 import controller.fx.ObjectConvertor;
 import controller.fx.UserFx;
 import database.mysql.CourseDAO;

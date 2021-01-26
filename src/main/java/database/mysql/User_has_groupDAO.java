@@ -19,6 +19,7 @@ public class User_has_groupDAO extends AbstractDAO {
 
     private GroupDAO groupDAO = new GroupDAO(Main.getDBaccess());
     private CourseDAO courseDAO = new CourseDAO(Main.getDBaccess());
+    private UserDAO userDAO = new UserDAO(Main.getDBaccess());
     private StudentSignInOut ssiso= new StudentSignInOut();
     private List<Integer> group_id;
     private User student;
@@ -53,12 +54,16 @@ public class User_has_groupDAO extends AbstractDAO {
                     else
                     {
                         courseDAO.createStudentHasCourse(student, course);
+                        groupDAO.createUserHasGroup(group_id,student);
                         //add student to excisting group and add student to course
                     }
                 }
                 else {
                    //create new group and add student and teacher to it and
                     // ad student to course
+                    groupDAO.createNewGroup(course, ssiso.generatedGroupName(course),
+                            student, ssiso.getRandomTeacher(userDAO.getListOfTeachers()));
+                    courseDAO.createStudentHasCourse(student, course);
                 }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
