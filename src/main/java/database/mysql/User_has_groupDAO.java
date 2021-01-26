@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User_has_groupDAO extends AbstractDAO {
-    public User_has_groupDAO(DBAccess dBaccess, User user) {
+    public User_has_groupDAO(DBAccess dBaccess, User user, List<Course> courseList) {
         super(dBaccess);
         this.student = user;
+        this.courseList = courseList;
     }
 
     private GroupDAO groupDAO = new GroupDAO(Main.getDBaccess());
@@ -47,7 +48,10 @@ public class User_has_groupDAO extends AbstractDAO {
                     int group_size = resultSet.getInt(3);
                     if (group_size >= 10)
                     {
-
+                        int numberOfGroupsForCourse = courseDAO.returnNumberOfGroupsPerCourse(course);
+                        groupDAO.createNewGroup(course, ssiso.generatedGroupName(course, numberOfGroupsForCourse),
+                                student, ssiso.getRandomTeacher(userDAO.getListOfTeachers()));
+                        courseDAO.createStudentHasCourse(student, course);
                         //create new group and add student and teacher to it and
                         // ad student to course
                     }

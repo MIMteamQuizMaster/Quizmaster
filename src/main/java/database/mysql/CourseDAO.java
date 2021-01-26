@@ -306,7 +306,7 @@ public class CourseDAO extends AbstractDAO {
         int returnValue = 0;
         int course_id = course.getDbId();
         String sql = String.format("SELECT course_id, count(course_id) AS number_of_groups " +
-                "FROM group " +
+                "FROM `group` " +
                 "group by course_id " +
                 "HAVING course_id = %d;", course_id);
         try {
