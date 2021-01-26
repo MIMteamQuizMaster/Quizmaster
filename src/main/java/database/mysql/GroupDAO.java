@@ -2,6 +2,7 @@ package database.mysql;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import model.Course;
 import model.Group;
 import model.User;
 
@@ -63,5 +64,32 @@ public class GroupDAO extends AbstractDAO {
             System.out.println(throwables.getMessage());
         }
         return rList;
+    }
+
+    public void createNewGroup(Course course, String name, User student)
+    {
+        String sql = "Insert into group(course_id, name) values(?,?) ;";
+        try {
+            PreparedStatement preparedStatement = getStatementWithKey(sql);
+            preparedStatement.setInt(1,course.getDbId());
+            preparedStatement.setString(2,name);
+            int key = executeInsertPreparedStatement(preparedStatement);
+            createUserHasGroup(key,student);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void createUserHasGroup(int groupId, User student)
+    {
+        String sql = "Insert into user_has_group(student_user_id, group_id) values(?,?) ;";
+        try {
+            PreparedStatement preparedStatement = getStatementWithKey(sql);
+            preparedStatement.setInt(1,groupId);
+            preparedStatement.setInt(2,student.getUserId());
+            int key = executeInsertPreparedStatement(preparedStatement);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

@@ -37,7 +37,7 @@ public class studentSignInOutController{
     public void initialize()
     {
         this.dbAccess = Main.getDBaccess();
-        this.student = (User) Main.getPrimaryStage().getUserData();
+        this.student = (User) Main.getPrimaryStage().getUserData();//Gets the user that's sined in.
         this.studentSignInOutDAO = new StudentSignInOutDAO(this.dbAccess);
         this.studentSignInOutDAO.setStudent(this.student);
         this.courseListToSignIn = this.studentSignInOutDAO.returnCoursesToRegisterFor();

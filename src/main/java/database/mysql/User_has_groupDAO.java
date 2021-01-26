@@ -1,8 +1,9 @@
 package database.mysql;
 
+import launcher.Main;
 import model.Course;
+import model.StudentSignInOut;
 import model.User;
-import model.AtudentSignInOut;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,79 +12,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User_has_groupDAO extends AbstractDAO {
-    public User_has_groupDAO(DBAccess dBaccess) {
+    public User_has_groupDAO(DBAccess dBaccess, User user) {
         super(dBaccess);
+        this.student = user;
     }
 
+    private GroupDAO groupDAO = new GroupDAO(Main.getDBaccess());
+    private CourseDAO courseDAO = new CourseDAO(Main.getDBaccess());
+    private StudentSignInOut ssiso= new StudentSignInOut();
     private List<Integer> group_id;
+    private User student;
+    private List<Course> courseList;
 
-    public List<AtudentSignInOut> groupIdPerCourse(List<Course> courseList, User student)
+    public void groupIdPerCourse(List<Course> courseList, User student)
     {
-        List<AtudentSignInOut> returnValue = new ArrayList<>();
+        List<StudentSignInOut> returnValue = new ArrayList<>();
+        int student_id = student.getUserId();
         for (Course course: courseList)
         {
             int course_id = course.getDbId();
-            String sql = String.format("SELECT count(group_id) AS group_size, group_id, course_id " +
-                    "FROM user_has_group " +
-                    "group by group_id " +
-                    "HAVING course_id = %d;", course_id);
+            String sql = String.format("SELECT u.group_id, g.course_id, count(u.group_id) AS group_count FROM user_has_group AS u " +
+                    "INNER JOIN `group` AS g ON g.id = u.group_id " +
+                    "WHERE g.course_id = %d " +
+                    "GROUP BY u.group_id " +
+                    "ORDER BY count(u.group_id) " +
+                    "LIMIT 1;", course_id);
             try {
                 PreparedStatement preparedStatement = getStatement(sql);
                 ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
-                if (resultSet.getFetchSize() == 0)
+                if (resultSet.next())
                 {
-                    returnValue.add(1);
+                    int group_id = resultSet.getInt(1);
+                    int group_size = resultSet.getInt(3);
+                    if (group_size >= 10)
+                    {
+
+                        //create new group and add student and teacher to it and
+                        // ad student to course
+                    }
+                    else
+                    {
+                        courseDAO.createStudentHasCourse(student, course);
+                        //add student to excisting group and add student to course
+                    }
                 }
                 else {
-                    while (resultSet.next()) {
-                        int group_id = resultSet.getInt(2);
-                        int group_size = resultSet.getInt(1);
-                        if (group_size >= 10)
-                        {
-                            group_id++;
-                            returnValue.add(group_id);
-                        }
-                        else
-                        {
-                            returnValue.add(group_id);
-                        }
-                    }
+                   //create new group and add student and teacher to it and
+                    // ad student to course
                 }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
 
-        return returnValue;
     }
 
-    public List<Integer> teacher_ids()
-    {
-        List<Integer> returnValue = new ArrayList<>();
-        String sql = "SELECT user_id, role_id FROM user_role " +
-                "WHERE role_id = 2;";
-        try {
-            PreparedStatement preparedStatement = getStatement(sql);
-            ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
-            while (resultSet.next())
-            {
-                int teacher_id = resultSet.getInt(1);
-                returnValue.add(teacher_id);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return returnValue;
-    }
-
-    public boolean createAGroupForStudent(List<Course> courseList)
-    {
-        for (Course course: courseList)
-        {
-
-        }
-        return false;
-    }
 
 }

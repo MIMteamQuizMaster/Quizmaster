@@ -42,7 +42,7 @@ public class StudentSignInOutDAO extends AbstractDAO {
     /**
      * @author Ismael Ben Cherif
      * Returns a list of courses with the quizzes, questions and
-     * answers objects in it that the student hasn't registered for.
+     * mixed answers objects in it that the student hasn't registered for.
      * @return
      */
     public List<Course> returnCoursesToRegisterFor()

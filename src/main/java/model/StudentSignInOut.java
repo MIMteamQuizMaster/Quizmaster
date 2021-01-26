@@ -3,7 +3,7 @@ package model;
 import java.util.List;
 import java.util.Random;
 
-public class AtudentSignInOut {
+public class StudentSignInOut {
 
     private List<Integer> student_idList;
     private List<Integer> teacher_idList;
@@ -18,10 +18,10 @@ public class AtudentSignInOut {
     private int group_id;
     private int course_id;
 
-    public AtudentSignInOut() {
+    public StudentSignInOut() {
     }
 
-    public AtudentSignInOut(int student_id, int teacher_id, int group_id, int course_id) {
+    public StudentSignInOut(int student_id, int teacher_id, int group_id, int course_id) {
         this.student_id = student_id;
         this.teacher_id = teacher_id;
         this.group_id = group_id;
@@ -106,5 +106,25 @@ public class AtudentSignInOut {
         int i = random.nextInt(teachers.size());
         returnValue = teachers.get(i);
         return returnValue;
+    }
+
+    public String generatedGroupName(Course course)
+    {
+        StringBuilder groupName = new StringBuilder();
+        String firstPart = course.getName() + " ";
+        groupName.append(firstPart);
+        char secondPart = (char) 65;
+        groupName.append(secondPart);
+        return groupName.toString();
+    }
+
+    public String generatedGroupName(Course course, int number)
+    {
+        StringBuilder groupName = new StringBuilder();
+        String firstPart = course.getName() + " ";
+        groupName.append(firstPart);
+        char secondPart = (char) (65+number);
+        groupName.append(secondPart);
+        return groupName.toString();
     }
 }
