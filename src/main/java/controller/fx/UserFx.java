@@ -11,7 +11,6 @@ import java.util.List;
 public class UserFx{
     private final User userObject;
 
-
     public UserFx(User user) {
         this.userObject = user;
     }
@@ -24,8 +23,6 @@ public class UserFx{
 
         return new SimpleListProperty<>(FXCollections.observableList(this.userObject.getRoles()));
     }
-
-
 
     public int getUserId() {
         return new SimpleIntegerProperty(userObject.getUserId()).get();
@@ -82,5 +79,12 @@ public class UserFx{
 
     public User getUserObject(){
         return this.userObject;
+    }
+
+    @Override
+    public String toString() {
+        return "UserFx{" +
+                "userObject=" + userObject.toString() +
+                '}';
     }
 }

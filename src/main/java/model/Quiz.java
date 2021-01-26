@@ -28,6 +28,11 @@ public class Quiz {
         this.timeLimit = timeLimit;
     }
 
+    public Quiz(String name,double succsesDefinition,  int idquiz, int idcourse) {
+        this(name,succsesDefinition,idquiz,idcourse,0);
+
+    }
+
     public List<Question> getQuestions() {
         return questions;
     }

@@ -48,4 +48,7 @@ public class GroupFX {
         this.group.setTeacher(teacher);
     }
 
+    public IntegerProperty getTotalStudents() {
+        return new SimpleIntegerProperty(group.getStudents().size());
+    }
 }

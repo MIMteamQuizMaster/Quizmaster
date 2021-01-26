@@ -1,9 +1,11 @@
 package controller;
 
-import com.google.gson.JsonObject;
 import database.mysql.DBAccess;
-import database.mysql.LoginDAO;
+import database.mysql.DomainClass;
+import database.mysql.GenericDAO;
+import database.mysql.UserDAO;
 import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -12,6 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import launcher.Main;
+import model.LoginAttempt;
 import model.User;
 import org.lightcouch.CouchDbClient;
 
@@ -20,12 +23,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 
 public class LoginController {
-    private final DBAccess dBaccess;
+
     public Label warningLabel;
-    private final LoginDAO dao;
     public TextField loginUsername;
     public TextField loginUnMaskedPassword;
     public PasswordField loginMaskedPassword;
@@ -33,12 +36,11 @@ public class LoginController {
     public Button loginbtn;
     public Button cancelBtn;
     private CouchDbClient dbClient;
+    private GenericDAO genericDao;
 
 
     public LoginController() {
-        this.dBaccess = Main.getDBaccess();
-        this.dao = new LoginDAO(dBaccess);
-
+        this.genericDao = new DomainClass();
         try {
             dbClient = new CouchDbClient("couchdb.properties");
         } catch (Exception e) {
@@ -64,13 +66,7 @@ public class LoginController {
 
     }
 
-    /**
-     * store a jsonobject of login attempt, including IP address generated using Amazon AWS service
-     * @param id
-     * @param pass
-     * @author Everyone in Team MIM
-     */
-    private void logLoginAttempt(int id, String pass) {
+    private void logLoginAttempt(int id) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date date = new Date();
         String ip = "";
@@ -81,17 +77,15 @@ public class LoginController {
             ip = in.readLine();
 
         } catch (Exception e) {
-            ip = "could not retrieve.";
+            ip = "could not retrieve ip.";
         }
         try{
-            String jsonstr = String.format("{\"ip\":\"%s\" , \"user-id\":\"%s\" , \"password\": \"%s\",\"time\": \"%s\"}", ip, id, pass, formatter.format(date));
-            JsonObject jsonobj = dbClient.getGson().fromJson(jsonstr, JsonObject.class);
-            dbClient.save(jsonobj);
+            LoginAttempt la = new LoginAttempt(id,ip,formatter.format(date));
+            dbClient.save(la);
         }catch (Exception e){
-            System.out.println("couldnt save logging attemp in NoSQL");
+            System.out.println("couldnt syncWithdb logging attemp in NoSQL");
         }
-
-
+//        List<LoginAttempt> docs =  dbClient.view("_all_docs").includeDocs(true);
 
     }
 
@@ -100,8 +94,9 @@ public class LoginController {
         try {
             userid = Integer.parseInt(loginUsername.getText());
             String password = loginMaskedPassword.getText();
-            logLoginAttempt(userid, password);
-            boolean result = dao.isValidUser(userid, password);
+            logLoginAttempt(userid);
+            boolean result = genericDao.isValidUser(userid, password);
+
             if (result) {
                 System.out.println("login permission: " + result);
 
@@ -127,14 +122,13 @@ public class LoginController {
     }
 
     public void loginCancel(ActionEvent actionEvent) {
-        dBaccess.closeConnection();
-        Main.getSceneManager().setWindowTool();
+        Main.getPrimaryStage().close();
 
     }
 
     public User passUser(int userId) {
         // get appropriate user object
-        return dao.getUser(userId);
+        return genericDao.getUser(userId);
     }
 
     public void passfieldInputChanged(KeyEvent inputMethodEvent) {
@@ -151,4 +145,10 @@ public class LoginController {
                 keyEvent.getCode().isArrowKey());
         warningLabel.setVisible(false);
     }
+//
+//    public void passGenericDao(GenericDAO g) {
+//        System.out.println("pff method");
+//        this.genericDao = g;
+//    }
+
 }

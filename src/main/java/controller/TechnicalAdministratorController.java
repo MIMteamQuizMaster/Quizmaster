@@ -4,21 +4,25 @@ import database.mysql.DBAccess;
 import database.mysql.TechnischBeheerderDAO;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import launcher.Main;
 import model.Role;
 import model.User;
 import controller.fx.UserFx;
 import org.controlsfx.control.CheckComboBox;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import static controller.fx.ObjectConvertor.*;
 
@@ -30,6 +34,8 @@ import static controller.fx.ObjectConvertor.*;
 public class TechnicalAdministratorController {
 
 
+    public TitledPane newUserPane;
+    public HBox hboxInsidePane;
     @FXML
     private TableView<UserFx> table_users;
     @FXML
@@ -43,7 +49,7 @@ public class TechnicalAdministratorController {
     @FXML
     private TableColumn<UserFx, String> col_role;
     public TableColumn<UserFx, Void> col_actie;
-    public TableColumn<UserFx, Void> col_delete;
+    public TableColumn<UserFx, Void> col_action;
     @FXML
     private TextField richtingField;
     @FXML
@@ -51,17 +57,14 @@ public class TechnicalAdministratorController {
     @FXML
     private TextField voornaamField;
 
-    @FXML
-    private Button updateUserbtn;
-    @FXML
-    private Button cancelBtn;
-    @FXML
-    private Button addUserbtn;
 
     @FXML
     private CheckComboBox<String> rolesComboBox;
     private TechnischBeheerderDAO dao;
     private UserFx selectedUser;
+
+    private GlyphFont glyphFont;
+
 
 
     public void initialize() {
@@ -69,7 +72,28 @@ public class TechnicalAdministratorController {
         this.dao = new TechnischBeheerderDAO(dBaccess);
         populateRoleMenu(); // add items to ComboBox
         refreshTable(); // add data to table
+        glyphFont = GlyphFontRegistry.font("FontAwesome");
+        bindSizeProperty();
+
     }
+
+    public ChangeListener<Number> listener= (observableValue, number, t1) -> bindSizeProperty();
+
+    private void bindSizeProperty() {
+//        newUserPane.prefWidthProperty().bind(gridPane.widthProperty().subtract(10));
+        hboxInsidePane.prefWidthProperty().bind((newUserPane.widthProperty().multiply(0.96)));
+//        table_users.prefWidthProperty().bind(gridPane.widthProperty().subtract(10));
+//        table_users.prefHeightProperty().bind(gridPane.heightProperty().subtract(43));
+
+        col_id.prefWidthProperty().bind(table_users.widthProperty().divide(10)); // w * 1/10
+        col_fname.prefWidthProperty().bind(table_users.widthProperty().divide(8)); // w * 1/8
+        col_lname.prefWidthProperty().bind(table_users.widthProperty().divide(8)); // w * 1/8
+        col_richting.prefWidthProperty().bind(table_users.widthProperty().divide(7)); // w * 1/7
+        col_role.prefWidthProperty().bind(table_users.widthProperty().divide(5));
+//        col_action.prefWidthProperty().bind(table_users.widthProperty().divide(7));
+        col_actie.prefWidthProperty().bind(table_users.widthProperty().divide(7));
+    }
+
 
     /**
      * @author M.J. Moshiri
@@ -94,10 +118,8 @@ public class TechnicalAdministratorController {
         table_users.refresh();
         table_users.getItems().clear();
         ObservableList<UserFx> tableListUsers = convertUserToUserFX(dao.getAllusers());
-
         col_id.setCellValueFactory(cellData -> cellData.getValue().userIdProperty().asObject());
         col_fname.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
-
         col_lname.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
         col_richting.setCellValueFactory(cellData -> cellData.getValue().studieRichtingProperty());
         col_role.setCellValueFactory(cellData -> cellData.getValue().rolesProperty().asString());
@@ -114,9 +136,16 @@ public class TechnicalAdministratorController {
      * @author M.J. Moshiri
      */
     private void addEndBtnToUserTable() {
-        col_delete.setCellFactory(cellData -> new TableCell<>() {
-            private final Button delButton = new Button("Beëindigen");
+        col_action.setCellFactory(cellData -> new TableCell<>() {
+            private final Button delButton = new Button("");
+            private final Button editButton = new Button("");
+            private final HBox pane = new HBox(editButton, delButton);
+
             {
+                col_action.prefWidthProperty().bind(pane.widthProperty().add(5));
+                delButton.setGraphic(glyphFont.create(FontAwesome.Glyph.REMOVE).color(Color.RED));
+                editButton.setGraphic(glyphFont.create(FontAwesome.Glyph.PENCIL).color(Color.BLUE));
+
                 delButton.setOnAction(event ->
                 {
                     boolean r = AlertHelper.confirmationDialog("Wilt u de lidmaatschap ven deze gebruiker beëindigen?");
@@ -127,16 +156,36 @@ public class TechnicalAdministratorController {
                     }
 
                 });
+
+                editButton.setOnAction(event -> {
+                    table_users.getSelectionModel().select(getIndex());
+                    selectedUser = getTableView().getItems().get(getIndex());
+                    CoordinatorPanelController.expandTitledPane(newUserPane);
+                    editUserPreSetup();
+
+                });
             }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (!empty) {
-                    setGraphic(delButton);
+                    setGraphic(pane);
                 }
 
             }
         });
+    }
+
+    private void editUserPreSetup() {
+        voornaamField.setText(selectedUser.getFirstName());
+        achternaamField.setText(selectedUser.getLastName());
+        richtingField.setText((selectedUser.getStudieRichting()));
+        List<Role> roles = selectedUser.getRoles();
+        rolesComboBox.getCheckModel().clearChecks();
+        for (Role r : roles) {
+            rolesComboBox.getCheckModel().check(r.toString());
+        }
     }
 
     /**
@@ -145,10 +194,12 @@ public class TechnicalAdministratorController {
     private void addSetCredentialBtnToUserTable() {
         col_actie.setCellFactory(cellData -> new TableCell<>() {
             private final TextField passwordField = new TextField("");
-            private final Button editButton = new Button("Set Credential");
+            private final Button setPassBtn = new Button("Set Credential");
+
 
             {
-                editButton.setOnAction(event -> {
+                setPassBtn.prefWidthProperty().bind(col_actie.widthProperty().subtract(5));
+                setPassBtn.setOnAction(event -> {
                     UserFx u = getTableRow().getItem();
                     this.setGraphic(passwordField);
                     String currentPassword = showPasswordString(u.getUserObject());
@@ -169,7 +220,7 @@ public class TechnicalAdministratorController {
                                         refreshTable();
                                     }
                                 }
-                                setGraphic(editButton);
+                                setGraphic(setPassBtn);
                             });
                         }
                     };
@@ -181,48 +232,25 @@ public class TechnicalAdministratorController {
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (!empty) {
-                    setGraphic(editButton);
-                    try {
-                        UserFx user = getTableRow().getItem();
+                    setGraphic(setPassBtn);
+                    UserFx user = getTableRow().getItem();
+                    if (user != null) {
                         String pass = showPasswordString(user.getUserObject());
                         if (pass.equals("")) {
-                            editButton.setStyle("-fx-background-color: #f6a3a3");
-                            editButton.setText("Set Credential");
+                            setPassBtn.setStyle("-fx-background-color: #f6a3a3");
+                            setPassBtn.setGraphic(glyphFont.create(FontAwesome.Glyph.PLUS_CIRCLE).color(Color.GREEN));
+                            setPassBtn.setText("Set Credential");
                         } else {
-                            editButton.setStyle("-fx-background-color: #ccffcc");
-                            editButton.setText("Edit Credential");
+                            setPassBtn.setStyle("-fx-background-color: #ccffcc");
+                            setPassBtn.setGraphic(glyphFont.create(FontAwesome.Glyph.EDIT).color(Color.RED));
+                            setPassBtn.setText("Edit Credential");
                         }
-                    } catch (NullPointerException e) {
-                        System.out.println("null");
-                        return;// this will force the table to stop rendering but we refresh the table
-                               // after a successful action with btn
                     }
 
                 }
 
             }
         });
-    }
-
-    /**
-     * if a row in the user table is selected , the function add all information of the users to the TexTFields
-     * and active the editmode
-     */
-    public void tableSelected() {
-        if (table_users.getSelectionModel().getSelectedItem() != null) {
-            this.selectedUser = table_users.getSelectionModel().getSelectedItem();
-
-            voornaamField.setText(selectedUser.getFirstName());
-            achternaamField.setText(selectedUser.getLastName());
-            richtingField.setText((selectedUser.getStudieRichting()));
-            List<Role> roles = selectedUser.getRoles();
-            rolesComboBox.getCheckModel().clearChecks();
-            for (Role r : roles) {
-                rolesComboBox.getCheckModel().check(r.toString());
-            }
-
-            editMode(true);
-        }
     }
 
 
@@ -236,37 +264,35 @@ public class TechnicalAdministratorController {
     /**
      * Update the user information given in the field to the Database
      */
-    public void updateUser() {
-        boolean r = AlertHelper.confirmationDialog("Wilt u deze gebruiker bijwerken in de databank?");
-        if (r) {
-            List<String> allChecked = rolesComboBox.getCheckModel().getCheckedItems();
-            List<Role> roles = new ArrayList<>();
-
-            for (String stringRole : allChecked) {
-                roles.add(Role.getRole(stringRole));
-            }
-
-            selectedUser.setFirstName(voornaamField.getText());
-            selectedUser.setLastName(achternaamField.getText());
-            selectedUser.setStudieRichting(richtingField.getText());
-
-            selectedUser.setRoles(roles);
-
-            // Selected user is UserFX but dao Parameter is User
-            // the User Objet is stored in UserFX so
-
-            dao.saveUser(selectedUser.getUserObject());
-            refreshTable();
-            editMode(false);
+    public void btnSaveUser() {
+        User user;
+        if (selectedUser == null) //New
+        {
+            user = new User(0);
+        } else {//Update
+            user = selectedUser.getUserObject();
         }
-    }
+        List<String> allChecked = rolesComboBox.getCheckModel().getCheckedItems();
+        List<Role> roles = new ArrayList<>();
+        for (String stringRole : allChecked) {
+            roles.add(Role.getRole(stringRole));
+        }
+        user.setFirstName(voornaamField.getText());
+        user.setLastName(achternaamField.getText());
+        user.setStudieRichting(richtingField.getText());
+        user.setRoles(roles);
 
-    /**
-     * change the edit mode to skip accidentally update command
-     */
-    public void cancelUpdate() {
-        // hide edit btn
-        editMode(false);
+        if (!(roles.size() == 0)) {
+            boolean r = AlertHelper.confirmationDialog("Wilt u deze gebruiker bijwerken in de databank?");
+            if (r) {
+                selectedUser = null;
+                dao.saveUser(user);
+                refreshTable();
+                CoordinatorPanelController.expandTitledPane(newUserPane);
+            }
+        } else {
+            new Alert(Alert.AlertType.ERROR, "een user moet altijd tenminste een role hebben.").show();
+        }
     }
 
     /**
@@ -274,73 +300,7 @@ public class TechnicalAdministratorController {
      *
      * @param editMode boolean to determine the situation of panel
      */
-    private void editMode(boolean editMode) {
-        if (editMode) {
-            // SHOW update btn
-            updateUserbtn.setVisible(true);
-            updateUserbtn.setDisable(false);
 
-            // SHOW cancel btn
-            cancelBtn.setVisible(true);
-            cancelBtn.setDisable(false);
-
-            /// HIDE add btn
-            addUserbtn.setVisible(false);
-            addUserbtn.setDisable(true);
-        } else {
-            // HIDE update btn
-            updateUserbtn.setVisible(false);
-            updateUserbtn.setDisable(true);
-
-            // hide cancel btn
-            cancelBtn.setVisible(false);
-            cancelBtn.setDisable(true);
-
-            /// Show add btn
-            addUserbtn.setVisible(true);
-            addUserbtn.setDisable(false);
-
-            // Empty fields
-            voornaamField.setText("");
-            achternaamField.setText("");
-            richtingField.setText("");
-
-            table_users.getSelectionModel().clearSelection();
-        }
-
-    }
-
-    /**
-     * takes the values in textfield and add a new user to de database
-     * the role Combobox is mandatory to fill
-     *
-     * @return the object of made user
-     */
-    public User addUser() {
-        List<String> allChecked = rolesComboBox.getCheckModel().getCheckedItems();
-        List<Role> roles = new ArrayList<>();
-        for (String stringRole : allChecked) {
-            roles.add(Role.getRole(stringRole));
-        }
-        if(!(roles.size() == 0)){
-            boolean r = AlertHelper.confirmationDialog("Wilt u deze gebruiker toevoegen aan de databank?");
-            if (r) {
-                User u = new User(0,
-                        voornaamField.getText(),
-                        achternaamField.getText(),
-                        richtingField.getText(),
-                        roles);
-                u = dao.saveUser(u);
-
-                table_users.refresh();
-                table_users.getItems().add(new UserFx(u));
-                return u;
-            }
-        }else {
-            new Alert(Alert.AlertType.ERROR,"een user moet altijd tenminste een role hebben.").show();
-        }
-        return null;
-    }
 
     /**
      * add credential to user in the Database
@@ -362,4 +322,22 @@ public class TechnicalAdministratorController {
     }
 
 
+    public void openPaneVoorNewUser(ActionEvent actionEvent) {
+        cancelUpdate(); // will open the Pane and empty all fields
+    }
+
+    public void cancelUpdate() {
+        CoordinatorPanelController.expandTitledPane(newUserPane);
+        voornaamField.clear();
+        achternaamField.clear();
+        richtingField.clear();
+        rolesComboBox.getCheckModel().clearChecks();
+        selectedUser = null;
+    }
+
+    public void onTableClick() {
+        if (newUserPane.isExpanded()) {
+            CoordinatorPanelController.expandTitledPane(newUserPane);
+        }
+    }
 }

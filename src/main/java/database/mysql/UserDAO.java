@@ -6,10 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class LoginDAO extends AbstractDAO {
-    public LoginDAO(DBAccess dBaccess) {
+public class UserDAO extends AbstractDAO {
+    public UserDAO(DBAccess dBaccess) {
         super(dBaccess);
     }
 
@@ -51,12 +52,12 @@ public class LoginDAO extends AbstractDAO {
      * <p>
      * Creates a user object from the given user id with alle information that are stored in db from the databes
      * this user object will be used furthur in thet application to for showing correct panels of retrieving appropriate date
-     * @Should return null if it failed retrieving data from DB
+     * @should return null if it failed retrieving data from DB
      */
     public User getUser(int user_id) {
         String sql = "SELECT u.*, ur.endDate , r.name as role FROM quizmaster.user u, quizmaster.user_role ur , quizmaster.role r where u.user_id = ur.user_id and ur.role_id = r.id and \n" +
                 "u.user_id = ? and\n" +
-                "( ur.endDate > ? or ur.endDate is null)";
+                "( ur.endDate > ? or ur.endDate is null) group by r.name";
         try {
             PreparedStatement ps = getStatement(sql);
             ps.setInt(1, user_id);
@@ -64,31 +65,32 @@ public class LoginDAO extends AbstractDAO {
 
             ResultSet resultSet = executeSelectPreparedStatement(ps);
             List<Role> roles = new ArrayList<>();
-            int uid= 0;
+            int uid = 0;
             String fname = "";
             String lname = "";
             String richting = "";
+            Date deletionDate = null;
 
             while (resultSet.next()) {
                 uid = resultSet.getInt("user_id");
                 fname = resultSet.getString("firstname");
                 lname = resultSet.getString("lastname");
                 richting = resultSet.getString("studierichting");
+                deletionDate = resultSet.getDate("deletiondate");
                 Role r;
                 String role = resultSet.getString("role");
                 try {
                     r = Role.getRole(role);
-                    System.out.println(r);
-
                 } catch (Exception e) {
                     System.out.println("Something is wrong with user role.");
                     return null;
                 }
                 roles.add(r);
             }
+            if(uid!=0){return new User(uid, fname, lname, richting, roles);}
 
-            return new User(uid, fname, lname, richting, roles);
-        } catch (SQLException throwables) {
+        } catch (
+                SQLException throwables) {
             System.out.println(throwables.getMessage() + "Something is wrong with GettingUser.");
         }
         return null;

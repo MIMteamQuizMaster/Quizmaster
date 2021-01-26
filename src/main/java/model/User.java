@@ -1,8 +1,11 @@
 package model;
 
+import database.mysql.DomainClass;
+import database.mysql.GenericDAO;
 import javafx.beans.property.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class User {
@@ -11,6 +14,8 @@ public class User {
     private String lastName;
     private String studieRichting;
     private List<Role> roles;
+    private Date delitionDate;
+    private GenericDAO genericDAO;
 
 
     public User(int userId, String firstName, String lastName) {
@@ -23,7 +28,11 @@ public class User {
         this.lastName = lastName;
         this.studieRichting = studieRichting;
         this.roles = r;
+//        this.genericDAO = new DomainClass();
+    }
 
+    public User(int userId) {
+        this.userId = userId;
     }
 
     public void setUserId(int userId) {
@@ -66,14 +75,20 @@ public class User {
         return roles;
     }
 
+    public boolean isValid() {
+        return genericDAO.isValidUser(userId , "");
+    }
+
+    public Date getDelitionDate() {
+        return delitionDate;
+    }
+
+    public void setDelitionDate(Date delitionDate) {
+        this.delitionDate = delitionDate;
+    }
     @Override
     public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", firstName=" + firstName +
-                ", lastName=" + lastName +
-                ", studieRichting=" + studieRichting +
-                ", role=" + roles +
-                '}';
+        return  firstName +" "+ lastName;
+
     }
 }

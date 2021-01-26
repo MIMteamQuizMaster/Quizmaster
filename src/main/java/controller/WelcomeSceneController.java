@@ -1,7 +1,5 @@
 package controller;
 
-import javafx.event.ActionEvent;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -12,12 +10,7 @@ import launcher.Main;
 import model.*;
 import view.SceneManager;
 
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import org.lightcouch.CouchDbClient;
 
 public class WelcomeSceneController {
 
@@ -34,19 +27,17 @@ public class WelcomeSceneController {
     public void initialize() {
         sceneManager = Main.getSceneManager();
         // Setting the client-object in WelcomeSceneController
-
         loggedInUser = (User) Main.getPrimaryStage().getUserData();
-
         this.welcomeLabel.setText(String.format("Welcome %s!", loggedInUser.getFirstName().toUpperCase()));
         this.lnameLabel.setText(loggedInUser.getLastName());
         this.uidLabel.setText(String.valueOf(loggedInUser.getUserId()));
         this.richtingLabel.setText(loggedInUser.getStudieRichting());
-
-        /// set the pane according to the loged in user .
+        /// set the pane according to the loged in user.
         setPane();
+
     }
 
-    public void logOutClick(ActionEvent actionEvent) {
+    public void logOutClick() {
         Main.getSceneManager().showLoginScene();
     }
 
@@ -88,10 +79,10 @@ public class WelcomeSceneController {
                     tabPanel.getTabs().add(tab);
 
                 }
-                else if (r == Role.TEACHER) {
-                    view = sceneManager.getPage("Teacher");
+                else if (r == Role.ADMINISTRATOR) {
+                    view = sceneManager.getPage("Administrator");
                     Tab tab = new Tab();
-                    tab.setText("Teacher");
+                    tab.setText("Administrator");
                     tab.setContent(view);
                     tabPanel.getTabs().add(tab);
 

@@ -1,5 +1,6 @@
 package controller;
 
+import database.mysql.GenericDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -18,6 +19,7 @@ public class WindowToolController {
 
     public void initialize() {
         populateScreenMenu();
+
         // Initialization code can go here.
         // The parameters url and resources can be omitted if they are not needed
     }

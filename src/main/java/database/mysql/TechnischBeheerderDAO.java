@@ -1,5 +1,6 @@
 package database.mysql;
 
+import launcher.Main;
 import model.Role;
 import model.User;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class TechnischBeheerderDAO extends AbstractDAO {
     public TechnischBeheerderDAO(DBAccess dBaccess) {
         super(dBaccess);
+
     }
 
     /**
