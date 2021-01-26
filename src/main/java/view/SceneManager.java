@@ -45,7 +45,6 @@ public class SceneManager {
                 throw new FileNotFoundException("FXML file not found.");
             }
             view = FXMLLoader.load(fileUrl);
-
         }
         catch (Exception e){
             System.out.println(e.getMessage());

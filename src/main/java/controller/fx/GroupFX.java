@@ -52,3 +52,4 @@ public class GroupFX {
         return new SimpleIntegerProperty(group.getStudents().size());
     }
 }
+
