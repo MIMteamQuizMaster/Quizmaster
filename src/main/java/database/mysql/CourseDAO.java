@@ -11,14 +11,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class CourseDAO extends AbstractDAO {
     UserDAO userDAO;
+    GroupDAO groupDAO;
 
     public CourseDAO(DBAccess dBaccess) {
         super(dBaccess);
         userDAO = new UserDAO(dBaccess);
+        groupDAO = new GroupDAO(dBaccess);
     }
 
     /**
@@ -92,8 +95,7 @@ public class CourseDAO extends AbstractDAO {
             ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
             while (resultSet.next()) {
                 String course_id = String.valueOf(resultSet.getInt(1));
-                if (course_id.equalsIgnoreCase("0"))
-                {
+                if (course_id.equalsIgnoreCase("0")) {
                     continue;
                 }
                 courseIdsList.add(course_id);
@@ -132,7 +134,7 @@ public class CourseDAO extends AbstractDAO {
             }
         } catch (SQLException throwables) {
             System.out.println(throwables.getMessage());
-            System.out.println("fault in getAllCourses");
+            System.out.println("somthing went wrong while getting courses");
         }
 
         return courseList;
@@ -164,7 +166,7 @@ public class CourseDAO extends AbstractDAO {
             }
         } catch (SQLException throwables) {
             System.out.println(throwables.getMessage());
-            System.out.println("fout in getGroupsOfCourse");
+            System.out.println("womthing went wrong while getting groups of a course");
         }
         return groupList;
     }
@@ -189,7 +191,7 @@ public class CourseDAO extends AbstractDAO {
             }
         } catch (SQLException throwables) {
             System.out.println(throwables.getMessage());
-            System.out.println("fout in getStudentsOfGroup");
+            System.out.println("somthing went wrong while getting students of a group");
         }
         return userList;
     }
@@ -204,19 +206,20 @@ public class CourseDAO extends AbstractDAO {
                 "( u.deletionDate > ? or u.deletionDate is null) and  ( ur.endDate > ? or ur.endDate is null);";
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setString(1,role.toString());
+            ps.setString(1, role.toString());
             ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
             ps.setDate(3, java.sql.Date.valueOf(java.time.LocalDate.now()));
             ResultSet rs = executeSelectPreparedStatement(ps);
             while (rs.next()) {
-                User coordinator = userDAO.getUser(rs.getInt("user_id"));
-                if (coordinator != null) {
-                    userList.add(coordinator);
+                User user = userDAO.getUser(rs.getInt("user_id"));
+                if (user != null) {
+                    userList.add(user);
                 }
             }
             return userList;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+            System.out.println("somthing went wrong in getting users by role");
         }
         return null;
     }
@@ -247,10 +250,15 @@ public class CourseDAO extends AbstractDAO {
             return userList;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+            System.out.println("somthing went wrong while retrieving students in a course that has no group");
         }
         return null;
     }
 
+    /**
+     * @return
+     * @author M.J. Moshiri
+     */
     public boolean saveCourse(Course c) {
         String query;
         if (c.getDbId() == 0) {// INSERT
@@ -268,16 +276,15 @@ public class CourseDAO extends AbstractDAO {
             }
             ps.setString(2, c.getName());
             if (c.getStartDate() == null) {
-                ps.setNull(3,  java.sql.Types.NULL);
+                ps.setNull(3, java.sql.Types.NULL);
             } else {
                 ps.setDate(3, Date.valueOf(c.getStartDate()));
             }
             if (c.getEndDate() == null) {
-                ps.setNull(4,  java.sql.Types.NULL);
+                ps.setNull(4, java.sql.Types.NULL);
             } else {
                 ps.setDate(4, Date.valueOf(c.getEndDate()));
             }
-
             ps.setInt(5, c.getDbId());
             int key = executeInsertPreparedStatement(ps);
             if (c.getDbId() == 0) c.setDbId(key);
@@ -288,21 +295,21 @@ public class CourseDAO extends AbstractDAO {
         return false;
     }
 
-    public void createStudentHasCourse(User student, Course course)
-    {
+
+
+    public void createStudentHasCourse(User student, Course course) {
         String sql = "Insert student_has_course(student_user_id, course_id) values(?,?) ;";
         try {
             PreparedStatement preparedStatement = getStatementWithKey(sql);
-            preparedStatement.setInt(1,student.getUserId());
-            preparedStatement.setInt(2,course.getDbId());
+            preparedStatement.setInt(1, student.getUserId());
+            preparedStatement.setInt(2, course.getDbId());
             int key = executeInsertPreparedStatement(preparedStatement);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public int returnNumberOfGroupsPerCourse(Course course)
-    {
+    public int returnNumberOfGroupsPerCourse(Course course) {
         int returnValue = 0;
         int course_id = course.getDbId();
         String sql = String.format("SELECT course_id, count(course_id) AS number_of_groups " +
@@ -312,13 +319,10 @@ public class CourseDAO extends AbstractDAO {
         try {
             PreparedStatement preparedStatement = getStatement(sql);
             ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
-            if (resultSet.next())
-            {
+            if (resultSet.next()) {
                 int numberOfGroups = resultSet.getInt(2);
                 returnValue = numberOfGroups;
-            }
-            else
-            {
+            } else {
                 returnValue = 0;
             }
         } catch (SQLException throwables) {

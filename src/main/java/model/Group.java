@@ -8,26 +8,21 @@ public class Group {
     private int dbId;
     private String name;
     private User teacher;
-    private User coordinator;
     private List<User> students;
-    public Group(int dbId, String name, User teacher, User coordinator, List<User> students) {
+
+    public Group(int dbId, String name, User teacher, List<User> students) {
         this.dbId = dbId;
         this.name = name;
         this.teacher = teacher;
-        this.coordinator = coordinator;
         this.students = students;
     }
-
-
     public Group(int dbId, String name, User teacher) {
-        this.dbId = dbId;
-        this.name = name;
-        this.teacher = teacher;
-        this.coordinator = new User(0,null,null);
-        List<User> emptyUser = new ArrayList<>();
-        this.students = emptyUser;
+        this(dbId,name,teacher,new ArrayList<>());
     }
 
+    public Group(int dbId) {
+        this(dbId,"",null,new ArrayList<>());
+    }
 
     public int getDbId() {
         return dbId;
@@ -51,14 +46,6 @@ public class Group {
 
     public void setTeacher(User teacher) {
         this.teacher = teacher;
-    }
-
-    public User getCoordinator() {
-        return coordinator;
-    }
-
-    public void setCoordinator(User coordinator) {
-        this.coordinator = coordinator;
     }
 
     public List<User> getStudents() {

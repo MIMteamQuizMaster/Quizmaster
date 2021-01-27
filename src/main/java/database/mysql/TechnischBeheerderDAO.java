@@ -119,7 +119,7 @@ public class TechnischBeheerderDAO extends AbstractDAO {
             if (u.getUserId() == 0) {
                 u.setUserId(key);
             }
-            setRoleToUser(u, u.getRoles());
+            setRoleToUser(u);
             return u;
         } catch (SQLException throwables) {
             System.out.println(throwables.getMessage() + " Somthing wrong while adding/Updating user");
@@ -181,10 +181,10 @@ public class TechnischBeheerderDAO extends AbstractDAO {
      * at first it take the roles that user already have and compare it with the new roles
      * so if a role needs to be ended or be assignt the method will do that
      */
-    public void setRoleToUser(User u, List<Role> roles) {
+    public void setRoleToUser(User u) {
         HashMap<Integer, Role> userAlreadyHaveRoles = getUserRoles(u);
         List<Role> userNewRoles = u.getRoles();
-
+        // TODO checl fun
         assert userAlreadyHaveRoles != null;
         for (Integer i : userAlreadyHaveRoles.keySet()) {
             if (!userNewRoles.contains(userAlreadyHaveRoles.get(i))) {
@@ -192,8 +192,9 @@ public class TechnischBeheerderDAO extends AbstractDAO {
                 setEndToRole(i);
             }
         }
-        for (Role r : roles) {
+        for (Role r : userNewRoles) {
             if (!userAlreadyHaveRoles.containsValue(r)) {
+                // if there is a role that user doesnt already have then add it
                 String query = "INSERT INTO user_role (user_id,role_id, startDate) VALUES (?,?,?)";
                 int roleId = getRoleId(r.toString());
                 try {
