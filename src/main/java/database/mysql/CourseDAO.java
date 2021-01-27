@@ -231,9 +231,9 @@ public class CourseDAO extends AbstractDAO {
      */
     public List<User> getStudentsWithNoGroupAssigned(Course course) {
         List<User> userList = new ArrayList<>();
-        String query = "SELECT * FROM student_has_course\n" +
-                "where course_id = ?\n" +
-                "and student_user_id not in \n" +
+        String query = "SELECT * FROM student_has_course " +
+                "where course_id = ? " +
+                "and student_user_id not in " +
                 "(select student_user_id from student_has_group where group_id in (SELECT id FROM `group` where course_id = ?))";
         try {
             PreparedStatement ps = getStatement(query);
@@ -369,7 +369,7 @@ public class CourseDAO extends AbstractDAO {
         String sql1 = String.format("DELETE FROM student_has_course WHERE " +
                 "student_user_id = %d AND course_id = %d;", student_id, course_id);
         String sql2 = String.format("DELETE FROM user_has_group" +
-                " WHERE group_id = %d;", group_id);
+                " WHERE group_id = %d AND student_user_id = %d;", group_id, student_id);
         try {
             PreparedStatement preparedStatement = getStatement(sql1);
             executeManipulatePreparedStatement(preparedStatement);

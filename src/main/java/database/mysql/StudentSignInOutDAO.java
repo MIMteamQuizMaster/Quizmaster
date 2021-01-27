@@ -23,12 +23,14 @@ public class StudentSignInOutDAO extends AbstractDAO {
     private CourseDAO courseDAO;
     private CoordinatorDAO coordinatorDAO;
     private QuizDAO quizDAO;
+    private UserDAO userDAO;
 
     public StudentSignInOutDAO(DBAccess dBaccess) {
         super(dBaccess);
         this.courseDAO = new CourseDAO(dBaccess);
         this.coordinatorDAO = new CoordinatorDAO(dBaccess);
         this.quizDAO = new QuizDAO(dBaccess);
+        this.userDAO = new UserDAO(dBaccess);
     }
 
     public User getStudent() {
@@ -115,9 +117,12 @@ public class StudentSignInOutDAO extends AbstractDAO {
             Course newCourse;
             while (resultSet.next())
             {
+                int courseId = resultSet.getInt(1);
                 int coordinator_id = resultSet.getInt(2);
                 String name = resultSet.getString(3);
-                courses.add(new Course(name, coordinatorDAO.getCoordibatorById(coordinator_id)));
+                newCourse = new Course(name, this.userDAO.getUser(coordinator_id));
+                newCourse.setDbId(courseId);
+                courses.add(newCourse);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -166,9 +171,12 @@ public class StudentSignInOutDAO extends AbstractDAO {
             Course newCourse;
             while (resultSet.next())
             {
+                int courseId = resultSet.getInt(1);
                 int coordinator_id = resultSet.getInt(2);
                 String name = resultSet.getString(3);
-                courses.add(new Course(name, coordinatorDAO.getCoordibatorById(coordinator_id)));
+                newCourse = new Course(name, this.userDAO.getUser(coordinator_id));
+                newCourse.setDbId(courseId);
+                courses.add(newCourse);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();

@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import launcher.Main;
 import model.LoginAttempt;
 import model.User;
@@ -45,7 +46,7 @@ public class LoginController {
             dbClient = new CouchDbClient("couchdb.properties");
         } catch (Exception e) {
             System.out.println("CouchDB user not found or CouchDB not running");
-        }
+        };
     }
 
     public void showPassword(MouseEvent mouseEvent) {
@@ -56,7 +57,6 @@ public class LoginController {
         loginUnMaskedPassword.setVisible(true);
 
         loginMaskedPassword.setVisible(false);
-
     }
 
     public void unShowPassword(MouseEvent mouseEvent) {
