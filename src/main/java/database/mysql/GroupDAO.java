@@ -152,6 +152,32 @@ public class GroupDAO extends AbstractDAO {
         }
         return false;
     }
+
+    public boolean deletGroup(Group group){
+        String query;
+        PreparedStatement ps;
+        try {
+            query = "DELETE FROM student_has_group WHERE group_id = ?";
+            ps = getStatement(query);
+            ps.setInt(1,group.getDbId());
+            executeManipulatePreparedStatement(ps);
+            try {
+                query = "DELETE FROM `group` WHERE id = ?";
+                ps = getStatement(query);
+                ps.setInt(1,group.getDbId());
+                executeManipulatePreparedStatement(ps);
+                return true;
+            } catch (SQLException throwables) {
+                System.out.println("Somthing went wrong while deleting group");
+            }
+
+        } catch (SQLException throwables) {
+            System.out.println("Somthing went wrong emptying group");
+        }
+
+        return false;
+    }
+
     /**
      * @return
      * @author M.J. Moshiri

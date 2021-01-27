@@ -52,7 +52,7 @@ public class LoginController implements Initializable {
         }
         this.genericDao = new DomainClass();
         GlyphFont glyphFont = GlyphFontRegistry.font("FontAwesome");
-        passShowBtn.setGraphic(glyphFont.create(FontAwesome.Glyph.EYE).color(Color.BLUE));
+        passShowBtn.setGraphic(glyphFont.create(FontAwesome.Glyph.EYE).color(Color.BROWN));
         passShowBtn.setText("");
     }
 

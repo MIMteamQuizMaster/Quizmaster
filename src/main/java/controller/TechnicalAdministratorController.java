@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import launcher.Main;
@@ -36,6 +37,7 @@ public class TechnicalAdministratorController {
 
     public TitledPane newUserPane;
     public HBox hboxInsidePane;
+    public AnchorPane rootPane;
     @FXML
     private TableView<UserFx> table_users;
     @FXML
@@ -66,31 +68,26 @@ public class TechnicalAdministratorController {
     private GlyphFont glyphFont;
 
 
-
     public void initialize() {
         DBAccess dBaccess = Main.getDBaccess();
         this.dao = new TechnischBeheerderDAO(dBaccess);
         populateRoleMenu(); // add items to ComboBox
         refreshTable(); // add data to table
         glyphFont = GlyphFontRegistry.font("FontAwesome");
-        bindSizeProperty();
+        rootPane.widthProperty().addListener(data -> bindSizeProperty());
 
     }
 
-    public ChangeListener<Number> listener= (observableValue, number, t1) -> bindSizeProperty();
 
     private void bindSizeProperty() {
-//        newUserPane.prefWidthProperty().bind(gridPane.widthProperty().subtract(10));
-        hboxInsidePane.prefWidthProperty().bind((newUserPane.widthProperty().multiply(0.96)));
-//        table_users.prefWidthProperty().bind(gridPane.widthProperty().subtract(10));
-//        table_users.prefHeightProperty().bind(gridPane.heightProperty().subtract(43));
-
+        table_users.maxWidthProperty().bind(rootPane.widthProperty().subtract(10));
+        hboxInsidePane.minWidthProperty().bind((table_users.widthProperty().multiply(0.92)));
         col_id.prefWidthProperty().bind(table_users.widthProperty().divide(10)); // w * 1/10
         col_fname.prefWidthProperty().bind(table_users.widthProperty().divide(8)); // w * 1/8
         col_lname.prefWidthProperty().bind(table_users.widthProperty().divide(8)); // w * 1/8
         col_richting.prefWidthProperty().bind(table_users.widthProperty().divide(7)); // w * 1/7
         col_role.prefWidthProperty().bind(table_users.widthProperty().divide(5));
-//        col_action.prefWidthProperty().bind(table_users.widthProperty().divide(7));
+
         col_actie.prefWidthProperty().bind(table_users.widthProperty().divide(7));
     }
 
@@ -152,7 +149,7 @@ public class TechnicalAdministratorController {
                     if (r) {
                         UserFx u = getTableRow().getItem();
                         dao.setEnd(u.getUserObject());
-                        refreshTable();
+                        getTableView().getItems().remove(u);
                     }
 
                 });
@@ -160,7 +157,7 @@ public class TechnicalAdministratorController {
                 editButton.setOnAction(event -> {
                     table_users.getSelectionModel().select(getIndex());
                     selectedUser = getTableView().getItems().get(getIndex());
-                    CoordinatorPanelController.expandTitledPane(newUserPane);
+                    expandTitledPane(newUserPane);
                     editUserPreSetup();
 
                 });
@@ -175,6 +172,27 @@ public class TechnicalAdministratorController {
 
             }
         });
+    }
+
+    public void expandTitledPane(TitledPane selectedPane) {
+        HBox n = (HBox) selectedPane.getGraphic();
+        Button b = new Button();
+        if (n.getChildren().get(1) instanceof Button) {
+            b = (Button) n.getChildren().get(1);
+        }
+        if (selectedPane.isExpanded()) {
+            selectedPane.setCollapsible(true);
+            selectedPane.setExpanded(false);
+            selectedPane.setCollapsible(false);
+            b.setText("Nieuw");
+            b.setStyle("-fx-background-color: green");
+        } else {
+            selectedPane.setCollapsible(true);
+            selectedPane.setExpanded(true);
+            selectedPane.setCollapsible(false);
+            b.setText("Afsluiten");
+            b.setStyle("-fx-background-color: red");
+        }
     }
 
     private void editUserPreSetup() {
@@ -288,7 +306,7 @@ public class TechnicalAdministratorController {
                 selectedUser = null;
                 dao.saveUser(user);
                 refreshTable();
-                CoordinatorPanelController.expandTitledPane(newUserPane);
+                expandTitledPane(newUserPane);
             }
         } else {
             new Alert(Alert.AlertType.ERROR, "een user moet altijd tenminste een role hebben.").show();
@@ -327,7 +345,7 @@ public class TechnicalAdministratorController {
     }
 
     public void cancelUpdate() {
-        CoordinatorPanelController.expandTitledPane(newUserPane);
+        expandTitledPane(newUserPane);
         voornaamField.clear();
         achternaamField.clear();
         richtingField.clear();
@@ -337,7 +355,7 @@ public class TechnicalAdministratorController {
 
     public void onTableClick() {
         if (newUserPane.isExpanded()) {
-            CoordinatorPanelController.expandTitledPane(newUserPane);
+            expandTitledPane(newUserPane);
         }
     }
 }

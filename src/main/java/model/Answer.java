@@ -15,6 +15,10 @@ public class Answer {
         this.answer = answer;
     }
 
+    public Answer(int i) {
+        this.id = 0;
+    }
+
     public int getId() {
         return id;
     }

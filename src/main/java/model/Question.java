@@ -22,6 +22,10 @@ public class Question {
         this.question = question;
     }
 
+    public Question(int i) {
+        this.questionId = i;
+    }
+
     public int getQuestionId() {
         return questionId;
     }

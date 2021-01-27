@@ -1,9 +1,6 @@
 package database.mysql;
 
-import model.Course;
-import model.Group;
-import model.Role;
-import model.User;
+import model.*;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -329,6 +326,24 @@ public class CourseDAO extends AbstractDAO {
         return false;
     }
 
+    /**
+     * @author M.J. Moshiri
+     * @param course
+     * @return
+     */
+    public boolean archiveCourse(Course course) {
+        String query = "UPDATE course SET archive=1 where id = ?";
+        try {
+            PreparedStatement ps = getStatement(query);
+            ps.setInt(1, course.getDbId());
+            executeManipulatePreparedStatement(ps);
+            return true;
+        } catch (SQLException throwables) {
+            System.out.println("Could not archive the course");
+            throwables.printStackTrace();
+        }
+        return false;
+    }
 
 
     public void createStudentHasCourse(User student, Course course) {
@@ -393,6 +408,7 @@ public class CourseDAO extends AbstractDAO {
 
         return returnValue;
     }
+
 
     public boolean deleteStudentFromCourseAndGroup(Course course,User student)
     {

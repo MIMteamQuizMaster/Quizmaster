@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.*?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TechnicalAdministratorController">
+<AnchorPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TechnicalAdministratorController">
     <GridPane fx:id="gridPane" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" />
@@ -16,15 +16,15 @@
         <children>
           <StackPane prefHeight="604.0" prefWidth="739.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
               <children>
-                  <TableView fx:id="table_users" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#onTableClick" onSort="#clearSelectionOnSort" StackPane.alignment="TOP_CENTER">
+                  <TableView fx:id="table_users" onMouseClicked="#onTableClick" onSort="#clearSelectionOnSort" StackPane.alignment="TOP_CENTER">
                       <columns>
                           <TableColumn fx:id="col_id" prefWidth="80.0" text="GebruikerID" />
                           <TableColumn fx:id="col_fname" prefWidth="107.0" text="Voornaam" />
                           <TableColumn fx:id="col_lname" prefWidth="110.0" text="Achternaam" />
                           <TableColumn fx:id="col_richting" prefWidth="112.0" text="Richting" />
                           <TableColumn fx:id="col_role" prefWidth="130.0" text="Role" />
-                          <TableColumn fx:id="col_actie" prefWidth="115.0" text="Credentials" />
-                          <TableColumn fx:id="col_action" prefWidth="100.0" text="Acties" />
+                          <TableColumn fx:id="col_actie" prefWidth="115.0" resizable="false" text="Credentials" />
+                          <TableColumn fx:id="col_action" maxWidth="80.0" minWidth="80.0" resizable="false" text="Acties" />
                       </columns>
                       <StackPane.margin>
                           <Insets top="33.0" />

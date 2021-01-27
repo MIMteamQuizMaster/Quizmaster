@@ -16,6 +16,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -40,7 +41,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 
-
 public class AdministratorController implements Initializable {
 
     public TableView<CourseFx> courseTableView;
@@ -53,6 +53,7 @@ public class AdministratorController implements Initializable {
 
 
     public Button newCourseBtn;
+    public AnchorPane rootPane;
     private CourseDAO courseDAO;
     private GroupDAO groupDAO;
     private GlyphFont glyphFont;
@@ -64,6 +65,19 @@ public class AdministratorController implements Initializable {
         courseDAO = new CourseDAO(Main.getDBaccess());
         groupDAO = new GroupDAO(Main.getDBaccess());
         fillCourseTable();
+        rootPane.widthProperty().addListener(data -> {
+            bindSizeProperty();
+        });
+    }
+
+    private void bindSizeProperty() {
+        courseTableView.maxWidthProperty().bind(rootPane.widthProperty().subtract(60));
+        col_CourseName.prefWidthProperty().bind(courseTableView.widthProperty().divide(6));
+        col_CourseStart.prefWidthProperty().bind(courseTableView.widthProperty().divide(10));
+        col_CourseEnd.prefWidthProperty().bind(courseTableView.widthProperty().divide(10));
+        col_CourseGroup.prefWidthProperty().bind(courseTableView.widthProperty().divide(3));
+        col_CourseGroup.minWidthProperty().bind(courseTableView.widthProperty().divide(3));
+        col_CourseCoordinator.prefWidthProperty().bind(courseTableView.widthProperty().divide(5));
     }
 
     /**
@@ -78,78 +92,52 @@ public class AdministratorController implements Initializable {
         col_CourseName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         col_CourseStart.setCellValueFactory(cellData -> cellData.getValue().startDateProperty());
         col_CourseEnd.setCellValueFactory(cellData -> cellData.getValue().endDateProperty());
-//        col_CourseGroup.setCellValueFactory(cellData -> cellData.getValue().getTotalGroups().asObject());
+
         col_CourseGroup.setCellFactory(cellData -> createCourseGroupCell());
         col_CourseCoordinator.setCellValueFactory(cellData -> cellData.getValue().coordinatorProperty());
         col_CourseActions.setCellFactory(cellData -> createCourseActionCell());
         courseTableView.setItems(courseFxes);
         courseTableView.refresh();
         courseTableView.setOnMouseClicked(event -> {
-//            if (event.getClickCount() == 1) showGroupPanel(false);
-//            else if (event.getClickCount() == 2) {
-//                onTableClick();
-//            }
+            if (event.getClickCount() == 2) {
+                courseTableView.refresh();
+            }
 
         });
-        courseTableView.getColumns().addListener((ListChangeListener) change -> {
+        courseTableView.setOnSort(new EventHandler<SortEvent<TableView<CourseFx>>>() {
+            @Override
+            public void handle(SortEvent<TableView<CourseFx>> tableViewSortEvent) {
+                courseTableView.refresh();
+            }
+        });
+        courseTableView.getColumns().addListener((ListChangeListener<? super TableColumn<CourseFx, ?>>) change -> {
             change.next();
             if (change.wasReplaced()) {
                 courseTableView.refresh();
             }
         }); // on coloums re ordering or resizing fix the rendering bug by refreshing the table
-        col_CourseName.prefWidthProperty().bind(courseTableView.widthProperty().divide(6));
-        col_CourseStart.prefWidthProperty().bind(courseTableView.widthProperty().divide(10));
-        col_CourseEnd.prefWidthProperty().bind(courseTableView.widthProperty().divide(10));
-        col_CourseGroup.prefWidthProperty().bind(courseTableView.widthProperty().divide(3));
-        col_CourseCoordinator.prefWidthProperty().bind(courseTableView.widthProperty().divide(5));
-        createCourseTableContextMenu();
-    }
-
-    private void createCourseTableContextMenu() {
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem item1 = new MenuItem("Refresh");
-        item1.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                courseTableView.getItems().clear();
-                fillCourseTable();
-                courseTableView.refresh();
-            }
-        });
-        MenuItem item2 = new MenuItem("Edit");
-        item2.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println(courseTableView.getSelectionModel().getSelectedItem());
-            }
-        });
-
-        // Add MenuItem to ContextMenu
-        contextMenu.getItems().addAll(item1, item2);
 
 
-        courseTableView.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-            @Override
-            public void handle(ContextMenuEvent contextMenuEvent) {
-                contextMenu.show(courseTableView, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
-            }
-        });
     }
 
     private TableCell<CourseFx, Void> createCourseGroupCell() {
         return new TableCell<>() {
             private final Button add = new Button();
-            private final HBox pane = new HBox();
+            private final FlowPane mainPane = new FlowPane();
+
 
             {
                 add.setGraphic(glyphFont.create(FontAwesome.Glyph.PLUS).color(Color.RED));
-                pane.setSpacing(2);
-                pane.getChildren().add(add);
+                add.setEffect(new DropShadow(2, 1, 1, Color.BLACK));
+                mainPane.setHgap(5);
+                mainPane.setPadding(new Insets(5, 5, 5, 5));
+                mainPane.setVgap(5);
+                mainPane.getChildren().add(add);
+
                 add.setOnAction(actionEvent -> {
                     CourseFx c = getTableRow().getItem();
                     Group newGroup = new Group(0);
-                    PopOver pop = groupsPopOver(c.getCourseObject(),newGroup);
+                    PopOver pop = groupsPopOver(c.getCourseObject(), newGroup);
                     pop.show(add);
                 });
 
@@ -164,16 +152,19 @@ public class AdministratorController implements Initializable {
                         if (c != null) {
                             ObservableList<Group> groups = c.getGroups();
                             for (Group g : groups) {
-                                pane.getChildren().add(groupHolderBtn(c.getCourseObject(), g));
+                                mainPane.getChildren().add(groupHolderBtn(c.getCourseObject(), g));
+                                mainPane.setPrefHeight(25);
                             }
                         }
-                        setGraphic(pane);
+                        setGraphic(mainPane);
+
                     }
 
                 }
             }
         };
     }
+
 
     private Button groupHolderBtn(Course c, Group g) {
         Button holder = new Button();
@@ -186,8 +177,34 @@ public class AdministratorController implements Initializable {
                     popOver.show(holder);
                 }
         );
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem delete = new MenuItem("Delete me.");
+        delete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                boolean r = AlertHelper.confirmationDialog("Wilt u zeker de groep " +
+                        g.getName()
+                        + " verwijderen ?");
+                if (r) {
+                    groupDAO.deletGroup(g);
+                    c.getGroups().remove(g);
+                    courseTableView.refresh();
+                }
+            }
+        });
+
+        contextMenu.getItems().addAll(delete);
+
+        holder.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+            @Override
+            public void handle(ContextMenuEvent contextMenuEvent) {
+                contextMenu.show(holder, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+            }
+        });
+        holder.setEffect(new DropShadow(2, 1, 1, Color.BLACK));
         return holder;
     }
+
 
     /**
      * @param course object to find all students that has registerd for this course but have no group
@@ -219,7 +236,7 @@ public class AdministratorController implements Initializable {
             PopOver teacherPopOver = createTeacherPopOver(group);
             teacherPopOver.show(addTeacherBtn);
         });
-        gridPane.addRow(0,groupName,groupNameText,teacherLable,addTeacherBtn);
+        gridPane.addRow(0, groupName, groupNameText, teacherLable, addTeacherBtn);
 
         // 3rd row - An atomic reference of a ListView that will be lated used to work with another ListView
         ObservableList<User> studentsWithNoGroupList = FXCollections.observableArrayList(courseDAO.getStudentsWithNoGroupAssigned(course));
@@ -228,8 +245,8 @@ public class AdministratorController implements Initializable {
         ListView<User> listViewStudentsWithNoGroupList = new ListView<>(studentsWithNoGroupList);
         ListView<User> listViewStudentsInGroup = new ListView<User>(studentsInGroup);
 
-        listViewStudentsWithNoGroupList = CreateDoubleSideListView(listViewStudentsWithNoGroupList,listViewStudentsInGroup,true );
-        listViewStudentsInGroup = CreateDoubleSideListView(listViewStudentsInGroup,listViewStudentsWithNoGroupList,false);
+        listViewStudentsWithNoGroupList = CreateDoubleSideListView(listViewStudentsWithNoGroupList, listViewStudentsInGroup, true);
+        listViewStudentsInGroup = CreateDoubleSideListView(listViewStudentsInGroup, listViewStudentsWithNoGroupList, false);
 
         Label labelInGroup = new Label("Students in group:");
         Label labelTotal = new Label("Students Available:");
@@ -237,8 +254,8 @@ public class AdministratorController implements Initializable {
         VBox vBoxAssign = new VBox(labelInGroup, listViewStudentsInGroup);
         VBox vBoxAssign1 = new VBox(labelTotal, listViewStudentsWithNoGroupList);
 
-        gridPane.add(vBoxAssign,0,1,2,1);
-        gridPane.add(vBoxAssign1,2,1,2,1);
+        gridPane.add(vBoxAssign, 0, 1, 2, 1);
+        gridPane.add(vBoxAssign1, 2, 1, 2, 1);
 
 
         Button saveBtn = new Button("Save");
@@ -250,8 +267,8 @@ public class AdministratorController implements Initializable {
             group.setName(groupNameText.getText());
             group.setStudents(finalListViewStudentsInGroup.getItems());
             System.out.println(finalListViewStudentsInGroup.getItems().size());
-            if(!course.getGroups().contains(group))course.addGroup(group);
-            groupDAO.saveGroupDedicatedToCourse(course,group);
+            if (!course.getGroups().contains(group)) course.addGroup(group);
+            groupDAO.saveGroupDedicatedToCourse(course, group);
             courseTableView.refresh();
             popOver.hide();
         });
@@ -265,8 +282,9 @@ public class AdministratorController implements Initializable {
      * All the items that will be chosen in this ListView will be added to the party ListView
      * the correct way of use is to call the same method for both Listview but the party ListView should be
      * an AtomicRefrence
-     * @param mydata myListview
-     * @param other listview that the deleted data will be add to
+     *
+     * @param mydata   myListview
+     * @param other    listview that the deleted data will be add to
      * @param leftside to define the side of arrow
      * @return a listView with configured cells and action handeler for removing item and adding to party List
      */
@@ -314,7 +332,7 @@ public class AdministratorController implements Initializable {
 
 
     /**
-     * @return counfigured cell
+     * @return configured cell
      * @author M.J. Moshiri
      * create a cell with 2 btn responsible for edditing of removing CourseFX object type
      */
@@ -331,12 +349,12 @@ public class AdministratorController implements Initializable {
                 {
                     boolean r = AlertHelper.confirmationDialog("Wilt u de lidmaatschap ven deze gebruiker beëindigen?");
                     if (r) {
-//                        UserFx u = getTableRow().getItem();
-//                        dao.setEnd(u.getUserObject());
-//                        refreshTable();
-                        // TODO delete action on Course table
-                        System.out.println(this.getTableColumn().getWidth());
-                        System.out.println(this.getWidth());
+                        CourseFx courseFx = getTableRow().getItem();
+
+                        boolean result = courseDAO.archiveCourse(courseFx.getCourseObject());
+                        if (result) getTableView().getItems().remove(courseFx);
+                        getTableView().refresh();
+
                     }
                 });
 
@@ -476,7 +494,6 @@ public class AdministratorController implements Initializable {
         popOver.setContentNode(vBox);
         return popOver;
     }
-
 
 
     private Button setBtn(User user, Button btn) {

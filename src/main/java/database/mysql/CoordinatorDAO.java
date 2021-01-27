@@ -76,6 +76,13 @@ public class CoordinatorDAO extends AbstractDAO {
         return null;
     }
 
+    /**
+     * Set the quiz in archive so the end user will no more see it
+     *
+     * @param quiz
+     * @return true if it was successful
+     * @author M.J. Moshiri
+     */
     public boolean archiveQuiz(Quiz quiz) {
         String query = "UPDATE QUIZ SET archive=1 where id = ?";
         try {
@@ -101,7 +108,7 @@ public class CoordinatorDAO extends AbstractDAO {
         String query = "DELETE FROM question WHERE id= ?";
         int questionId = question.getQuestionId();
         for (Answer a : question.getAnswers()) {
-                    deleteAnswer(a);
+            deleteAnswer(a);
         }
         return deleteQuery(query, questionId);
     }
@@ -175,5 +182,6 @@ public class CoordinatorDAO extends AbstractDAO {
         return null;
 
     }
+
 
 }
