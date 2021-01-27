@@ -88,7 +88,7 @@ public class GroupDAO extends AbstractDAO {
 
     public void createUserHasGroup(int groupId, User student)
     {
-        String sql = "Insert into user_has_group (student_user_id, group_id) values(?,?) ;";
+        String sql = "Insert into student_has_group (student_user_id, group_id) values(?,?) ;";
         try {
             PreparedStatement preparedStatement = getStatementWithKey(sql);
             preparedStatement.setInt(2,groupId);
