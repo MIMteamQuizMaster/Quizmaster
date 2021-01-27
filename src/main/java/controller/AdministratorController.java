@@ -28,7 +28,7 @@ import model.Role;
 import model.User;
 
 import org.controlsfx.control.PopOver;
-import org.controlsfx.control.ToggleSwitch;
+
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.*;
 
@@ -38,7 +38,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicReference;
+
 
 
 public class AdministratorController implements Initializable {
@@ -51,7 +51,7 @@ public class AdministratorController implements Initializable {
     public TableColumn<CourseFx, User> col_CourseCoordinator;
     public TableColumn<CourseFx, Void> col_CourseActions;
 
-    public SplitPane splitPane;
+
     public Button newCourseBtn;
     private CourseDAO courseDAO;
     private GroupDAO groupDAO;
@@ -73,7 +73,7 @@ public class AdministratorController implements Initializable {
      * the coordinator must be a valid user
      */
     private void fillCourseTable() {
-        List<Course> s = courseDAO.getAllCourses();
+        List<Course> s = courseDAO.getAllCourses(false);
         ObservableList<CourseFx> courseFxes = ObjectConvertor.convertCoursetoCourseFX(s);
         col_CourseName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         col_CourseStart.setCellValueFactory(cellData -> cellData.getValue().startDateProperty());

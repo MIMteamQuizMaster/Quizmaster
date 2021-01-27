@@ -179,7 +179,7 @@ public class CoordinatorPanelController {
      */
     private void fillCoursesTable() {
         ObservableList<CourseFx> courses;
-        courses = convertCoursetoCourseFX(coordinatorDAO.getMyCourses());
+        courses = convertCoursetoCourseFX(coordinatorDAO.getMyCourses(false));
         col_course_name.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         col_sdate.setCellValueFactory(cellData -> cellData.getValue().startDateProperty());
         col_edate.setCellValueFactory(cellData -> cellData.getValue().endDateProperty());
@@ -200,7 +200,7 @@ public class CoordinatorPanelController {
     private void fillQuizTable() {
         ObservableList<QuizFx> quizFxes;
         // fil table accodring to selectedCourse
-        quizFxes = convertQuizToQuizFX(quizDAO.getQuizOfCourse(selectedCourse.getCourseObject()));
+        quizFxes = convertQuizToQuizFX(quizDAO.getQuizOfCourse(selectedCourse.getCourseObject(),false));
         colNameQuizTable.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         colSuccessQuizTable.setCellValueFactory(cellData -> cellData.getValue().succsesDefinitionProperty().asObject());
 //        colTimeLimitQuizTable.setCellValueFactory(cellData -> cellData.getValue().timeLimitProperty().asObject());

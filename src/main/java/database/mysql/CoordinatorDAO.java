@@ -42,14 +42,15 @@ public class CoordinatorDAO extends AbstractDAO {
      * ans has not meet the endDate of the courser
      * @should return null if it cant retrieve data from database
      */
-    public List<Course> getMyCourses() {
+    public List<Course> getMyCourses(Boolean archive) {
 
         List<Course> courseList = new ArrayList<>();
-        String query = "SELECT * FROM course WHERE coordinator_user_id=? and endDate > ?";
+        String query = "SELECT * FROM course WHERE coordinator_user_id=? and (endDate > ? or endDate is null ) and archive = ?";
         try {
             PreparedStatement ps = getStatement(query);
             ps.setInt(1, this.coordinator.getUserId());
             ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            ps.setBoolean(3, archive);
             ResultSet rs = executeSelectPreparedStatement(ps);
             while (rs.next()) {
                 String name = rs.getString("name");
@@ -63,7 +64,7 @@ public class CoordinatorDAO extends AbstractDAO {
                 course.setStartDate(startDate);
                 course.setEndDate(endDate);
 
-                course.setQuizzes(quizDAO.getQuizOfCourse(course)); // add quizes to Course object
+                course.setQuizzes(quizDAO.getQuizOfCourse(course, archive)); // add quizes to Course object
 
                 courseList.add(course);
             }
@@ -73,6 +74,20 @@ public class CoordinatorDAO extends AbstractDAO {
             throwables.printStackTrace();
         }
         return null;
+    }
+
+    public boolean archiveQuiz(Quiz quiz) {
+        String query = "UPDATE QUIZ SET archive=1 where id = ?";
+        try {
+            PreparedStatement ps = getStatement(query);
+            ps.setInt(1, quiz.getIdquiz());
+            executeManipulatePreparedStatement(ps);
+            return true;
+        } catch (SQLException throwables) {
+            System.out.println("Could not archive the quiz");
+            throwables.printStackTrace();
+        }
+        return false;
     }
 
     /**
@@ -85,6 +100,9 @@ public class CoordinatorDAO extends AbstractDAO {
     public Boolean deleteQuestion(Question question) {
         String query = "DELETE FROM question WHERE id= ?";
         int questionId = question.getQuestionId();
+        for (Answer a : question.getAnswers()) {
+                    deleteAnswer(a);
+        }
         return deleteQuery(query, questionId);
     }
 
@@ -135,23 +153,19 @@ public class CoordinatorDAO extends AbstractDAO {
         return false;
     }
 
-    public User getCoordibatorById(int coordinatorId)
-    {
+    public User getCoordibatorById(int coordinatorId) {
         User coordinator_user = null;
         String sql = String.format("SELECT * FROM user\n" +
                 "WHERE user_id=%s;", coordinatorId);
         try {
             PreparedStatement preparedStatement = getStatement(sql);
             ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
-            if (resultSet.next())
-            {
+            if (resultSet.next()) {
                 int user_id = resultSet.getInt(1);
                 String firstName = resultSet.getString(2);
                 String lastName = resultSet.getString(3);
                 coordinator_user = new User(user_id, firstName, lastName);
-            }
-            else
-            {
+            } else {
                 System.out.println("There is no Coordinator to select.");
             }
             return coordinator_user;

@@ -1,9 +1,7 @@
 package controller;
 
-import database.mysql.DBAccess;
 import database.mysql.DomainClass;
 import database.mysql.GenericDAO;
-import database.mysql.UserDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -13,9 +11,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import launcher.Main;
 import model.LoginAttempt;
 import model.User;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.lightcouch.CouchDbClient;
 
 import java.io.BufferedReader;
@@ -26,7 +28,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 
-public class LoginController {
+public class LoginController implements Initializable {
 
     public Label warningLabel;
     public TextField loginUsername;
@@ -37,15 +39,21 @@ public class LoginController {
     public Button cancelBtn;
     private CouchDbClient dbClient;
     private GenericDAO genericDao;
+    private GlyphFont glyphFont;
 
 
-    public LoginController() {
-        this.genericDao = new DomainClass();
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
         try {
             dbClient = new CouchDbClient("couchdb.properties");
         } catch (Exception e) {
             System.out.println("CouchDB user not found or CouchDB not running");
         }
+        this.genericDao = new DomainClass();
+        GlyphFont glyphFont = GlyphFontRegistry.font("FontAwesome");
+        passShowBtn.setGraphic(glyphFont.create(FontAwesome.Glyph.EYE).color(Color.BLUE));
+        passShowBtn.setText("");
     }
 
     public void showPassword(MouseEvent mouseEvent) {
@@ -79,10 +87,10 @@ public class LoginController {
         } catch (Exception e) {
             ip = "could not retrieve ip.";
         }
-        try{
-            LoginAttempt la = new LoginAttempt(id,ip,formatter.format(date));
+        try {
+            LoginAttempt la = new LoginAttempt(id, ip, formatter.format(date));
             dbClient.save(la);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("couldnt syncWithdb logging attemp in NoSQL");
         }
 //        List<LoginAttempt> docs =  dbClient.view("_all_docs").includeDocs(true);
@@ -145,6 +153,8 @@ public class LoginController {
                 keyEvent.getCode().isArrowKey());
         warningLabel.setVisible(false);
     }
+
+
 //
 //    public void passGenericDao(GenericDAO g) {
 //        System.out.println("pff method");

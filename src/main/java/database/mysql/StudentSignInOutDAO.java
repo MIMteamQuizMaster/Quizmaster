@@ -136,7 +136,7 @@ public class StudentSignInOutDAO extends AbstractDAO {
         List<Course> returnValue= new ArrayList<>();
         for (Course course : courseList)
         {
-            course.setQuizzes(quizDAO.getQuizOfCourse(course));
+            course.setQuizzes(quizDAO.getQuizOfCourse(course,false));
             returnValue.add(course);
         }
         return returnValue;

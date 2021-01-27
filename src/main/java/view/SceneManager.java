@@ -66,6 +66,7 @@ public class SceneManager {
         primaryStage.setMaxHeight(200);
         primaryStage.setResizable(false);
         getScene("/view/fxml/login.fxml");
+
 //        Scene scene;
 //        try {
 //            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/fxml/login.fxml"));

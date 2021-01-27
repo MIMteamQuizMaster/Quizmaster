@@ -112,13 +112,14 @@ public class CourseDAO extends AbstractDAO {
      * @return
      * @author M.J. Moshiri
      */
-    public List<Course> getAllCourses() {
+    public List<Course> getAllCourses(boolean archive) {
         List<Course> courseList = new ArrayList<>();
-        String query = "SELECT c.id, c.name , c.startDate, c.endDate, c.coordinator_user_id as coordinator FROM course c";
+        String query = "SELECT c.id, c.name , c.startDate, c.endDate, c.coordinator_user_id as coordinator FROM course c where c.archive =?";
 
         try {
-            PreparedStatement preparedStatement = getStatement(query);
-            ResultSet rs = executeSelectPreparedStatement(preparedStatement);
+            PreparedStatement ps = getStatement(query);
+            ps.setBoolean(1,archive);
+            ResultSet rs = executeSelectPreparedStatement(ps);
             while (rs.next()) {
                 int dbId = rs.getInt("id");
                 String name = rs.getString("name");
