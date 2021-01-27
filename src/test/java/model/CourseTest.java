@@ -19,8 +19,7 @@ public class CourseTest {
         students.add(new User(8, "h", "G"));
         students.add(new User(99,"hg","grt"));
         Course newCourse = new Course("Math", new User(1, "Hans","Mer"));
-        Group newGroup  = new Group(1,"Foo", new User(2, "T","K"),
-                new User(4, "H", "M"), students);
+        Group newGroup  = new Group(1,"Foo", new User(2, "T","K"), students);
         //Act
         newCourse.addGroup(newGroup);
         //Assert

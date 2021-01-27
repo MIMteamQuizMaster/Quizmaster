@@ -2,7 +2,6 @@ package controller;
 
 import controller.fx.CourseFx;
 import controller.fx.ObjectConvertor;
-import controller.fx.UserFx;
 import database.mysql.CourseDAO;
 import database.mysql.GroupDAO;
 import javafx.beans.value.ChangeListener;
@@ -14,15 +13,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import launcher.Main;
@@ -32,6 +28,7 @@ import model.Role;
 import model.User;
 
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.*;
 
@@ -41,6 +38,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class AdministratorController implements Initializable {
@@ -148,6 +146,12 @@ public class AdministratorController implements Initializable {
                 add.setGraphic(glyphFont.create(FontAwesome.Glyph.PLUS).color(Color.RED));
                 pane.setSpacing(2);
                 pane.getChildren().add(add);
+                add.setOnAction(actionEvent -> {
+                    CourseFx c = getTableRow().getItem();
+                    Group newGroup = new Group(0);
+                    PopOver pop = groupsPopOver(c.getCourseObject(),newGroup);
+                    pop.show(add);
+                });
 
             }
 
@@ -185,73 +189,109 @@ public class AdministratorController implements Initializable {
         return holder;
     }
 
+    /**
+     * @param course object to find all students that has registerd for this course but have no group
+     * @param group  object to update or save it
+     * @return A popOver with Creat and Read and Edit functionality
+     * @author M.J. Moshiri
+     * Creates a PopOver for managing Groups
+     */
     private PopOver groupsPopOver(Course course, Group group) {
         PopOver popOver = new PopOver();
         GridPane gridPane = new GridPane();
         gridPane.setHgap(5);
         gridPane.setVgap(5);
-        gridPane.setPadding(new Insets(5, 5, 5, 5));
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+
+        // first row - group name row which is a Label and a TextField         // Second row - add teacher row
 
         Label groupName = new Label("Group name:");
+
         TextField groupNameText = TextFields.createClearableTextField();
         groupNameText.setText(group.getName());
-        gridPane.addRow(0, groupName, groupNameText); // group name row
 
         Label teacherLable = new Label("Docent:");
-        Button teacherBtn = new Button();
-        teacherBtn = setBtn(group.getTeacher(), teacherBtn);
-        Button finalTeacherBtn = teacherBtn;
-        teacherBtn.setOnAction(event -> {
+
+        Button addTeacherBtn = new Button();
+        setBtn(group.getTeacher(), addTeacherBtn);
+        addTeacherBtn.setMaxWidth(Double.MAX_VALUE);
+        addTeacherBtn.setOnAction(event -> {
             PopOver teacherPopOver = createTeacherPopOver(group);
-            teacherPopOver.show(finalTeacherBtn);
+            teacherPopOver.show(addTeacherBtn);
         });
-        gridPane.addRow(1, teacherLable, teacherBtn);  // teacher row
+        gridPane.addRow(0,groupName,groupNameText,teacherLable,addTeacherBtn);
 
-        Label labelAssign = new Label("Students:");
-        Label labelTotalAssign = new Label("Aantal: " + group.getStudents().size());
-        VBox vBoxAssign = new VBox(labelAssign, labelTotalAssign);
-        vBoxAssign.setSpacing(10);
-        ListView<User> listAssigned = new ListView<User>();
-        listAssigned.setPrefHeight(300);
-//        ObservableList<User> students = groupDAO.getStudentsPerGroup(group);
-        ObservableList<User> students = FXCollections.observableArrayList(group.getStudents());
-        if (students != null && students.size() != 0) listAssigned.setItems(students);
-        gridPane.addRow(2, vBoxAssign, listAssigned);
-        GridPane.setValignment(vBoxAssign, VPos.TOP); // students row
+        // 3rd row - An atomic reference of a ListView that will be lated used to work with another ListView
+        ObservableList<User> studentsWithNoGroupList = FXCollections.observableArrayList(courseDAO.getStudentsWithNoGroupAssigned(course));
+        ObservableList<User> studentsInGroup = FXCollections.observableArrayList(group.getStudents());
 
-        Button addStudent = new Button("Student Toevoegen");
-        addStudent.setGraphic(glyphFont.create(FontAwesome.Glyph.USER_PLUS).color(Color.RED));
-        addStudent.setMaxWidth(Double.MAX_VALUE);
-        addStudent.setOnAction(actionEvent -> {
-            ListView<User> allAvailable;
-            allAvailable = createAllAvailableStudentList(course, group, listAssigned);
-            allAvailable.setPrefHeight(300);
-            gridPane.add(allAvailable, 2, 2);
+        ListView<User> listViewStudentsWithNoGroupList = new ListView<>(studentsWithNoGroupList);
+        ListView<User> listViewStudentsInGroup = new ListView<User>(studentsInGroup);
+
+        listViewStudentsWithNoGroupList = CreateDoubleSideListView(listViewStudentsWithNoGroupList,listViewStudentsInGroup,true );
+        listViewStudentsInGroup = CreateDoubleSideListView(listViewStudentsInGroup,listViewStudentsWithNoGroupList,false);
+
+        Label labelInGroup = new Label("Students in group:");
+        Label labelTotal = new Label("Students Available:");
+
+        VBox vBoxAssign = new VBox(labelInGroup, listViewStudentsInGroup);
+        VBox vBoxAssign1 = new VBox(labelTotal, listViewStudentsWithNoGroupList);
+
+        gridPane.add(vBoxAssign,0,1,2,1);
+        gridPane.add(vBoxAssign1,2,1,2,1);
+
+
+        Button saveBtn = new Button("Save");
+        saveBtn.setMinHeight(30);
+        saveBtn.setMaxWidth(Double.MAX_VALUE);
+        gridPane.add(saveBtn, 0, 2, 2, 1);
+        ListView<User> finalListViewStudentsInGroup = listViewStudentsInGroup;
+        saveBtn.setOnAction(actionEvent -> {
+            group.setName(groupNameText.getText());
+            group.setStudents(finalListViewStudentsInGroup.getItems());
+            System.out.println(finalListViewStudentsInGroup.getItems().size());
+            if(!course.getGroups().contains(group))course.addGroup(group);
+            groupDAO.saveGroupDedicatedToCourse(course,group);
+            courseTableView.refresh();
+            popOver.hide();
         });
-        gridPane.add(addStudent, 1, 3);
 
         popOver.setContentNode(gridPane);
         return popOver;
     }
 
-    private ListView<User> createAllAvailableStudentList(Course course, Group group, ListView<User> students) {
-        ListView<User> allAvailable = new ListView<User>();
-        ObservableList<User> observableList = FXCollections.observableArrayList(courseDAO.getStudentsWithNoGroupAssigned(course));
-        allAvailable.setCellFactory(param -> new ListCell<User>() {
+    /**
+     * Create a listView that needs a party to work together
+     * All the items that will be chosen in this ListView will be added to the party ListView
+     * the correct way of use is to call the same method for both Listview but the party ListView should be
+     * an AtomicRefrence
+     * @param mydata myListview
+     * @param other listview that the deleted data will be add to
+     * @param leftside to define the side of arrow
+     * @return a listView with configured cells and action handeler for removing item and adding to party List
+     */
+    private ListView<User> CreateDoubleSideListView(ListView<User> mydata, ListView<User> other, boolean leftside) {
+        ListView<User> me = mydata;
+        me.setCellFactory(param -> new ListCell<User>() {
             Button move = new Button();
 
             {
-                move.setGraphic(glyphFont.create(FontAwesome.Glyph.CHEVRON_LEFT).color(Color.BLUE));
+                if (leftside) {
+                    move.setGraphic(glyphFont.create(FontAwesome.Glyph.CHEVRON_LEFT).color(Color.BLUE));
+                    setContentDisplay(ContentDisplay.LEFT);
+                } else {
+                    move.setContentDisplay(ContentDisplay.RIGHT);
+                    move.setGraphic(glyphFont.create(FontAwesome.Glyph.CHEVRON_RIGHT).color(Color.RED));
+                }
+                move.setMaxWidth(Double.MAX_VALUE);
                 move.setOnAction(event -> {
                     if (getItem() != null) {
                         User u = getItem();
-//                        students.getItems().add(u);
-                        observableList.remove(u);
-                        group.addStudent(u);
-                        getListView().refresh();
-
+                        other.getItems().add(u);
+                        me.getItems().remove(u);
+                        me.refresh();
+                        other.refresh();
                     }
-
                 });
             }
 
@@ -269,8 +309,7 @@ public class AdministratorController implements Initializable {
 
             }
         });
-        allAvailable.setItems(observableList);
-        return allAvailable;
+        return me;
     }
 
 
@@ -345,7 +384,7 @@ public class AdministratorController implements Initializable {
      * @param course object from tableView
      * @return a popOver
      * @author M.J. Moshiri
-     * create a popOver to assign new coordinator to to course, it also show the momentory coordinator of the
+     * create a popOver to assign new coordinator to course, it also shows the momentory coordinator of the
      * course
      * the listView in the popOver has a listener to update the new value of the coordinator for course
      */
@@ -438,34 +477,6 @@ public class AdministratorController implements Initializable {
         return popOver;
     }
 
-
-//    private ListView fillAvailableList(Course course) {
-//        ListView listView = new ListView();
-//        List<User> userList = courseDAO.getStudentsWithNoGroupAssigned(course);
-//        if (userList != null) {
-//            ObservableList<UserFx> userFxes = ObjectConvertor.convertUserToUserFX(userList);
-////            ObservableList<User> userFxes1 = FXCollections.observableArrayList(userList);
-//
-//            listView.setCellFactory(param -> new ListCell<UserFx>() {
-//                @Override
-//                protected void updateItem(UserFx item, boolean empty) {
-//                    super.updateItem(item, empty);
-//                    if (empty) {
-//                        setText(null);
-//                    } else {
-//                        User u = item.getUserObject();
-//                        if (u != null) {
-//                            setText(u.toString());
-//                        } else {
-//                            setText(null);
-//                        }
-//                    }
-//                }
-//            });
-//            listView.setItems(userFxes);
-//        }
-//        return listView;
-//    }
 
 
     private Button setBtn(User user, Button btn) {
