@@ -71,14 +71,14 @@ public class GroupDAO extends AbstractDAO {
         return rList;
     }
 
-    public void createNewGroup(Course course, String name, User student, int teacher)
+    public void createNewGroup(Course course, String name, User student, User teacher)
     {
-        String sql = "Insert into group(course_id, name, docent) values(?,?, ?) ;";
+        String sql = "Insert into `group`(course_id, name, docent) values(?,?, ?) ;";
         try {
             PreparedStatement preparedStatement = getStatementWithKey(sql);
             preparedStatement.setInt(1,course.getDbId());
             preparedStatement.setString(2,name);
-            preparedStatement.setInt(3, teacher);
+            preparedStatement.setInt(3, teacher.getUserId());
             int key = executeInsertPreparedStatement(preparedStatement);
             createUserHasGroup(key,student);
         } catch (SQLException throwables) {
@@ -88,7 +88,7 @@ public class GroupDAO extends AbstractDAO {
 
     public void createUserHasGroup(int groupId, User student)
     {
-        String sql = "Insert into student_has_group (student_user_id, group_id) values(?,?) ;";
+        String sql = "Insert into user_has_group (student_user_id, group_id) values(?,?) ;";
         try {
             PreparedStatement preparedStatement = getStatementWithKey(sql);
             preparedStatement.setInt(2,groupId);
