@@ -67,6 +67,39 @@ public class CourseDAO extends AbstractDAO {
     }
 
     /**
+     * Use parameter to retrieve the selected course from the database. Use retrieved coordinator_id to retrieve corresponding coordinator.
+     * Build new course object.
+     * @param user_id the id of the user.
+     * @return the new course object created from the database.
+     * @author M.J. Alden-Montague
+     */
+    public List<Course> getAllCoursesForUser(int user_id) {
+        String sql_course = "SELECT course_id, c.name AS course_name, c.coordinator_user_id FROM user_has_group uhg, course c, `group` g WHERE uhg.group_id = g.id AND g.course_id = c.id AND student_user_id = " + user_id;
+        List<Course> resultList = new ArrayList<>();
+        try {
+            int courseId;
+            String courseName;
+            int coordinatorId;
+            PreparedStatement psCourse = getStatement(sql_course);
+            ResultSet rsCourse = executeSelectPreparedStatement(psCourse);
+            while (rsCourse.next()) {
+                courseId = rsCourse.getInt(1);
+                courseName = rsCourse.getString(2);
+                coordinatorId = rsCourse.getInt(3);
+                User coordinator = new User(coordinatorId,"first","last");
+                Course course = new Course(courseName,coordinator);
+                course.setDbId(courseId);
+                resultList.add(course);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL error: " + e.getMessage());
+        }
+        return resultList;
+    }
+
+
+    /**
      * Insert passed course into database, extracting each attribute from preparedStatement
      *
      * @param mpCourse is the course passed by the user

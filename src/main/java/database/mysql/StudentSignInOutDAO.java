@@ -100,12 +100,12 @@ public class StudentSignInOutDAO extends AbstractDAO {
     public List<Course> getAllcoursesNotAssignedToStudent(List<String> registeredCourses)
     {
         List<Course> courses = new ArrayList<>();
-        String stringRegesteredCourses = String.join(", ", registeredCourses);
+        String stringRegisteredCourses = String.join(", ", registeredCourses);
         String sql;
         if (registeredCourses.size()!=0) {
             sql = String.format("SELECT * " +
                     "FROM course " +
-                    "WHERE id NOT IN (%s);", stringRegesteredCourses);
+                    "WHERE id NOT IN (%s);", stringRegisteredCourses);
         }
         else
         {

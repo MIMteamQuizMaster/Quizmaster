@@ -70,6 +70,11 @@ public class WelcomeSceneController {
                     tab.setContent(view);
                     tabPanel.getTabs().add(tab);
 
+                    view = sceneManager.getPage("selectQuizForStudent");
+                    Tab tab2 = new Tab();
+                    tab2.setText("Student");
+                    tab2.setContent(view);
+                    tabPanel.getTabs().add(tab2);
                 }
                 else if (r == Role.COORDINATOR) {
                     view = sceneManager.getPage("coordinatorPanel");

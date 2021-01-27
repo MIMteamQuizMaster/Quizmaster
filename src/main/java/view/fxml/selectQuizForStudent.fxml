@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<FlowPane alignment="CENTER" columnHalignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.selectQuizController">
+   <children>
+      <HBox spacing="60.0">
+         <children>
+            <ListView fx:id="selectCourse" prefHeight="200.0" prefWidth="200.0" />
+            <ListView fx:id="selectQuiz" prefHeight="200.0" prefWidth="200.0" />
+            <Button fx:id="startBtn" mnemonicParsing="false" text="Start Quiz!">
+               <HBox.margin>
+                  <Insets top="90.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+         <FlowPane.margin>
+            <Insets />
+         </FlowPane.margin>
+      </HBox>
+   </children>
+   <padding>
+      <Insets left="100.0" />
+   </padding>
+</FlowPane>

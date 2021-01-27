@@ -1,15 +1,18 @@
 package controller;
 
 import controller.fx.AnswerFormFX;
+import controller.fx.QuizFx;
 import database.mysql.RetriveQuizFromDatabase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
+import launcher.Main;
 import model.Answer;
 import model.Question;
 import model.Quiz;
+import model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,7 @@ public class FillOutFormMultipleAnswersController {
     private List<List<AnswerFormFX>> answersFXListPerQuestion = new ArrayList<List<AnswerFormFX>>();
     private List<Integer> countPossibleAnswers = new ArrayList<>();
     private List<Integer> countGivenAnswers = new ArrayList<>();
+    private QuizFx selectedQuiz;
 
     private int questionNumber =1;
 
@@ -48,7 +52,12 @@ public class FillOutFormMultipleAnswersController {
      */
     public void initialize()
     {
+        selectedQuiz = (QuizFx) Main.getPrimaryStage().getUserData();
+        //this.quiz = selectedQuiz.getQuizObject();
+        System.out.println("selected quiz" + selectedQuiz.getName());
+
         questionLabel.setText(String.format("Vraag %d", questionNumber));
+
         callCreateAndAddQuiz();
         createAndAddAnswerFormFX();
         initiateTextAreaProperty();
@@ -208,8 +217,7 @@ public class FillOutFormMultipleAnswersController {
      */
     public void callCreateAndAddQuiz()
     {
-        Quiz newQuiz = new Quiz("Math", 5.5);
-        newQuiz.setIdquiz(3);
+        Quiz newQuiz = selectedQuiz.getQuizObject();
         RetriveQuizFromDatabase createQuiz = new RetriveQuizFromDatabase();
         this.quiz = createQuiz.returnQuizFromDatabase(newQuiz);
         for (Question question: this.quiz.getQuestions())

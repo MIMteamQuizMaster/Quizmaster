@@ -4,6 +4,7 @@ import database.mysql.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import model.Course;
+import model.User;
 import view.SceneManager;
 
 public class Main extends Application {
@@ -12,6 +13,9 @@ public class Main extends Application {
     private static Stage primaryStage = null;
     private static DBAccess db = null;
     public GenericDAO genericDAO;
+    private static User loggedInUser;
+
+
 
     public static DBAccess getDBaccess() {
         if (db == null) {
@@ -42,6 +46,14 @@ public class Main extends Application {
             sceneManager = new SceneManager(primaryStage);
         }
         return sceneManager;
+    }
+
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public static void setLoggedInUser(User loggedInUser) {
+        Main.loggedInUser = loggedInUser;
     }
 
     public static Stage getPrimaryStage() {

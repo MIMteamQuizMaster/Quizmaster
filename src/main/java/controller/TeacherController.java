@@ -141,7 +141,7 @@ public class TeacherController implements Initializable {
                         total = total + grade.getGrade();
                         count++;
                     }
-                    averageGrade.setText("Gemiddelde: " + String.valueOf(total / count));
+                    averageGrade.setText("Gemiddelde: " + total / count);
                 } else {
                     averageGrade.clear();
                 }

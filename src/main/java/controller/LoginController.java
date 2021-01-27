@@ -110,6 +110,7 @@ public class LoginController implements Initializable {
 
                 // set logedin user data to use in different pane with appropriate permision!
                 Main.getPrimaryStage().setUserData(passUser(userid));
+                Main.setLoggedInUser(passUser(userid));
                 //
                 Main.getSceneManager().showWelcome();
             } else {

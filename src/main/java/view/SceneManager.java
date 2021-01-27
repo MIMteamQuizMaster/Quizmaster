@@ -95,6 +95,9 @@ public class SceneManager {
         getScene("/view/fxml/welcomeScene.fxml");
     }
 
+    public void showQuiz() {
+        getScene("/view/fxml/fillOutFormMultipleAnswers.fxml");
+    }
 
 
 }
