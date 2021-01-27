@@ -332,4 +332,54 @@ public class CourseDAO extends AbstractDAO {
         return returnValue;
     }
 
+    public int getGroupThatBelongToStudentAndCourse(User student, Course course)
+    {
+        int returnValue = 0;
+        String sql = String.format("SELECT u.student_user_id, u.group_id, g.course_id FROM" +
+                " user_has_group AS u " +
+                "JOIN `group` AS g " +
+                "ON u.group_id = g.id " +
+                "WHERE u.student_user_id = %d " +
+                "AND g.course_id = %d", student.getUserId(), course.getDbId());
+        try {
+            PreparedStatement preparedStatement = getStatement(sql);
+            ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
+            if (resultSet.next())
+            {
+                int group_id = resultSet.getInt(2);
+                returnValue = group_id;
+            }
+            else
+            {
+                System.out.println("Course couldn't be found.");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return returnValue;
+    }
+
+    public boolean deleteStudentFromCourseAndGroup(Course course,User student)
+    {
+        boolean returnValue = true;
+        int course_id = course.getDbId();
+        int student_id = student.getUserId();
+        int group_id = getGroupThatBelongToStudentAndCourse(student, course);
+        String sql1 = String.format("DELETE FROM student_has_course WHERE " +
+                "student_user_id = %d AND course_id = %d;", student_id, course_id);
+        String sql2 = String.format("DELETE FROM user_has_group" +
+                " WHERE group_id = %d;", group_id);
+        try {
+            PreparedStatement preparedStatement = getStatement(sql1);
+            executeManipulatePreparedStatement(preparedStatement);
+            PreparedStatement preparedStatement1 = getStatement(sql2);
+            executeManipulatePreparedStatement(preparedStatement1);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            returnValue=false;
+        }
+        return returnValue;
+    }
+
 }

@@ -100,9 +100,9 @@ public class StudentSignInOut {
         this.id = id;
     }
 
-    public int getRandomTeacher(List<Integer> teachers)
+    public User getRandomTeacher(List<User> teachers)
     {
-        int returnValue = 0;
+        User returnValue;
         int i = random.nextInt(teachers.size());
         returnValue = teachers.get(i);
         return returnValue;

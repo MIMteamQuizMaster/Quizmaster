@@ -96,26 +96,6 @@ public class UserDAO extends AbstractDAO {
         return null;
     }
 
-    public List<Integer> getListOfTeachers()
-    {
-        List<Integer> listOfTeachers = new ArrayList<>();
-        String sql = "SELECT user_id, role_id FROM user_role " +
-                "WHERE role_id = 2;";
-        try {
-            PreparedStatement preparedStatement = getStatement(sql);
-            ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
-            while (resultSet.next())
-            {
-                int teacherId = resultSet.getInt(1);
-                listOfTeachers.add(teacherId);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return listOfTeachers;
-    }
-
 
 }
 

@@ -138,7 +138,7 @@ public class CoordinatorDAO extends AbstractDAO {
     public User getCoordibatorById(int coordinatorId)
     {
         User coordinator_user = null;
-        String sql = String.format("SELECT * FROM user\n" +
+        String sql = String.format("SELECT * FROM user " +
                 "WHERE user_id=%s;", coordinatorId);
         try {
             PreparedStatement preparedStatement = getStatement(sql);
