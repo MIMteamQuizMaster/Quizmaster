@@ -337,7 +337,7 @@ public class CourseDAO extends AbstractDAO {
     {
         int returnValue = 0;
         String sql = String.format("SELECT u.student_user_id, u.group_id, g.course_id FROM" +
-                " user_has_group AS u " +
+                " student_has_group AS u " +
                 "JOIN `group` AS g " +
                 "ON u.group_id = g.id " +
                 "WHERE u.student_user_id = %d " +
@@ -369,7 +369,7 @@ public class CourseDAO extends AbstractDAO {
         int group_id = getGroupThatBelongToStudentAndCourse(student, course);
         String sql1 = String.format("DELETE FROM student_has_course WHERE " +
                 "student_user_id = %d AND course_id = %d;", student_id, course_id);
-        String sql2 = String.format("DELETE FROM user_has_group" +
+        String sql2 = String.format("DELETE FROM student_has_group" +
                 " WHERE group_id = %d AND student_user_id = %d;", group_id, student_id);
         try {
             PreparedStatement preparedStatement = getStatement(sql1);
