@@ -75,6 +75,14 @@ public class WelcomeSceneController {
                     tab2.setText("Student");
                     tab2.setContent(view);
                     tabPanel.getTabs().add(tab2);
+
+                    view = sceneManager.getPage("Teacher");
+                    Tab tab3 = new Tab();
+                    tab3.setText("Teacher");
+                    tab3.setContent(view);
+                    tabPanel.getTabs().add(tab3);
+
+
                 }
                 else if (r == Role.COORDINATOR) {
                     view = sceneManager.getPage("coordinatorPanel");
