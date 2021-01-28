@@ -11,10 +11,15 @@ public class StoreAnswerFromQuiz {
 
     Quiz quizFromStudent;
     User student;
-    List<AnswerFormFX> answers;
+    List<List<AnswerFormFX>> answerformFXs = new ArrayList<List<AnswerFormFX>>();
     //ontvang de ingevulde vragen per quiz.
 
 
+    public StoreAnswerFromQuiz(Quiz quizFromStudent, User student, List<List<AnswerFormFX>> answerformFXs) {
+        this.quizFromStudent = quizFromStudent;
+        this.student = student;
+        this.answerformFXs = answerformFXs;
+    }
 
     //Vergeijk gegevenantwoord met goede antwoord.
     public List<Boolean> returnIfAnswerWasRightOrWrong()
@@ -34,6 +39,16 @@ public class StoreAnswerFromQuiz {
     //calculate the grade
     public double calculateGrade()
     {
-        return 0;
+        double returnValue = 0;
+
+        return returnValue;
+    }
+
+    //create Grade objrct
+    public Grade returnGradeObject(User student, Quiz quiz, double grade)
+    {
+        Grade returnValue;
+
+        return null;
     }
 }

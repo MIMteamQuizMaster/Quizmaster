@@ -249,7 +249,6 @@ public class AdministratorController {
         saveBtn.setOnAction(actionEvent -> {
             group.setName(groupNameText.getText());
             group.setStudents(listViewStudentsInGroup.getItems());
-            System.out.println(listViewStudentsInGroup.getItems().size());
             if (!course.getGroups().contains(group)) course.addGroup(group);
             groupDAO.saveGroupDedicatedToCourse(course, group);
             courseTableView.refresh();

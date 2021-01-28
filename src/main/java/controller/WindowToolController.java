@@ -1,26 +1,16 @@
 package controller;
 
-import com.google.gson.JsonObject;
-import com.google.gson.Gson;
-
-import com.google.gson.JsonParser;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import launcher.*;
-import model.LoginAttempt;
+
 import org.lightcouch.CouchDbClient;
 
 import view.SceneManager;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+
 
 public class WindowToolController {
 
