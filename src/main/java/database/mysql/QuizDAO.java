@@ -27,7 +27,7 @@ public class QuizDAO extends AbstractDAO {
      * @author M.J. Moshiri
      * @should return null if Course argument has no id
      */
-    public List<Quiz> getQuizOfCourse(Course course,boolean archive) {
+    public List<Quiz> getQuizOfCourse(Course course, boolean archive) {
         List<Quiz> quizList = new ArrayList<>();
         String query = "SELECT * FROM quiz WHERE course_id =? and archive = ?";
         int courseId = course.getDbId();

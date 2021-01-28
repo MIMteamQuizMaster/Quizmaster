@@ -2,7 +2,6 @@ package controller;
 
 import database.mysql.DomainClass;
 import database.mysql.GenericDAO;
-import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,7 +9,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import launcher.Main;
 import model.LoginAttempt;
@@ -52,28 +50,38 @@ public class LoginController implements Initializable {
         }
         this.genericDao = new DomainClass();
         GlyphFont glyphFont = GlyphFontRegistry.font("FontAwesome");
-        passShowBtn.setGraphic(glyphFont.create(FontAwesome.Glyph.EYE).color(Color.BLUE));
+        passShowBtn.setGraphic(glyphFont.create(FontAwesome.Glyph.EYE).color(Color.BROWN));
         passShowBtn.setText("");
     }
 
-    public void showPassword(MouseEvent mouseEvent) {
+    /**
+     * @author M.J. Moshiri
+     * Shows the typed Password by swaping data with a text field
+     */
+    public void showPassword() {
         /// get the password from passwordFIeld
         /// and pass it to a text field and change the visibility
         loginUnMaskedPassword.setText(loginMaskedPassword.getText());
         loginUnMaskedPassword.setDisable(false);
         loginUnMaskedPassword.setVisible(true);
-
         loginMaskedPassword.setVisible(false);
-
     }
 
-    public void unShowPassword(MouseEvent mouseEvent) {
+    /**
+     * @author M.J. Moshiri
+     * Hides the password by swaping visiblity back with the passwordField
+     */
+    public void unShowPassword() {
         loginMaskedPassword.setVisible(true);
         loginUnMaskedPassword.setVisible(false);
         loginUnMaskedPassword.setDisable(true);
-
     }
 
+    /**
+     * @author M.J. Moshiri
+     * Every logging attempt of the user to store its data in the NoSql
+     * @param id that been used to login
+     */
     private void logLoginAttempt(int id) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date date = new Date();
@@ -94,9 +102,13 @@ public class LoginController implements Initializable {
             System.out.println("couldnt syncWithdb logging attemp in NoSQL");
         }
 //        List<LoginAttempt> docs =  dbClient.view("_all_docs").includeDocs(true);
-
     }
 
+    /**
+     * @author M.J. Moshiri
+     * the attempts of logging in which is the handler of the Login button
+     * that will controll the username and password and giving permission for logging in
+     */
     public void userLogin() {
         int userid;
         try {
@@ -130,22 +142,40 @@ public class LoginController implements Initializable {
 
     }
 
-    public void loginCancel(ActionEvent actionEvent) {
+    /**
+     * Will close the Primary Stage as an act of exit
+     */
+    public void loginCancel() {
         Main.getPrimaryStage().close();
 
     }
 
+    /**
+     * Passes a User object appropriate with the given User ID
+     * @param userId that its User objcet has been asked
+     * @return
+     */
     public User passUser(int userId) {
         // get appropriate user object
         return genericDao.getUser(userId);
     }
 
-    public void passfieldInputChanged(KeyEvent inputMethodEvent) {
+    /**
+     * @author M.J. Moshiri
+     * Reset the style of password field and remove the warning lable
+     * this happens after a wrong attempt and changing hte passwordfield content
+     */
+    public void passfieldInputChanged() {
         loginMaskedPassword.setStyle(null);
         loginUnMaskedPassword.setStyle(null);
         warningLabel.setVisible(false);
     }
 
+    /**
+     * @author M.J. Moshiri
+     * it forces the User Id field to only accept Integers
+     * @param keyEvent
+     */
     public void onlyIntegerAcceptable(KeyEvent keyEvent) {
 //        System.out.println(keyEvent.getCode());
         loginUsername.setEditable(keyEvent.getCode() == KeyCode.BACK_SPACE ||
@@ -155,11 +185,5 @@ public class LoginController implements Initializable {
         warningLabel.setVisible(false);
     }
 
-
-//
-//    public void passGenericDao(GenericDAO g) {
-//        System.out.println("pff method");
-//        this.genericDao = g;
-//    }
 
 }

@@ -33,6 +33,9 @@ public class Quiz {
 
     }
 
+    public Quiz(int i) {
+    }
+
     public List<Question> getQuestions() {
         return questions;
     }

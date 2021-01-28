@@ -1,9 +1,6 @@
 package database.mysql;
 
-import model.Course;
-import model.Group;
-import model.Role;
-import model.User;
+import model.*;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -11,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 public class CourseDAO extends AbstractDAO {
@@ -119,6 +116,10 @@ public class CourseDAO extends AbstractDAO {
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Returns a list of ids belonging to courses the student is allready assigned to.
+     */
     public List<String> courseIdsToRegisterForEachStudent(User student) {
         List<String> courseIdsList = new ArrayList<>();
         String sql = String.format("SELECT course_id FROM student_has_course " +
@@ -147,7 +148,8 @@ public class CourseDAO extends AbstractDAO {
      */
     public List<Course> getAllCourses(boolean archive) {
         List<Course> courseList = new ArrayList<>();
-        String query = "SELECT c.id, c.name , c.startDate, c.endDate, c.coordinator_user_id as coordinator FROM course c where c.archive =?";
+        String query = "SELECT c.id, c.name , c.startDate, c.endDate, c.coordinator_user_id as coordinator FROM course c where c.archive =? " +
+                    (archive?" " : " and ( endDate > CURRENT_DATE() or endDate is null )");
 
         try {
             PreparedStatement ps = getStatement(query);
@@ -329,8 +331,30 @@ public class CourseDAO extends AbstractDAO {
         return false;
     }
 
+    /**
+     * @author M.J. Moshiri
+     * @param course
+     * @return
+     */
+    public boolean archiveCourse(Course course) {
+        String query = "UPDATE course SET archive=1 where id = ?";
+        try {
+            PreparedStatement ps = getStatement(query);
+            ps.setInt(1, course.getDbId());
+            executeManipulatePreparedStatement(ps);
+            return true;
+        } catch (SQLException throwables) {
+            System.out.println("Could not archive the course");
+            throwables.printStackTrace();
+        }
+        return false;
+    }
 
 
+    /**
+     * @author Ismael Ben Cherif
+     * Ads a student to a course.
+     */
     public void createStudentHasCourse(User student, Course course) {
         String sql = "Insert student_has_course(student_user_id, course_id) values(?,?) ;";
         try {
@@ -343,6 +367,11 @@ public class CourseDAO extends AbstractDAO {
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Returns the number of groups that already excists for a course.
+     * Information is used to generate a group name.
+     */
     public int returnNumberOfGroupsPerCourse(Course course) {
         int returnValue = 0;
         int course_id = course.getDbId();
@@ -366,6 +395,10 @@ public class CourseDAO extends AbstractDAO {
         return returnValue;
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Selects the group that belongs to the course the student is signed up for.
+     */
     public int getGroupThatBelongToStudentAndCourse(User student, Course course)
     {
         int returnValue = 0;
@@ -394,6 +427,10 @@ public class CourseDAO extends AbstractDAO {
         return returnValue;
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     *Deletes the student from the course and group.
+     */
     public boolean deleteStudentFromCourseAndGroup(Course course,User student)
     {
         boolean returnValue = true;

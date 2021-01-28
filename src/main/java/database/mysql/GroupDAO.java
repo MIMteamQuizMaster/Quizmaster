@@ -29,7 +29,7 @@ public class GroupDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public ObservableList<Group> getAllGroups(User teacher) {
-        String sql = "SELECT uhg.group_id, g.name, uhg.teacher_user_id FROM student_has_group uhg INNER JOIN quizmaster.group g ON uhg.group_id = g.id WHERE uhg.teacher_user_id = " + teacher.getUserId();
+        String sql = "SELECT uhg.group_id, g.name, g.docent FROM student_has_group uhg INNER JOIN quizmaster.group g ON uhg.group_id = g.id WHERE g.docent = " + teacher.getUserId();
         ObservableList<Group> rList = FXCollections.observableArrayList();
         try {
             PreparedStatement ps = getStatement(sql);
@@ -71,6 +71,10 @@ public class GroupDAO extends AbstractDAO {
         return rList;
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Creates a new group and ads a teacher to it.
+     */
     public void createNewGroup(Course course, String name, User student, User teacher)
     {
         String sql = "Insert into `group`(course_id, name, docent) values(?,?, ?) ;";
@@ -80,12 +84,17 @@ public class GroupDAO extends AbstractDAO {
             preparedStatement.setString(2,name);
             preparedStatement.setInt(3, teacher.getUserId());
             int key = executeInsertPreparedStatement(preparedStatement);
-            createUserHasGroup(key,student);
+            createUserHasGroup(key,student);//@author Ismael Ben Cherif: the key is udused to register the
+            //student to a specific group.
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * A student is added to the group
+     */
     public void createUserHasGroup(int groupId, User student)
     {
         String sql = "Insert into student_has_group (student_user_id, group_id) values(?,?) ;";
@@ -152,6 +161,32 @@ public class GroupDAO extends AbstractDAO {
         }
         return false;
     }
+
+    public boolean deletGroup(Group group){
+        String query;
+        PreparedStatement ps;
+        try {
+            query = "DELETE FROM student_has_group WHERE group_id = ?";
+            ps = getStatement(query);
+            ps.setInt(1,group.getDbId());
+            executeManipulatePreparedStatement(ps);
+            try {
+                query = "DELETE FROM `group` WHERE id = ?";
+                ps = getStatement(query);
+                ps.setInt(1,group.getDbId());
+                executeManipulatePreparedStatement(ps);
+                return true;
+            } catch (SQLException throwables) {
+                System.out.println("Somthing went wrong while deleting group");
+            }
+
+        } catch (SQLException throwables) {
+            System.out.println("Somthing went wrong emptying group");
+        }
+
+        return false;
+    }
+
     /**
      * @return
      * @author M.J. Moshiri

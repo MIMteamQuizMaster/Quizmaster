@@ -8,11 +8,16 @@ public class Answer {
     private boolean isCorrect;
     private String answer;
 
-    private boolean isGivenAnswer = false;
+    private boolean isGivenAnswer = false; // Geeft aan of dit antwoord is ingevuld
+    //door de student.
 
     public Answer(boolean isCorrect, String answer) {
         this.isCorrect = isCorrect;
         this.answer = answer;
+    }
+
+    public Answer(int i) {
+        this.id = 0;
     }
 
     public int getId() {

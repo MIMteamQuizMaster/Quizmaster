@@ -280,7 +280,10 @@ public class FillOutFormMultipleAnswersController {
     }
 
     public void menuButtonAction(ActionEvent actionEvent) {
-
+        if(AlertHelper.confirmationDialog("If you go back now, quiz answers will not be saved.")) {
+            Main.getPrimaryStage().setUserData(Main.getLoggedInUser());
+            Main.getSceneManager().showWelcome();
+        }
     }
 
     /**

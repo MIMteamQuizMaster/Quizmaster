@@ -1,48 +1,37 @@
 package controller;
 
-import controller.fx.AnswerFx;
-import controller.fx.CourseFx;
-import controller.fx.QuestionFx;
-import controller.fx.QuizFx;
+import controller.fx.*;
 import database.mysql.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import launcher.Main;
-import model.Answer;
-import model.Question;
-import model.Quiz;
-import model.User;
+import model.*;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.textfield.TextFields;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 import java.util.List;
 
 import static controller.fx.ObjectConvertor.*;
 
 public class CoordinatorPanelController {
-    public TitledPane quizPane;
-    public TitledPane questionPane;
-    public TitledPane answerPane;
-    public Button btnQuizPanelOpen;
-    public Button btnQuestionPanelOpen;
-    public Button btnAnswerPanelOpen;
 
-    public CheckBox cBoxAnswerIsCorrect;
+    public Button btnNewQuestion;
+    public Button btnNewAnswer;
+    public Button btnNewQuiz;
 
     public Label labelCourse;
     public Label labelTotalQuizen;
 
-    public TextArea textAnswer;
-    public TextField textQuizName;
-    public TextField textSuccessDefinite;
-    public TextArea textQuestion;
-
-
     public TableView<QuizFx> quizzesTable;
-    public TableColumn<QuizFx, String> colNameQuizTable;
+    public TableColumn<QuizFx, String> col_NameQuiz;
     public TableColumn<QuizFx, Double> colSuccessQuizTable;
     public TableColumn<QuizFx, Integer> colTimeLimitQuizTable;
     public TableColumn<QuizFx, Void> col_Action_Quiz;
@@ -61,11 +50,12 @@ public class CoordinatorPanelController {
     public VBox leftVBox;
     public VBox rightVBox;
 
-    public Label questionPaneHbox;
-    public Label answerPaneHbox;
-    public HBox quizPaneHbox;
     public HBox rootHPane;
+    public HBox quizPaneHbox;
+    public HBox questionPaneHbox;
+    public HBox answerPaneHbox;
     public AnchorPane rootPane;
+    private GlyphFont glyphFont;
 
 
     @FXML
@@ -97,57 +87,25 @@ public class CoordinatorPanelController {
         this.coordinatorDAO.setCoordinator(loggedInUser);
         System.out.println("initialize");
         fillCoursesTable();
-        emptyFieldsAndSelected();
-        Main.getPrimaryStage().widthProperty().addListener( data -> bindSizeProperty());
-
-
-    }
-
-    private void bindSizeProperty() {
-        rootPane.prefWidthProperty().bind(Main.getPrimaryStage().widthProperty());
-
-        leftVBox.prefWidthProperty().bind(rootHPane.widthProperty().divide(3));
-        rightVBox.prefWidthProperty().bind(rootHPane.widthProperty().divide(2));
-
-        questionTable.prefWidthProperty().bind(rightVBox.widthProperty().subtract(20));
-
-        // 3 bane to bind to its table
-        quizPane.prefHeightProperty().bind(quizzesTable.widthProperty());
-        questionPane.prefHeightProperty().bind(questionTable.widthProperty());
-        answerPane.prefHeightProperty().bind(answerTable.widthProperty());
-
-        // tables in 2 column
-        courseTable.prefWidthProperty().bind(quizzesTable.widthProperty());
-        questionTable.prefWidthProperty().bind(answerTable.widthProperty());
-        questionPaneHbox.prefWidthProperty().bind(questionPane.widthProperty().subtract(20));
-        answerPaneHbox.prefWidthProperty().bind(answerPane.widthProperty().subtract(20));
-        quizPaneHbox.prefWidthProperty().bind(quizPane.widthProperty().subtract(20));
-
-
-
+        clearAll();
+        glyphFont = GlyphFontRegistry.font("FontAwesome");
+        rootPane.widthProperty().addListener(data -> bindSizeProperty());
     }
 
     /**
      * @author M.J. Moshiri
-     * <p>
-     * Empty and clear fields and selected objects to skip faulty usage of fields
-     * and also check all the TitlePanes to be closed
+     * Bind de width property of tables for good responsive view and change in column sizes
+     * by resizing the stage
      */
-    private void emptyFieldsAndSelected() {
-        //Close all open pane
-        if (quizPane.isExpanded()) {
-            expandTitledPane(quizPane);
-        }
-        if (questionPane.isExpanded()) {
-            expandTitledPane(questionPane);
-        }
-        if (answerPane.isExpanded()) {
-            expandTitledPane(answerPane);
-        }
-        btnAnswerPanelOpen.setDisable(true);
-        btnQuestionPanelOpen.setDisable(true);
-        btnQuizPanelOpen.setDisable(true);
-        clearAll();
+    private void bindSizeProperty() {
+        leftVBox.prefWidthProperty().bind(Main.getPrimaryStage().widthProperty().divide(4));
+        courseTable.prefWidthProperty().bind(leftVBox.widthProperty().subtract(10));
+        col_Answer.minWidthProperty().bind(answerTable.widthProperty().multiply(0.87));
+        colQuestion.minWidthProperty().bind(questionTable.widthProperty().multiply(0.75));
+        col_NameQuiz.minWidthProperty().bind(quizzesTable.widthProperty().multiply(0.35));
+        colSuccessQuizTable.minWidthProperty().bind(quizzesTable.widthProperty().multiply(0.35));
+        col_course_name.minWidthProperty().bind(courseTable.widthProperty().multiply(0.35));
+
     }
 
     /**
@@ -159,16 +117,13 @@ public class CoordinatorPanelController {
         selectedQuiz = null;
         selectedQuestion = null;
         selectedAnswer = null;
-        // empty sub quiz lists
+
         answerTable.getItems().clear();
         quizzesTable.getItems().clear();
         questionTable.getItems().clear();
-        // empty text area and checkbox
-        textQuestion.clear();
-        textAnswer.clear();
-
-        textSuccessDefinite.clear();
-        textQuizName.clear();
+        btnNewQuiz.setDisable(true);
+        btnNewQuestion.setDisable(true);
+        btnNewAnswer.setDisable(true);
     }
 
 
@@ -194,14 +149,14 @@ public class CoordinatorPanelController {
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * Fill the Quiz Table view using QuizFX
      */
     private void fillQuizTable() {
         ObservableList<QuizFx> quizFxes;
         // fil table accodring to selectedCourse
-        quizFxes = convertQuizToQuizFX(quizDAO.getQuizOfCourse(selectedCourse.getCourseObject(),false));
-        colNameQuizTable.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        quizFxes = convertQuizToQuizFX(quizDAO.getQuizOfCourse(selectedCourse.getCourseObject(), false));
+        col_NameQuiz.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         colSuccessQuizTable.setCellValueFactory(cellData -> cellData.getValue().succsesDefinitionProperty().asObject());
 //        colTimeLimitQuizTable.setCellValueFactory(cellData -> cellData.getValue().timeLimitProperty().asObject());
         addActionBtnToQuizTable();
@@ -214,22 +169,25 @@ public class CoordinatorPanelController {
 
         this.labelCourse.setText(selectedCourse.getName());
         this.labelTotalQuizen.setText(String.valueOf(quizFxes.size()));
-        btnQuizPanelOpen.setDisable(false);
+
 
     }
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * Add 2 btn to Quiz table for delet or edit Row
      */
     private void addActionBtnToQuizTable() {
         col_Action_Quiz.setCellFactory(cellData -> new TableCell<>() {
-            private final Button editButton = new Button("bijwerken");
-            private final Button deleteButton = new Button("Verwijderen");
-            private final TilePane pane = new TilePane(deleteButton, editButton);
+            private final Button editButton = new Button();
+            private final Button deleteButton = new Button();
+            private final HBox pane = new HBox(editButton, deleteButton);
 
             {
+                pane.setSpacing(2);
+                editButton.setGraphic(glyphFont.create(FontAwesome.Glyph.PENCIL).color(Color.BLUE));
+                deleteButton.setGraphic(glyphFont.create(FontAwesome.Glyph.REMOVE).color(Color.RED));
                 deleteButton.setOnAction(event -> {
                     quizzesTable.getSelectionModel().select(getIndex());
                     selectedQuiz = getTableView().getItems().get(getIndex());
@@ -239,7 +197,8 @@ public class CoordinatorPanelController {
                 editButton.setOnAction(event -> {
                     quizzesTable.getSelectionModel().select(getIndex());
                     selectedQuiz = getTableView().getItems().get(getIndex());
-                    editQuizPreSetup();
+                    PopOver p = createQuizPopOver(selectedCourse.getCourseObject(), selectedQuiz.getQuizObject());
+                    p.show(editButton);
                 });
             }
 
@@ -253,7 +212,7 @@ public class CoordinatorPanelController {
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * Fill the Question Table view using QuestionFx
      */
     private void fillQuestionTable() {
@@ -267,37 +226,39 @@ public class CoordinatorPanelController {
         addActionBtnToQuestionTable();
         questionTable.setItems(questionFxes);
 
-        btnQuestionPanelOpen.setDisable(false);
+        btnNewQuestion.setDisable(false);
     }
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * Add edit and delete btn to questionTable
      */
     private void addActionBtnToQuestionTable() {
         colActionQuestion.setCellFactory(cellData -> new TableCell<>() {
-            private final Button editButton = new Button("bijwerken");
-            private final Button deleteButton = new Button("Verwijderen");
-            private final VBox pane = new VBox(deleteButton, editButton);
-
+            private final Button editButton = new Button();
+            private final Button deleteButton = new Button();
+            private final VBox pane = new VBox(editButton, deleteButton);
 
             {
+                pane.setSpacing(2);
+                editButton.setGraphic(glyphFont.create(FontAwesome.Glyph.PENCIL).color(Color.BLUE));
+                deleteButton.setGraphic(glyphFont.create(FontAwesome.Glyph.REMOVE).color(Color.RED));
                 pane.setPrefWidth(90);
                 editButton.setPrefWidth(90);
                 deleteButton.setPrefWidth(90);
                 deleteButton.setOnAction(event -> {
                     questionTable.getSelectionModel().select(getIndex());
                     selectedQuestion = getTableView().getItems().get(getIndex());
-
                     deleteQuestion();
                 });
 
                 editButton.setOnAction(event -> {
                     questionTable.getSelectionModel().select(getIndex());
                     selectedQuestion = getTableView().getItems().get(getIndex());
+                    PopOver p = createQuestionPopOver(selectedQuiz.getQuizObject(), selectedQuestion.getQuestionObject());
+                    p.show(editButton);
 
-                    editQuestionPreSetup();
                 });
             }
 
@@ -311,7 +272,7 @@ public class CoordinatorPanelController {
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * Fill the Answer table using AnswerFX according to the selectedQuestion
      * which has prevoisly chosen in OnQuestionTable click
      */
@@ -325,13 +286,13 @@ public class CoordinatorPanelController {
         addColorOnBooleanToAnswerTable();
         addBtnToAnswerTable();
         answerTable.setItems(answerFxes);
-        btnAnswerPanelOpen.setDisable(false);
+        btnNewAnswer.setDisable(false);
 
     }
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * Add color to row if appropriate to answer validity
      * green if the answer is a correct one and red if its not correct
      */
@@ -358,16 +319,19 @@ public class CoordinatorPanelController {
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * Add edit and delete btn to answer table
      */
     private void addBtnToAnswerTable() {
         col_Delete_Answer.setCellFactory(cellData -> new TableCell<>() {
-            private final Button editButton = new Button("bijwerken");
-            private final Button deleteButton = new Button("wissen");
+            private final Button editButton = new Button();
+            private final Button deleteButton = new Button();
             private final HBox pane = new HBox(editButton, deleteButton);
 
             {
+                pane.setSpacing(2);
+                editButton.setGraphic(glyphFont.create(FontAwesome.Glyph.PENCIL).color(Color.BLUE));
+                deleteButton.setGraphic(glyphFont.create(FontAwesome.Glyph.REMOVE).color(Color.RED));
                 deleteButton.setOnAction(event -> {
                     answerTable.getSelectionModel().select(getIndex());
                     selectedAnswer = getTableView().getItems().get(getIndex());
@@ -377,7 +341,8 @@ public class CoordinatorPanelController {
                 editButton.setOnAction(event -> {
                     answerTable.getSelectionModel().select(getIndex());
                     selectedAnswer = getTableView().getItems().get(getIndex());
-                    editAnswerPreSetup();
+                    PopOver p = createAnswerPopOver(selectedQuestion.getQuestionObject(), selectedAnswer.getAnswerObject());
+                    p.show(editButton);
 
                 });
 
@@ -393,7 +358,7 @@ public class CoordinatorPanelController {
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * it will refresh the quiz table according to the selected course and if no course has been selected
      * it will clean and empty all fields
      * also close the panel if it is open
@@ -403,20 +368,14 @@ public class CoordinatorPanelController {
             fillQuizTable();
 
         } else {
-            emptyFieldsAndSelected();
+            clearAll();
         }
-        if (quizPane.isExpanded()) {
-            expandTitledPane(quizPane);
-        }
-
-        textQuizName.clear();
-        textSuccessDefinite.clear();
 
     }
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * it will refresh the Question table according to the selected quiz and if no quiz has been selected
      * it will clean the quiz table
      * also close the panel if it is open
@@ -429,17 +388,13 @@ public class CoordinatorPanelController {
             questionTable.getItems().clear();
 
         }
-        if (questionPane.isExpanded()) {
-            expandTitledPane(questionPane);
-        }
 
-        textQuestion.clear();
 
     }
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * it will refresh the answer table according to the selected question and if no question has been selected
      * it will clean the answer table
      * also close the panel if it is open
@@ -450,68 +405,31 @@ public class CoordinatorPanelController {
         } else {
             answerTable.getItems().clear();
         }
-        if (answerPane.isExpanded()) {
-            expandTitledPane(answerPane);
-        }
-        textAnswer.clear();
-    }
-
-    /**
-     * @author M.J. Moshiri
-     *
-     * it will open the quizPane for editing the selected quiz
-     */
-    private void editQuizPreSetup() {
-        /// open panel  and fill selected item valuses to fields
-        textQuizName.setText(selectedQuiz.getName());
-        textSuccessDefinite.setText(String.valueOf(selectedQuiz.getSuccsesDefinition()));
-        expandTitledPane(quizPane);
 
     }
 
-    /**
-     * @author M.J. Moshiri
-     *
-     * Open the pane and set qustion ready to edit and syncWithdb
-     */
-    private void editQuestionPreSetup() {
-        textQuestion.setText(selectedQuestion.getQuestion());
-        expandTitledPane(questionPane);
-    }
 
     /**
      * @author M.J. Moshiri
-     *
-     * it will open the Pane and fill the data from the selected answer to the correct field
-     */
-    private void editAnswerPreSetup() {
-        expandTitledPane(answerPane);
-        textAnswer.setText(selectedAnswer.getAnswer());
-        cBoxAnswerIsCorrect.setSelected(selectedAnswer.isIsCorrect());
-    }
-
-    /**
-     * @author M.J. Moshiri
-     *
+     * <p>
      * Action method of Click on Course table
      * Which will fill add quizzes of selected course to de ListView
      */
     public void courseTableOnClick() {
         if (courseTable.getSelectionModel().getSelectedItem() != null) {
-            emptyFieldsAndSelected();
+            clearAll();
+            btnNewQuiz.setDisable(false);
             selectedCourse = courseTable.getSelectionModel().getSelectedItem();
             refreshQuizTable();
-
         }
     }
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * Quiz Table select function which is on table click action
      * it checks if the user has chosen a valid row then take the selected row object as selected quiz
      * and then fill the question table according to the selected row
-     *
      */
     public void quizTableOnClick() {
         if (quizzesTable.getSelectionModel().getSelectedItem() != null) {
@@ -519,9 +437,6 @@ public class CoordinatorPanelController {
             refreshQuestionTable();
             selectedQuestion = null;
             refreshAnswerTable();
-        }
-        if (quizPane.isExpanded()) {
-            expandTitledPane(quizPane);
         }
 
     }
@@ -539,9 +454,6 @@ public class CoordinatorPanelController {
             this.selectedQuestion = questionTable.getSelectionModel().getSelectedItem();
             refreshAnswerTable();
         }
-        if (questionPane.isExpanded()) {
-            expandTitledPane(questionPane);
-        }
 
     }
 
@@ -555,20 +467,17 @@ public class CoordinatorPanelController {
         if (answerTable.getSelectionModel().getSelectedItem() != null) {
             selectedAnswer = answerTable.getSelectionModel().getSelectedItem();
         }
-        if (answerPane.isExpanded()) {
-            expandTitledPane(answerPane);
-        }
     }
 
     /**
+     * @param lastAnswer is the answer which the user is trying to add
+     * @return a boolean define possibility of adding given answer
      * @author M.J. Moshiri
-     *
+     * <p>
      * Limit adding new answer if the given answer is extra or its the second correct answer
      * it take the given answer and count the answers that has already been dedicated to the question
      * and also count the number of corect answers and it the new giving answer is exceeding the limit it will
      * return false
-     * @param lastAnswer is the answer which the user is trying to add
-     * @return a boolean define possibility of adding given answer
      */
     public boolean limitAnswers(Answer lastAnswer) {
         List<Answer> answerList = selectedQuestion.getAnswers();
@@ -584,7 +493,7 @@ public class CoordinatorPanelController {
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * Delete the selected quiz if the user Approve the confirmation
      */
     public void deleteQuiz() {
@@ -593,7 +502,7 @@ public class CoordinatorPanelController {
                 quizzesTable.getSelectionModel().getSelectedItem().getName()
                 + " verwijderen ?");
         if (r) {
-            coordinatorDAO.deleteQuiz(quizFx.getQuizObject());
+            coordinatorDAO.archiveQuiz(quizFx.getQuizObject());
             refreshQuizTable();
             selectedQuiz = null;
         }
@@ -601,7 +510,7 @@ public class CoordinatorPanelController {
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * Delete the selected Question if the user accept the confirmation
      */
     private void deleteQuestion() {
@@ -613,12 +522,13 @@ public class CoordinatorPanelController {
             coordinatorDAO.deleteQuestion(selectedQuestion.getQuestionObject());
             selectedQuestion = null;
             refreshQuestionTable();
+            answerTable.getItems().clear();
         }
     }
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * Delete the selected Answer if the user accept the confirmation
      */
     private void deleteAnswer() {
@@ -637,203 +547,203 @@ public class CoordinatorPanelController {
 
     /**
      * @author M.J. Moshiri
-     * Save or update quiz
-     * for new quiz it add an id of 0 to quiz object so that the dao take the INSERT query
-     * otherwise it will take the update query with the valid id that is stored inside the object
+     * Opens the pane for adding new Quiz also clears the field
      */
-    public void btnSaveQuizAction() {
-        if (selectedCourse != null) {
-            int course_id = courseTable.getSelectionModel().getSelectedItem().getDbId();
-            String quizName = textQuizName.getText();
-            String sd = textSuccessDefinite.getText();
-
-            if (!sd.equals("") && !quizName.equals("")) {
-                double succesDefinite = Double.parseDouble(sd);
-
-                Quiz quiz;
-                if (this.selectedQuiz == null) {
-                    quiz = quizDAO.saveQuiz(new Quiz(quizName, succesDefinite, 0, course_id));
-                    // new QUiz
-                } else {
-                    // update Quiz
-                    selectedQuiz.setName(quizName);
-                    selectedQuiz.setSuccsesDefinition(succesDefinite);
-                    quiz = quizDAO.saveQuiz(selectedQuiz.getQuizObject());
-                }
-                if (quiz != null) {
-                    courseTable.getSelectionModel().getSelectedItem().addQuiz(quiz);
-                    refreshQuizTable();
-                }
-            } else {
-                new Alert(Alert.AlertType.ERROR, "AUB vull alle benodigde informatie").show();
-            }
-        } else {
-            new Alert(Alert.AlertType.ERROR, "AUB kies een cursus").show();
+    public void btnNewQuizAction() {
+        try {
+            PopOver popOver = createQuizPopOver(selectedCourse.getCourseObject(), new Quiz(0));
+            popOver.show(btnNewQuiz);
+        } catch (NullPointerException e) {
+            /// select a course fisrt
         }
+
     }
 
     /**
      * @author M.J. Moshiri
-     * it saves the question in case of update and new
-     * for new question it add an id of 0 to question object so that the dao take the INSERT query
-     * otherwise it will take the update query with the valid id that is stored inside the object
+     * Opens the pane for adding new Question
      */
-    public void btnSaveQuestionAction() {
-        Question question;
-        String questionString = textQuestion.getText();
-        if (questionString.equals("")) {
-            new Alert(Alert.AlertType.ERROR, "Schrijf de vraag aub").show();
-            return;
-        }
-        if (this.selectedQuestion == null) {
-            // if the user has chose new item then the selectionQuestion is empty so
-            //  we creat an object with id 0 so in dao we can use it as a trick to call INSERT query
-            // create new Question Object and send it to dao for saving function
-            question = new Question(questionString);
-            question.setQuizId(this.selectedQuiz.getIdquiz());
-            question.setQuestionId(0);
-            question = questionDAO.saveQuestion(question); // syncWithdb the question
-
-        } else {
-            /// UPDATE ITEM so we send update the selected question and send it to dao syncWithdb method
-            selectedQuestion.setQuestion(questionString);
-            question = questionDAO.saveQuestion(this.selectedQuestion.getQuestionObject());
-        }
-        if (question != null) { // after succesfull add we disable the editMode
-            refreshQuestionTable();
-            refreshAnswerTable();
-            selectedQuestion = new QuestionFx(question);
+    public void btnNewQuestionAction() {
+        try {
+            PopOver p = createQuestionPopOver(selectedQuiz.getQuizObject(), new Question(0));
+            p.show(btnNewQuestion);
+        } catch (NullPointerException e) {
+            /// select a quiz
         }
     }
 
-    /**
-     * send the answer to the the dao
-     * if the user has chosen the new Answer the function will add a 0 id to answer so the DAO knows that
-     * it is a new answer but in other case which the answer would have a valid id the dao will run the update query
-     *
-     * @author M.J. Moshiri
-     */
-    public void btnSaveAnswerAction() {
-        String answerString = textAnswer.getText();
-        boolean isCorrect = cBoxAnswerIsCorrect.isSelected();
-        Answer answer;
-        if (selectedAnswer != null) {
-            //update
-            answer = selectedAnswer.getAnswerObject();
-            answer.setAnswer(answerString);
-            answer.setCorrect(isCorrect);
-        } else {
-            // new
-            int questionId = this.selectedQuestion.getQuestionId();
-            answer = new Answer(isCorrect, answerString);
-            answer.setQuestionId(questionId);
-            answer.setId(0);
-        }
-        if (!limitAnswers(answer)) {
-            new Alert(Alert.AlertType.ERROR, "max 4 answer and 1 good answer").show();
-            return;
-        }
-        selectedQuestion.addAnswer(answer);
-        /// Send to DAO
-        answer = answerDAO.saveAnswer(answer);
-        if (answer != null) { // after succesfull add we disable the editMode
-            refreshQuestionTable();
-            refreshAnswerTable();
-            textAnswer.clear();
-        }
-
-    }
-
-
-    /**
-     * Close the New Quiz Pane and empty the fields
-     *
-     */
-    public void cancelQuizBtnAction() {
-        btnQuizPanelOpenAction();
-        textQuizName.clear();
-        textSuccessDefinite.clear();
-    }
-
-    /**
-     * @author M.J. Moshiri
-     * <p>
-     * cancel the workflow of adding new Question and clear the field and also close the pane
-     */
-    public void cancelQuestionBtnAction() {
-        textQuestion.clear();
-        expandTitledPane(questionPane);
-    }
-
-    /**
-     * @author M.J. Moshiri
-     * cancel the workflow of adding new answer and clear the field and also close the pane
-     */
-    public void cancelNewAnswerAction() {
-        textAnswer.clear();
-        cBoxAnswerIsCorrect.setSelected(false);
-        expandTitledPane(answerPane);
-    }
-
-    /**
-     * @author M.J. Moshiri
-     * cancel the workflow of adding new Quiz and clear the field and also close the pane
-     */
-    public void btnQuizPanelOpenAction() {
-        selectedQuiz = null;
-        textQuizName.clear();
-        textSuccessDefinite.clear();
-        expandTitledPane(quizPane);
-    }
-
-    /**
-     * @author M.J. Moshiri
-     * Opens the pane for adding new Question also clears the field
-     */
-    public void btnQuestionPanelAction() {
-        selectedQuestion = null;
-        textQuestion.clear();
-        expandTitledPane(questionPane);
-    }
 
     /**
      * @author M.J. Moshiri
      * <p>
      * Opens the titlepane for adding new answer to the selected Question
      */
-    public void btnAnswerPanelOpenAction() {
-        selectedAnswer = null;
-        textAnswer.clear();
-        cBoxAnswerIsCorrect.setSelected(false);
-        expandTitledPane(answerPane);
+    public void btnNewAnswerAction() {
+        try {
+            PopOver popOver = createAnswerPopOver(selectedQuestion.getQuestionObject(), new Answer(0));
+            popOver.show(btnNewAnswer);
+        } catch (NullPointerException e) {
+            /// select a quistion fisrt
+        }
     }
 
     /**
-     * @param selectedPane is the pane that we need to change to expand or close it
+     * @param header of the popover
+     * @return popover object
      * @author M.J. Moshiri
-     * <p>
-     * this method is responsible for opening or closing a titledPane and changing the btn color and text
-     * inside
+     * Creates a general popover with preferred attribute
      */
-    public static void expandTitledPane(TitledPane selectedPane) {
-        HBox n = (HBox) selectedPane.getGraphic();
-        Button b = new Button();
-        if (n.getChildren().get(1) instanceof Button) {
-            b = (Button) n.getChildren().get(1);
+    private PopOver getConfiguredPopover(String header) {
+        PopOver popOver = new PopOver();
+        popOver.setArrowSize(0);
+        popOver.setTitle(header);
+        popOver.setDetachable(false);
+        popOver.setHeaderAlwaysVisible(true);
+        popOver.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
+        return popOver;
+    }
+
+    /**
+     * @param course object that quizzes will be added to
+     * @param quiz   object for adding to course
+     * @return a popover for edit or saving Quiz object
+     * @author M.J. Moshiri
+     */
+    private PopOver createQuizPopOver(Course course, Quiz quiz) {
+        PopOver popOver = getConfiguredPopover("Quiz panel");
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(5);
+        gridPane.setVgap(5);
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+        Label quiznameLabel = new Label("Quiz naam:");
+        Label successDefinitieLable = new Label("Success Definitie:");
+
+        TextField quiznameText = TextFields.createClearableTextField();
+        quiznameText.setPromptText("de naam van quiz");
+
+        TextField successDefinitieText = TextFields.createClearableTextField();
+        successDefinitieText.setPromptText("Success definitie");
+        if (quiz.getIdquiz() != 0) {
+            successDefinitieText.setText(String.valueOf(quiz.getSuccsesDefinition()));
+            quiznameText.setText(quiz.getName());
         }
-        if (selectedPane.isExpanded()) {
-            selectedPane.setCollapsible(true);
-            selectedPane.setExpanded(false);
-            selectedPane.setCollapsible(false);
-            b.setText("Nieuw");
-            b.setStyle("-fx-background-color: green");
-        } else {
-            selectedPane.setCollapsible(true);
-            selectedPane.setExpanded(true);
-            selectedPane.setCollapsible(false);
-            b.setText("Afsluiten");
-            b.setStyle("-fx-background-color: red");
-        }
+        Button savebtn = new Button("Opslaan");
+        savebtn.setMaxHeight(Double.MAX_VALUE);
+
+        savebtn.setDefaultButton(true);
+
+        gridPane.addRow(0, quiznameLabel, quiznameText);
+        gridPane.addRow(1, successDefinitieLable, successDefinitieText);
+        gridPane.add(savebtn, 2, 0, 1, 2);
+
+        savebtn.setOnAction(actionEvent -> {
+            String finalquizName = quiznameText.getText();
+            String sd = successDefinitieText.getText();
+
+            if (!sd.equals("") && !finalquizName.equals("")) {
+                quiz.setIdcourse(course.getDbId());
+                double finalsuccesDefinite = Double.parseDouble(sd);
+                quiz.setName(finalquizName);
+                quiz.setSuccsesDefinition(finalsuccesDefinite);
+
+                if (quizDAO.saveQuiz(quiz) != null) {
+                    courseTable.getSelectionModel().getSelectedItem().addQuiz(quiz);
+                    refreshQuizTable();
+                    popOver.hide();
+                }
+            } else {
+                new Alert(Alert.AlertType.ERROR, "AUB vull alle benodigde informatie").show();
+            }
+        });
+
+        popOver.setContentNode(gridPane);
+
+        return popOver;
+    }
+
+    /**
+     * @param quiz     object that the question will be added to
+     * @param question qustion object
+     * @return a popover for editing or saving new Question in database
+     * @author M.J. Moshiri
+     */
+    private PopOver createQuestionPopOver(Quiz quiz, Question question) {
+        PopOver popOver = getConfiguredPopover("Question panel");
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(5);
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+        TextArea textArea = new TextArea();
+        textArea.setPromptText("Type de vraag hier.");
+
+        Button saveBtn = new Button("Opslaan");
+        saveBtn.setMaxWidth(Double.MAX_VALUE);
+        saveBtn.setMaxHeight(Double.MAX_VALUE);
+
+        gridPane.add(textArea, 0, 0);
+        gridPane.add(saveBtn, 1, 0);
+
+        if (question.getQuestionId() != 0) textArea.setText(question.getQuestion());
+
+        saveBtn.setOnAction(actionEvent -> {
+            question.setQuestion(textArea.getText());
+            question.setQuizId(quiz.getIdquiz());
+            if (questionDAO.saveQuestion(question) != null) popOver.hide();
+            refreshQuestionTable();
+        });
+
+        popOver.setContentNode(gridPane);
+        return popOver;
+    }
+
+    /**
+     * @param question     the onwer question
+     * @param answerInhand the answer that will be processed
+     * @return the PopOver
+     * @author M.J. Moshiri
+     * Create a popOver for edit or creating Answers
+     */
+    private PopOver createAnswerPopOver(Question question, Answer answerInhand) {
+        PopOver popOver = getConfiguredPopover("Answer panel");
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(5);
+        gridPane.setVgap(5);
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+
+        TextArea answerText = new TextArea();
+        CheckBox isCorrect = new CheckBox("Juist Antwoord");
+        Button savebtn = new Button("Opslaan");
+        savebtn.setDefaultButton(true);
+        savebtn.setMaxWidth(Double.MAX_VALUE);
+        savebtn.setMaxHeight(Double.MAX_VALUE);
+        gridPane.add(answerText, 0, 0, 1, 2);
+        gridPane.add(isCorrect, 1, 0);
+        gridPane.add(savebtn, 1, 1);
+
+        if (answerInhand.getId() != 0) answerText.setText(answerInhand.getAnswer());
+
+        savebtn.setOnAction(actionEvent -> {
+            boolean newCorrectValue = isCorrect.isSelected();
+            String answer = answerText.getText();
+            answerInhand.setQuestionId(question.getQuestionId());
+            answerInhand.setCorrect(newCorrectValue);
+            answerInhand.setAnswer(answer);
+            if (!limitAnswers(answerInhand)) {
+                new Alert(Alert.AlertType.ERROR, "max 4 answer and 1 good answer").show();
+                return;
+            }
+            question.addAnswer(answerInhand);
+            /// Send to DAO
+
+            if (answerDAO.saveAnswer(answerInhand) != null) { // after succesfull add we disable the editMode
+                refreshQuestionTable();
+                refreshAnswerTable();
+                popOver.hide();
+            }
+
+        });
+        popOver.setContentNode(gridPane);
+
+        return popOver;
     }
 
 }
