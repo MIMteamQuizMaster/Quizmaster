@@ -144,7 +144,8 @@ public class CourseDAO extends AbstractDAO {
      */
     public List<Course> getAllCourses(boolean archive) {
         List<Course> courseList = new ArrayList<>();
-        String query = "SELECT c.id, c.name , c.startDate, c.endDate, c.coordinator_user_id as coordinator FROM course c where c.archive =?";
+        String query = "SELECT c.id, c.name , c.startDate, c.endDate, c.coordinator_user_id as coordinator FROM course c where c.archive =? " +
+                    (archive?" " : " and ( endDate > CURRENT_DATE() or endDate is null )");
 
         try {
             PreparedStatement ps = getStatement(query);

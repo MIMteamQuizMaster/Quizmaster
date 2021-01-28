@@ -44,50 +44,54 @@ public class WelcomeSceneController {
 
     /**
      * @author M.J. Moshiri
-     *
+     * <p>
      * After a successful login and retrieveing user data this method will check the dedicated roles in the user object
      * which is the LoggedInUser
      * and for each role it will add the appripriate tab based on their role to the TabPane
      */
     private void setPane() {
         List<Role> roles = this.loggedInUser.getRoles();
-        if(roles.size()== 0){
+        if (roles.size() == 0) {
             new Alert(Alert.AlertType.INFORMATION, "No role has been dedicated to you.").show();
-        }else {
+        } else {
             for (Role r : roles) {
                 if (r == Role.TECHNICAL_ADMINISTRATOR) {
                     view = sceneManager.getPage("TechnicalAdministrator");
                     Tab tab = new Tab();
-                    tab.setText("Technical Administrator");
+                    tab.setText("Technische Administrator");
                     tab.setContent(view);
                     tabPanel.getTabs().add(tab);
 
-                }
-                else if (r == Role.STUDENT) {
+                } else if (r == Role.STUDENT) {
                     view = sceneManager.getPage("studentSignInOut");
                     Tab tab = new Tab();
-                    tab.setText("Student");
+                    tab.setText("Uw cursus");
                     tab.setContent(view);
                     tabPanel.getTabs().add(tab);
 
                     view = sceneManager.getPage("selectQuizForStudent");
                     Tab tab2 = new Tab();
-                    tab2.setText("Student");
+                    tab2.setText("Uw Quizen");
                     tab2.setContent(view);
                     tabPanel.getTabs().add(tab2);
-                }
-                else if (r == Role.COORDINATOR) {
+                } else if (r == Role.COORDINATOR) {
                     view = sceneManager.getPage("coordinatorPanel");
                     Tab tab = new Tab();
                     tab.setText("Coordinator");
                     tab.setContent(view);
                     tabPanel.getTabs().add(tab);
 
-                }
-                else if (r == Role.ADMINISTRATOR) {
+                } else if (r == Role.ADMINISTRATOR) {
                     view = sceneManager.getPage("Administrator");
                     Tab tab = new Tab();
                     tab.setText("Administrator");
+                    tab.setContent(view);
+                    tabPanel.getTabs().add(tab);
+
+                } else if (r == Role.TEACHER) {
+                    view = sceneManager.getPage("Teacher");
+                    Tab tab = new Tab();
+                    tab.setText("Docent");
                     tab.setContent(view);
                     tabPanel.getTabs().add(tab);
 
