@@ -3,14 +3,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="600" prefWidth="1024" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.fxml.QuizResults">
+<AnchorPane prefHeight="600" prefWidth="1024" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.quizResults">
    <children>
       <FlowPane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <TableView prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="resultTable" prefHeight="200.0" prefWidth="366.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="questionNumber" prefWidth="75.0" text="Vraag" />
+                <TableColumn fx:id="userAnswer" prefWidth="113.0" text="Jouw antwoord" />
+                  <TableColumn fx:id="correctBoolean" prefWidth="70.0" text="Correct" />
+                  <TableColumn fx:id="correctAnswer" prefWidth="107.0" text="Juiste antwoord" />
               </columns>
             </TableView>
          </children></FlowPane>

@@ -42,10 +42,10 @@ public class CoordinatorPanelController {
     public TableColumn<QuestionFx, Integer> colTotatlGood;
     public TableColumn<QuestionFx, Void> colActionQuestion;
 
-    public TableView<AnswerFx> answerTable;
-    public TableColumn<AnswerFx, String> col_Answer;
-    public TableColumn<AnswerFx, Boolean> col_validity;
-    public TableColumn<AnswerFx, Void> col_Delete_Answer;
+    public TableView<AnswerFX> answerTable;
+    public TableColumn<AnswerFX, String> col_Answer;
+    public TableColumn<AnswerFX, Boolean> col_validity;
+    public TableColumn<AnswerFX, Void> col_Delete_Answer;
 
     public VBox leftVBox;
     public VBox rightVBox;
@@ -75,7 +75,7 @@ public class CoordinatorPanelController {
     private CourseFx selectedCourse;
     private QuestionFx selectedQuestion;
     private QuizFx selectedQuiz;
-    private AnswerFx selectedAnswer;
+    private AnswerFX selectedAnswer;
 
     public void initialize() {
         DBAccess dBaccess = Main.getDBaccess();
@@ -278,14 +278,14 @@ public class CoordinatorPanelController {
      */
     private void fillAnswerTable() {
         // fill questions
-        ObservableList<AnswerFx> answerFxes;
+        ObservableList<AnswerFX> answerFXES;
         // fil table according to selectedQuestion
-        answerFxes = convertAnswerToAnswerFX(answerDAO.getAllAnswers(this.selectedQuestion.getQuestionObject()));
+        answerFXES = convertAnswerToAnswerFX(answerDAO.getAllAnswers(this.selectedQuestion.getQuestionObject()));
         col_Answer.setCellValueFactory(cellData -> cellData.getValue().answerProperty());
         col_validity.setCellValueFactory(cellData -> cellData.getValue().isCorrectProperty().asObject());
         addColorOnBooleanToAnswerTable();
         addBtnToAnswerTable();
-        answerTable.setItems(answerFxes);
+        answerTable.setItems(answerFXES);
         btnNewAnswer.setDisable(false);
 
     }

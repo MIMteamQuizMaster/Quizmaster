@@ -37,7 +37,7 @@ public class FillOutFormMultipleAnswersController {
     private Quiz quiz;
     private List<Question> questions = new ArrayList<>();
     private List<List<Answer>> answersListPerQuestion = new ArrayList<List<Answer>>();
-    private List<List<AnswerFormFX>> answersFXListPerQuestion = new ArrayList<List<AnswerFormFX>>();
+    private List<List<AnswerFormFX>> answersFXListPerQuestion = new ArrayList<List<AnswerFormFX>>(); //need to get this to quizResults
     private List<Integer> countPossibleAnswers = new ArrayList<>();
     private List<Integer> countGivenAnswers = new ArrayList<>();
     private QuizFx selectedQuiz;
@@ -321,6 +321,10 @@ public class FillOutFormMultipleAnswersController {
             this.nextButton.setText("Inleveren.");
             this.nextButton.isDisabled();
 
+            quizResults.setAnswersFXListPerQuestion(answersFXListPerQuestion);
+            Main.getSceneManager().showResults();
+
+            // transfer answersFXListPerQuestion to quizResults
         }
     }
 }

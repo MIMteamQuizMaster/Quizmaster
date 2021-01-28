@@ -75,10 +75,10 @@ public class ObjectConvertor {
      * <p>
      * Convert Answer objects to AnswerFX objects
      */
-    public static ObservableList<AnswerFx> convertAnswerToAnswerFX(List<Answer> list) {
-        ObservableList<AnswerFx> listedAnswer = FXCollections.observableArrayList();
+    public static ObservableList<AnswerFX> convertAnswerToAnswerFX(List<Answer> list) {
+        ObservableList<AnswerFX> listedAnswer = FXCollections.observableArrayList();
         for (Answer a : list) {
-            listedAnswer.add(new AnswerFx(a));
+            listedAnswer.add(new AnswerFX(a));
         }
         return listedAnswer;
     }
