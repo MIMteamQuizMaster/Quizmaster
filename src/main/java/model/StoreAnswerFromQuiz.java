@@ -34,6 +34,6 @@ public class StoreAnswerFromQuiz {
     //calculate the grade
     public double calculateGrade()
     {
-
+        return 0;
     }
 }

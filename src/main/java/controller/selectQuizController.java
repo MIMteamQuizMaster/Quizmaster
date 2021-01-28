@@ -51,12 +51,14 @@ public class selectQuizController {
         this.courseDAO = new CourseDAO(this.dbAccess);
         this.quizDAO = new QuizDAO(this.dbAccess);
         this.studentSignInOutDAO = new StudentSignInOutDAO(this.dbAccess);
-        loggedInUser = (User) Main.getPrimaryStage().getUserData();
+        loggedInUser = Main.getLoggedInUser();
         studentSignInOutDAO.setStudent(loggedInUser);
         populateCourseTable();
         populateQuizTable();
         initializeListeners();
+
     }
+
 
     /**
      * Fill the Courses table with data from the database

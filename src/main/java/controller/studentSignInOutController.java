@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import launcher.Main;
 import model.Course;
 import model.User;
+import view.SceneManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +105,7 @@ public class studentSignInOutController{
         {
             courseListRemove.getItems().add(c);
         }
+
     }
 
 

@@ -1,8 +1,10 @@
 package controller.fx;
 
+import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Callback;
 import model.*;
 
 public class CourseFx {
@@ -110,4 +112,7 @@ public class CourseFx {
     public void removeQuiz(Quiz quiz){
         this.course.removeQuiz(quiz);
     }
+
+
+
 }

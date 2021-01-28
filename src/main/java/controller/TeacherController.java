@@ -104,7 +104,6 @@ public class TeacherController implements Initializable {
                     grades = convertGradeToGradeFX(gradeDAO.getAllGrades(selectedItems.get(0).getUserObject()));
                     quizColumn.setCellValueFactory(cellData -> cellData.getValue().quizNameProperty());
                     quizTable.getItems().addAll(grades);
-                    double total = 0;
                     int count = 0;
                     for(GradeFX grade: grades) {
                         count++;

@@ -88,8 +88,8 @@ public class SceneManager {
 
     public void showWelcome() {
         primaryStage.setResizable(true);
-        primaryStage.setMinWidth(200);
-        primaryStage.setMinHeight(100);
+        primaryStage.setMinWidth(1024);
+        primaryStage.setMinHeight(768);
         primaryStage.setMaxHeight(2560);
         primaryStage.setMaxWidth(1440);
         getScene("/view/fxml/welcomeScene.fxml");
