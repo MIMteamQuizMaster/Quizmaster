@@ -42,6 +42,10 @@ public class selectQuizController {
     @FXML
     private Button startBtn;
 
+    /**
+     * Start required components for data and UI
+     * @author M.J. Alden-Montague
+     */
     public void initialize() {
         this.dbAccess = Main.getDBaccess();
         this.courseDAO = new CourseDAO(this.dbAccess);
@@ -54,6 +58,10 @@ public class selectQuizController {
         initializeListeners();
     }
 
+    /**
+     * Fill the Courses table with data from the database
+     * @author M.J. Alden-Montague
+     */
     public void populateCourseTable() {
         courseList = convertCoursetoCourseFX(studentSignInOutDAO.returnCoursesAllreadyRegisterFor());
         selectCourse.setCellFactory(param -> new ListCell<CourseFx>() {
@@ -70,6 +78,10 @@ public class selectQuizController {
         selectCourse.setItems(courseList);
     }
 
+    /**
+     * Fill the Quiz table with data from the database
+     * @author M.J. Alden-Montague
+     */
     public void populateQuizTable() {
         selectQuiz.getItems().clear();
 
@@ -92,6 +104,10 @@ public class selectQuizController {
         selectQuiz.setItems(quizList);
     }
 
+    /**
+     * Start interactive components / listeners of the UI, to register and act on events.
+     * @author M.J. Alden-Montague
+     */
     public void initializeListeners() {
         selectCourse.setOnMouseClicked(mouseEvent -> {
             selectedCourse = selectCourse.getSelectionModel().getSelectedItem();

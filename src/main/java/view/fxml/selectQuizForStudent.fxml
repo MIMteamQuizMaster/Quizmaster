@@ -4,24 +4,33 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<FlowPane alignment="CENTER" columnHalignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.selectQuizController">
+
+<GridPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.selectQuizController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <HBox spacing="60.0">
-         <children>
-            <ListView fx:id="selectCourse" prefHeight="200.0" prefWidth="200.0" />
-            <ListView fx:id="selectQuiz" prefHeight="200.0" prefWidth="200.0" />
-            <Button fx:id="startBtn" mnemonicParsing="false" text="Start Quiz!">
-               <HBox.margin>
-                  <Insets top="90.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-         <FlowPane.margin>
-            <Insets />
-         </FlowPane.margin>
-      </HBox>
+      <ListView fx:id="selectCourse" prefHeight="200.0" prefWidth="200.0">
+         <GridPane.margin>
+            <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+         </GridPane.margin>
+      </ListView>
+      <ListView fx:id="selectQuiz" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+         <GridPane.margin>
+            <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+         </GridPane.margin>
+      </ListView>
+      <Button fx:id="startBtn" mnemonicParsing="false" text="Start Quiz!" GridPane.columnIndex="2">
+         <GridPane.margin>
+            <Insets bottom="50.0" right="50.0" top="50.0" />
+         </GridPane.margin>
+      </Button>
    </children>
-   <padding>
-      <Insets left="100.0" />
-   </padding>
-</FlowPane>
+</GridPane>
