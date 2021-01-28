@@ -31,6 +31,10 @@ public class studentSignInOutController{
     private User student;
     private StudentSignInOutInterface myInterface;
 
+    /**
+     * @author Ismael Ben Cherif
+     * Takes care of the functionality of the U.I. studentSignInSignOut.
+     */
 
     @FXML
     private Button addCourse;
@@ -41,6 +45,10 @@ public class studentSignInOutController{
     @FXML
     private ListView courseListRemove;
 
+    /**
+     * @author Ismael Ben Cherif
+     * Initializes the ListView and set it to multi select.
+     */
     public void initialize()
     {
         this.dbAccess = Main.getDBaccess();
@@ -63,6 +71,11 @@ public class studentSignInOutController{
         courseListRemove.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Shows the user a text displaying how to select multiple
+     * items of the list and message disapears after 8 seconds.
+     */
     public void extraInfoBehaviour()
     {
         PauseTransition visibleLabel = new PauseTransition(Duration.seconds(8));
@@ -71,6 +84,10 @@ public class studentSignInOutController{
         visibleLabel.play();
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Deletes dthe items in the listview and refils them with up to date info.
+     */
     public void refresh()
     {
         this.courseListAdd.getItems().clear();
@@ -90,6 +107,10 @@ public class studentSignInOutController{
     }
 
 
+    /**
+     * @author Ismael Ben Cherif
+     * Ads students to a class and course of the courses the user has selected.
+     */
     public void addCoursesToList(ActionEvent actionEvent) {
         List<Course> selectedCourses = this.courseListAdd.getSelectionModel().getSelectedItems();
         myInterface.addStudentsToGroupAndClass(selectedCourses);
@@ -97,6 +118,10 @@ public class studentSignInOutController{
 
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Removes students from a class and course of the courses the user has selected.
+     */
     public void removeCoursesFromList(ActionEvent actionEvent) {
         List<Course> selectedCourses = this.courseListRemove.getSelectionModel().getSelectedItems();
         myInterface.deleteStudentFromCourseAndGroup(selectedCourses);

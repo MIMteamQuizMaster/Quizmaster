@@ -11,6 +11,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @author Ismael Ben Cherif
+ * This class ads and removes students from a course and group.
+ */
 public class User_has_groupDAO extends AbstractDAO {
     public User_has_groupDAO(DBAccess dBaccess, User user) {
         super(dBaccess);
@@ -24,6 +28,10 @@ public class User_has_groupDAO extends AbstractDAO {
     private User student;
     private Random random = new Random();
 
+    /**
+     * @author Ismael Ben Cherif
+     * Adds students to a group and course.
+     */
     public void addStudentToCourseAndGroup(List<Course> courseList)
     {
         int student_id = this.student.getUserId();
@@ -43,7 +51,8 @@ public class User_has_groupDAO extends AbstractDAO {
                 {
                     int group_id = resultSet.getInt(1);
                     int group_size = resultSet.getInt(3);
-                    if (group_size >= 10)
+                    if (group_size >= 10)//@author Ismael Ben Cherif: If a group for a course has 10 people
+                        //or more, an new group is created and a random teacher is assigned to that group.
                     {
                         int numberOfGroupsForCourse = courseDAO.returnNumberOfGroupsPerCourse(course);
                         groupDAO.createNewGroup(course, generatedGroupName(course, numberOfGroupsForCourse),
@@ -56,11 +65,11 @@ public class User_has_groupDAO extends AbstractDAO {
                     {
                         courseDAO.createStudentHasCourse(student, course);
                         groupDAO.createUserHasGroup(group_id,student);
-                        //add student to excisting group and add student to course
+                        //@author Ismael Ben Cherif: add student to excisting group and add student to course
                     }
                 }
                 else {
-                   //create new group and add student and teacher to it and
+                   //@author Ismael Ben Cherif: create new group and add student and teacher to it and
                     // ad student to course
                     groupDAO.createNewGroup(course, generatedGroupName(course),
                             student, getRandomTeacher(courseDAO.getAllValidUsersByRole(Role.TEACHER)));
@@ -73,6 +82,10 @@ public class User_has_groupDAO extends AbstractDAO {
 
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * A mehod that deletes the student from the groups and courses provided.
+     */
     public void deleteStudentFromCourseAndGroup(List<Course> courseList)
     {
         for (Course course: courseList)
@@ -81,6 +94,10 @@ public class User_has_groupDAO extends AbstractDAO {
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Selects a random teacher provided by the List of teachers
+     */
     public User getRandomTeacher(List<User> teachers)
     {
         User returnValue;
@@ -89,6 +106,10 @@ public class User_has_groupDAO extends AbstractDAO {
         return returnValue;
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Genreates a group name for the first group of that course.
+     */
     public String generatedGroupName(Course course)
     {
         StringBuilder groupName = new StringBuilder();
@@ -99,6 +120,12 @@ public class User_has_groupDAO extends AbstractDAO {
         return groupName.toString();
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Generates a groupname depending on the number of groups.
+     * If theyre are 999 groups the user wil get a message to delete older
+     * groups and the naming of the groups will start at 001 again.
+     */
     public String generatedGroupName(Course course, int number)
     {
         if (999%number == 0)

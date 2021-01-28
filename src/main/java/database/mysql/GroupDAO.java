@@ -71,6 +71,10 @@ public class GroupDAO extends AbstractDAO {
         return rList;
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Creates a new group and ads a teacher to it.
+     */
     public void createNewGroup(Course course, String name, User student, User teacher)
     {
         String sql = "Insert into `group`(course_id, name, docent) values(?,?, ?) ;";
@@ -80,12 +84,17 @@ public class GroupDAO extends AbstractDAO {
             preparedStatement.setString(2,name);
             preparedStatement.setInt(3, teacher.getUserId());
             int key = executeInsertPreparedStatement(preparedStatement);
-            createUserHasGroup(key,student);
+            createUserHasGroup(key,student);//@author Ismael Ben Cherif: the key is udused to register the
+            //student to a specific group.
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * A student is added to the group
+     */
     public void createUserHasGroup(int groupId, User student)
     {
         String sql = "Insert into student_has_group (student_user_id, group_id) values(?,?) ;";
