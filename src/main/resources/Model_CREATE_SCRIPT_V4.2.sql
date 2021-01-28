@@ -181,7 +181,7 @@ CREATE TABLE `student_has_group` (
 
 
 
-CREATE TABLE `grade` (
+CREATE TABLE `user_quiz_log` (
   `id` int NOT NULL AUTO_INCREMENT,
   `student_user_id` int NOT NULL,
   `quiz_id` int NOT NULL,
@@ -196,7 +196,6 @@ CREATE TABLE `grade` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
 CREATE TABLE `user_answer_log` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
@@ -208,10 +207,11 @@ CREATE TABLE `user_answer_log` (
   KEY `fk_user_answer_log_user1_idx` (`user_id`),
   KEY `fk_user_answer_log_answer1_idx` (`answer_id`),
   KEY `fk_grade_id_idx` (`grade_id`),
-  CONSTRAINT `fk_grade_id` FOREIGN KEY (`grade_id`) REFERENCES `grade` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_grade_id` FOREIGN KEY (`grade_id`) REFERENCES `user_quiz_log` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_user_answer_log_answer1` FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_user_answer_log_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
