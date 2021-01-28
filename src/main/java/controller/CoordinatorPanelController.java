@@ -1,9 +1,6 @@
 package controller;
 
-import controller.fx.AnswerFx;
-import controller.fx.CourseFx;
-import controller.fx.QuestionFx;
-import controller.fx.QuizFx;
+import controller.fx.*;
 import database.mysql.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -95,20 +92,18 @@ public class CoordinatorPanelController {
         rootPane.widthProperty().addListener(data -> bindSizeProperty());
     }
 
+    /**
+     * @author M.J. Moshiri
+     * Bind de width property of tables for good responsive view and change in column sizes
+     * by resizing the stage
+     */
     private void bindSizeProperty() {
-
         leftVBox.prefWidthProperty().bind(Main.getPrimaryStage().widthProperty().divide(4));
-
-        // tables in 2 side
         courseTable.prefWidthProperty().bind(leftVBox.widthProperty().subtract(10));
-
-        // table columen
         col_Answer.minWidthProperty().bind(answerTable.widthProperty().multiply(0.87));
         colQuestion.minWidthProperty().bind(questionTable.widthProperty().multiply(0.75));
-
         col_NameQuiz.minWidthProperty().bind(quizzesTable.widthProperty().multiply(0.35));
         colSuccessQuizTable.minWidthProperty().bind(quizzesTable.widthProperty().multiply(0.35));
-
         col_course_name.minWidthProperty().bind(courseTable.widthProperty().multiply(0.35));
 
     }
@@ -550,77 +545,6 @@ public class CoordinatorPanelController {
         }
     }
 
-//    /**
-//     * @author M.J. Moshiri
-//     * Save or update quiz
-//     * for new quiz it add an id of 0 to quiz object so that the dao take the INSERT query
-//     * otherwise it will take the update query with the valid id that is stored inside the object
-//     */
-//    public void btnSaveQuizAction() {
-//        if (selectedCourse != null) {
-//            int course_id = courseTable.getSelectionModel().getSelectedItem().getDbId();
-//
-//
-//            if (!sd.equals("") && !quizName.equals("")) {
-//                double succesDefinite = Double.parseDouble(sd);
-//
-//                Quiz quiz;
-//                if (this.selectedQuiz == null) {
-//                    quiz = quizDAO.saveQuiz(new Quiz(quizName, succesDefinite, 0, course_id));
-//                    // new QUiz
-//                } else {
-//                    // update Quiz
-//                    selectedQuiz.setName(quizName);
-//                    selectedQuiz.setSuccsesDefinition(succesDefinite);
-//                    quiz = quizDAO.saveQuiz(selectedQuiz.getQuizObject());
-//                }
-//                if (quiz != null) {
-//                    courseTable.getSelectionModel().getSelectedItem().addQuiz(quiz);
-//                    refreshQuizTable();
-//                }
-//            } else {
-//                new Alert(Alert.AlertType.ERROR, "AUB vull alle benodigde informatie").show();
-//            }
-//        } else {
-//            new Alert(Alert.AlertType.ERROR, "AUB kies een cursus").show();
-//        }
-//    }
-
-//    /**
-//     * @author M.J. Moshiri
-//     * it saves the question in case of update and new
-//     * for new question it add an id of 0 to question object so that the dao take the INSERT query
-//     * otherwise it will take the update query with the valid id that is stored inside the object
-//     */
-//    public void btnSaveQuestionAction() {
-//        Question question;
-//
-//        if (questionString.equals("")) {
-//            new Alert(Alert.AlertType.ERROR, "Schrijf de vraag aub").show();
-//            return;
-//        }
-//        if (this.selectedQuestion == null) {
-//            // if the user has chose new item then the selectionQuestion is empty so
-//            //  we creat an object with id 0 so in dao we can use it as a trick to call INSERT query
-//            // create new Question Object and send it to dao for saving function
-//            question = new Question(questionString);
-//            question.setQuizId(this.selectedQuiz.getIdquiz());
-//            question.setQuestionId(0);
-//            question = questionDAO.saveQuestion(question); // syncWithdb the question
-//
-//        } else {
-//            /// UPDATE ITEM so we send update the selected question and send it to dao syncWithdb method
-//            selectedQuestion.setQuestion(questionString);
-//            question = questionDAO.saveQuestion(this.selectedQuestion.getQuestionObject());
-//        }
-//        if (question != null) { // after succesfull add we disable the editMode
-//            refreshQuestionTable();
-//            refreshAnswerTable();
-//            selectedQuestion = new QuestionFx(question);
-//        }
-//    }
-
-
     /**
      * @author M.J. Moshiri
      * Opens the pane for adding new Quiz also clears the field
@@ -646,7 +570,6 @@ public class CoordinatorPanelController {
         } catch (NullPointerException e) {
             /// select a quiz
         }
-
     }
 
 
@@ -665,10 +588,10 @@ public class CoordinatorPanelController {
     }
 
     /**
-     * Creates a general popover with preferred attribute
-     *
      * @param header of the popover
      * @return popover object
+     * @author M.J. Moshiri
+     * Creates a general popover with preferred attribute
      */
     private PopOver getConfiguredPopover(String header) {
         PopOver popOver = new PopOver();
@@ -742,6 +665,7 @@ public class CoordinatorPanelController {
      * @param quiz     object that the question will be added to
      * @param question qustion object
      * @return a popover for editing or saving new Question in database
+     * @author M.J. Moshiri
      */
     private PopOver createQuestionPopOver(Quiz quiz, Question question) {
         PopOver popOver = getConfiguredPopover("Question panel");
@@ -771,6 +695,13 @@ public class CoordinatorPanelController {
         return popOver;
     }
 
+    /**
+     * @param question     the onwer question
+     * @param answerInhand the answer that will be processed
+     * @return the PopOver
+     * @author M.J. Moshiri
+     * Create a popOver for edit or creating Answers
+     */
     private PopOver createAnswerPopOver(Question question, Answer answerInhand) {
         PopOver popOver = getConfiguredPopover("Answer panel");
         GridPane gridPane = new GridPane();

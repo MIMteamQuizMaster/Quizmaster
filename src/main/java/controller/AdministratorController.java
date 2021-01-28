@@ -1,24 +1,14 @@
 package controller;
-
 import controller.fx.CourseFx;
 import controller.fx.ObjectConvertor;
 import database.mysql.CourseDAO;
 import database.mysql.GroupDAO;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-
 import javafx.scene.effect.DropShadow;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
@@ -27,21 +17,16 @@ import model.Course;
 import model.Group;
 import model.Role;
 import model.User;
-
 import org.controlsfx.control.PopOver;
-
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.*;
-
-
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.ResourceBundle;
 
 
-public class AdministratorController implements Initializable {
+
+public class AdministratorController {
 
     public TableView<CourseFx> courseTableView;
     public TableColumn<CourseFx, String> col_CourseName;
@@ -58,18 +43,19 @@ public class AdministratorController implements Initializable {
     private GroupDAO groupDAO;
     private GlyphFont glyphFont;
 
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize() {
         glyphFont = GlyphFontRegistry.font("FontAwesome");
         courseDAO = new CourseDAO(Main.getDBaccess());
         groupDAO = new GroupDAO(Main.getDBaccess());
         fillCourseTable();
-        rootPane.widthProperty().addListener(data -> {
-            bindSizeProperty();
-        });
+        rootPane.widthProperty().addListener(data -> bindSizeProperty());
     }
 
+    /**
+     * @author M.J. Moshiri
+     * Binding ht wid property of columns to the width of the table
+     * so by resizing the stage the column width also get adjusted to the screen size
+     */
     private void bindSizeProperty() {
         courseTableView.maxWidthProperty().bind(rootPane.widthProperty().subtract(60));
         col_CourseName.prefWidthProperty().bind(courseTableView.widthProperty().divide(6));
@@ -104,12 +90,7 @@ public class AdministratorController implements Initializable {
             }
 
         });
-        courseTableView.setOnSort(new EventHandler<SortEvent<TableView<CourseFx>>>() {
-            @Override
-            public void handle(SortEvent<TableView<CourseFx>> tableViewSortEvent) {
-                courseTableView.refresh();
-            }
-        });
+        courseTableView.setOnSort(tableViewSortEvent -> courseTableView.refresh());
         courseTableView.getColumns().addListener((ListChangeListener<? super TableColumn<CourseFx, ?>>) change -> {
             change.next();
             if (change.wasReplaced()) {
@@ -117,9 +98,13 @@ public class AdministratorController implements Initializable {
             }
         }); // on coloums re ordering or resizing fix the rendering bug by refreshing the table
 
-
     }
 
+    /**
+     * @author M.J. Moshiri
+     * Create the group cell of table which may have 0 or more groupholder button
+     * @return the tablecell
+     */
     private TableCell<CourseFx, Void> createCourseGroupCell() {
         return new TableCell<>() {
             private final Button add = new Button();
@@ -153,7 +138,7 @@ public class AdministratorController implements Initializable {
                             ObservableList<Group> groups = c.getGroups();
                             for (Group g : groups) {
                                 mainPane.getChildren().add(groupHolderBtn(c.getCourseObject(), g));
-                                mainPane.setPrefHeight(25);
+                                mainPane.setPrefHeight(25); // truktje
                             }
                         }
                         setGraphic(mainPane);
@@ -166,6 +151,14 @@ public class AdministratorController implements Initializable {
     }
 
 
+    /**
+     * @author M.J. Moshiri
+     * A button describing the Group within a course
+     * @param c the course which must be the owner of group
+     * @param g the group
+     * @return a button with action handlar of delete with right click
+     * or show content for edit with click
+     */
     private Button groupHolderBtn(Course c, Group g) {
         Button holder = new Button();
         holder.setText(g.getName() + " (" + g.getStudents().size() + ")");
@@ -179,28 +172,19 @@ public class AdministratorController implements Initializable {
         );
         ContextMenu contextMenu = new ContextMenu();
         MenuItem delete = new MenuItem("Delete me.");
-        delete.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                boolean r = AlertHelper.confirmationDialog("Wilt u zeker de groep " +
-                        g.getName()
-                        + " verwijderen ?");
-                if (r) {
-                    groupDAO.deletGroup(g);
-                    c.getGroups().remove(g);
-                    courseTableView.refresh();
-                }
+        delete.setOnAction(event -> {
+            boolean r = AlertHelper.confirmationDialog("Wilt u zeker de groep " +
+                    g.getName()
+                    + " verwijderen ?");
+            if (r) {
+                groupDAO.deletGroup(g);
+                c.getGroups().remove(g);
+                courseTableView.refresh();
             }
         });
 
         contextMenu.getItems().addAll(delete);
-
-        holder.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-            @Override
-            public void handle(ContextMenuEvent contextMenuEvent) {
-                contextMenu.show(holder, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
-            }
-        });
+        holder.setOnContextMenuRequested(contextMenuEvent -> contextMenu.show(holder, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY()));
         holder.setEffect(new DropShadow(2, 1, 1, Color.BLACK));
         return holder;
     }
@@ -243,10 +227,10 @@ public class AdministratorController implements Initializable {
         ObservableList<User> studentsInGroup = FXCollections.observableArrayList(group.getStudents());
 
         ListView<User> listViewStudentsWithNoGroupList = new ListView<>(studentsWithNoGroupList);
-        ListView<User> listViewStudentsInGroup = new ListView<User>(studentsInGroup);
+        ListView<User> listViewStudentsInGroup = new ListView<>(studentsInGroup);
 
-        listViewStudentsWithNoGroupList = CreateDoubleSideListView(listViewStudentsWithNoGroupList, listViewStudentsInGroup, true);
-        listViewStudentsInGroup = CreateDoubleSideListView(listViewStudentsInGroup, listViewStudentsWithNoGroupList, false);
+        CreateDoubleSideListView(listViewStudentsWithNoGroupList, listViewStudentsInGroup, true);
+        CreateDoubleSideListView(listViewStudentsInGroup, listViewStudentsWithNoGroupList, false);
 
         Label labelInGroup = new Label("Students in group:");
         Label labelTotal = new Label("Students Available:");
@@ -262,11 +246,10 @@ public class AdministratorController implements Initializable {
         saveBtn.setMinHeight(30);
         saveBtn.setMaxWidth(Double.MAX_VALUE);
         gridPane.add(saveBtn, 0, 2, 2, 1);
-        ListView<User> finalListViewStudentsInGroup = listViewStudentsInGroup;
         saveBtn.setOnAction(actionEvent -> {
             group.setName(groupNameText.getText());
-            group.setStudents(finalListViewStudentsInGroup.getItems());
-            System.out.println(finalListViewStudentsInGroup.getItems().size());
+            group.setStudents(listViewStudentsInGroup.getItems());
+            System.out.println(listViewStudentsInGroup.getItems().size());
             if (!course.getGroups().contains(group)) course.addGroup(group);
             groupDAO.saveGroupDedicatedToCourse(course, group);
             courseTableView.refresh();
@@ -286,12 +269,10 @@ public class AdministratorController implements Initializable {
      * @param mydata   myListview
      * @param other    listview that the deleted data will be add to
      * @param leftside to define the side of arrow
-     * @return a listView with configured cells and action handeler for removing item and adding to party List
      */
-    private ListView<User> CreateDoubleSideListView(ListView<User> mydata, ListView<User> other, boolean leftside) {
-        ListView<User> me = mydata;
-        me.setCellFactory(param -> new ListCell<User>() {
-            Button move = new Button();
+    private void CreateDoubleSideListView(ListView<User> mydata, ListView<User> other, boolean leftside) {
+        mydata.setCellFactory(param -> new ListCell<>() {
+            final Button move = new Button();
 
             {
                 if (leftside) {
@@ -306,8 +287,8 @@ public class AdministratorController implements Initializable {
                     if (getItem() != null) {
                         User u = getItem();
                         other.getItems().add(u);
-                        me.getItems().remove(u);
-                        me.refresh();
+                        mydata.getItems().remove(u);
+                        mydata.refresh();
                         other.refresh();
                     }
                 });
@@ -327,7 +308,6 @@ public class AdministratorController implements Initializable {
 
             }
         });
-        return me;
     }
 
 
@@ -372,8 +352,6 @@ public class AdministratorController implements Initializable {
                     setGraphic(pane);
 
                 }
-
-
             }
         };
     }
@@ -382,8 +360,8 @@ public class AdministratorController implements Initializable {
     /**
      * Create a Vbox pane with a ListView in index 1 which is filled with the given Role parameter
      *
-     * @param r
-     * @return
+     * @param r role enum that will be used to fill the list View inside Vbox
+     * @return a Vbox contain a list of user with the role given as argument
      */
     private VBox getPanelOfRoles(Role r) {
         ObservableList<User> users = FXCollections.observableArrayList(courseDAO.getAllValidUsersByRole(r));
@@ -410,7 +388,7 @@ public class AdministratorController implements Initializable {
         PopOver popOver = new PopOver();
         VBox vBox = getPanelOfRoles(Role.COORDINATOR);
         ListView<User> listView = (ListView<User>) vBox.getChildren().get(1);
-        listView.setCellFactory(param -> new ListCell<User>() {
+        listView.setCellFactory(param -> new ListCell<>() {
             @Override
             public void updateItem(User name, boolean empty) {
                 super.updateItem(name, empty);
@@ -432,16 +410,13 @@ public class AdministratorController implements Initializable {
             }
         });
 
-        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getClickCount() == 2) {
-                    User u = listView.getSelectionModel().getSelectedItem();
-                    course.setCoordinator(u);
-                    Button owner = (Button) popOver.getOwnerNode();
-                    setBtn(u, owner);
-                    popOver.hide();
-                }
+        listView.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 2) {
+                User u = listView.getSelectionModel().getSelectedItem();
+                course.setCoordinator(u);
+                Button owner = (Button) popOver.getOwnerNode();
+                setBtn(u, owner);
+                popOver.hide();
             }
         });
         listView.getSelectionModel().getSelectedItems();
@@ -449,11 +424,17 @@ public class AdministratorController implements Initializable {
         return popOver;
     }
 
+    /**
+     * @author M.J. Moshiri
+     * Creates  popOver for edit the teacher assigned to a group
+     * @param group the group
+     * @return a popover with action handlers
+     */
     private PopOver createTeacherPopOver(Group group) {
         PopOver popOver = new PopOver();
         VBox vBox = getPanelOfRoles(Role.TEACHER);
         ListView<User> listView = (ListView<User>) vBox.getChildren().get(1);
-        listView.setCellFactory(param -> new ListCell<User>() {
+        listView.setCellFactory(param -> new ListCell<>() {
             @Override
             public void updateItem(User name, boolean empty) {
                 super.updateItem(name, empty);
@@ -475,19 +456,13 @@ public class AdministratorController implements Initializable {
             }
         });
 
-        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getClickCount() == 2) {
-                    User u = listView.getSelectionModel().getSelectedItem();
-                    group.setTeacher(u);
-                    Button owner = (Button) popOver.getOwnerNode();
-                    owner = setBtn(u, owner);
-//                    owner.setText(u.toString());
-//                    owner.setGraphic(glyphFont.create(FontAwesome.Glyph.PENCIL).color(Color.GREEN));
-
-                    popOver.hide();
-                }
+        listView.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 2) {
+                User u = listView.getSelectionModel().getSelectedItem();
+                group.setTeacher(u);
+                Button owner = (Button) popOver.getOwnerNode();
+                setBtn(u, owner);
+                popOver.hide();
             }
         });
         listView.getSelectionModel().getSelectedItems();
@@ -495,8 +470,14 @@ public class AdministratorController implements Initializable {
         return popOver;
     }
 
-
-    private Button setBtn(User user, Button btn) {
+    /**
+     * @author M.J. Moshiri
+     * configure a button that will change its design if the given user argument is null
+     * if the user objcet isnt null the btn text is the same as the given User name
+     * @param user user object defining the btn design
+     * @param btn the burron
+     */
+    private void setBtn(User user, Button btn) {
         if (user == null) {
             btn.setGraphic(glyphFont.create(FontAwesome.Glyph.PLUS_CIRCLE).color(Color.GREEN));
             btn.setText("Assign");
@@ -506,7 +487,6 @@ public class AdministratorController implements Initializable {
             btn.setText(user.toString());
         }
         btn.setMaxWidth(Double.MAX_VALUE);
-        return btn;
     }
 
     /**
@@ -556,11 +536,7 @@ public class AdministratorController implements Initializable {
             courseInHand.setStartDate(startdate == null ? null : startdate.toString());
             courseInHand.setEndDate(enddate == null ? null : enddate.toString());
             boolean newEntry;
-            if ((courseInHand.getDbId() == 0)) {
-                newEntry = true;
-            } else {
-                newEntry = false;
-            }
+            newEntry = courseInHand.getDbId() == 0;
             courseTableView.refresh();
             boolean result = courseInHand.saveToDB();
             if (result) {
@@ -600,7 +576,7 @@ public class AdministratorController implements Initializable {
         DatePicker datePicker = new DatePicker();
         String pattern = "yyyy-MM-dd";
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
-        datePicker.setConverter(new StringConverter<LocalDate>() {
+        datePicker.setConverter(new StringConverter<>() {
             @Override
             public String toString(LocalDate localDate) {
                 if (localDate != null) {
@@ -624,18 +600,18 @@ public class AdministratorController implements Initializable {
             }
         });
         datePicker.setPromptText("yyyy-MM-dd");
-        datePicker.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                if (!t1) {
-                    datePicker.setValue(datePicker.getConverter().fromString(datePicker.getEditor().getText()));
-                }
+        datePicker.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (!t1) {
+                datePicker.setValue(datePicker.getConverter().fromString(datePicker.getEditor().getText()));
             }
         });
         return datePicker;
     }
 
-    public void newCourse(ActionEvent actionEvent) {
+    /**
+     * Calls the popover for creating new Course
+     */
+    public void newCourse() {
         PopOver popOver = coursePanelPopOver(new Course());
         popOver.show(newCourseBtn);
     }
