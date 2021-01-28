@@ -8,18 +8,18 @@
    <children>
       <HBox spacing="2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button fx:id="newCourseBtn" mnemonicParsing="false" onAction="#newCourse" prefHeight="49.0" prefWidth="40.0" text="New" textFill="#f20000" HBox.hgrow="SOMETIMES" />
+            <Button fx:id="newCourseBtn" mnemonicParsing="false" onAction="#newCourse" prefHeight="49.0" prefWidth="51.0" text="Nieuw" textFill="#f20000" HBox.hgrow="SOMETIMES" />
             <TableView fx:id="courseTableView" prefHeight="231.0" prefWidth="717.0" HBox.hgrow="SOMETIMES">
               <columns>
                 <TableColumn fx:id="col_CourseName" prefWidth="169.0" text="Naam" />
                 <TableColumn prefWidth="158.0" text="period">
                      <columns>
-                        <TableColumn fx:id="col_CourseStart" prefWidth="75.0" text="start" />
-                        <TableColumn fx:id="col_CourseEnd" prefWidth="75.0" text="end" />
+                        <TableColumn fx:id="col_CourseStart" prefWidth="75.0" text="startdatum" />
+                        <TableColumn fx:id="col_CourseEnd" prefWidth="75.0" text="einddatum" />
                      </columns>
                 </TableColumn>
-                  <TableColumn fx:id="col_CourseCoordinator" prefWidth="288.0" text="Coordinatoor" />
-                <TableColumn fx:id="col_CourseGroup" prefWidth="289.0" text="Groeps" />
+                  <TableColumn fx:id="col_CourseCoordinator" prefWidth="288.0" text="coördinator" />
+                <TableColumn fx:id="col_CourseGroup" prefWidth="289.0" text="Groepen" />
                   <TableColumn fx:id="col_CourseActions" editable="false" maxWidth="61.0" minWidth="61.0" prefWidth="61.0" resizable="false" sortable="false" />
               </columns>
                <HBox.margin>

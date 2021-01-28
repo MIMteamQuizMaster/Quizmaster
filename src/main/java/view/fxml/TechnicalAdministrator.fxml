@@ -22,7 +22,7 @@
                           <TableColumn fx:id="col_fname" prefWidth="107.0" text="Voornaam" />
                           <TableColumn fx:id="col_lname" prefWidth="110.0" text="Achternaam" />
                           <TableColumn fx:id="col_richting" prefWidth="112.0" text="Richting" />
-                          <TableColumn fx:id="col_role" prefWidth="130.0" text="Role" />
+                          <TableColumn fx:id="col_role" prefWidth="130.0" text="Rol" />
                           <TableColumn fx:id="col_actie" prefWidth="115.0" resizable="false" text="Credentials" />
                           <TableColumn fx:id="col_action" maxWidth="80.0" minWidth="80.0" resizable="false" text="Acties" />
                       </columns>
