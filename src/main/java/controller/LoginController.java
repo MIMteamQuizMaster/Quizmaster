@@ -127,12 +127,12 @@ public class LoginController implements Initializable {
         try {
             userid = Integer.parseInt(loginUsername.getText());
             String password = loginMaskedPassword.getText();
-            logLoginAttempt(userid);
+            //logLoginAttempt(userid);
             boolean result = genericDao.isValidUser(userid, password);
-            if (read() > 5) {
+         /*   if (read() > 5) {
                 new Alert(Alert.AlertType.ERROR," yo yo yo yo !!! \n slow down buddy!!! \n wacht tot het toetsenbord is afgekoeld").show();
-                return;
-            }
+                return;*/
+            /*}*/
             if (result) {
                 System.out.println("login permission: " + true);
                 // set logedin user data to use in different pane with appropriate permision!
