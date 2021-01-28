@@ -79,7 +79,7 @@ public class CoordinatorPanelController {
 
     public void initialize() {
         DBAccess dBaccess = Main.getDBaccess();
-        User loggedInUser = (User) Main.getPrimaryStage().getUserData();
+        User loggedInUser = Main.getLoggedInUser();
         this.coordinatorDAO = new CoordinatorDAO(dBaccess);
         this.quizDAO = new QuizDAO(dBaccess);
         this.questionDAO = new QuestionDAO(dBaccess);

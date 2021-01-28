@@ -1,5 +1,7 @@
 package controller;
 
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -11,6 +13,7 @@ import model.*;
 import view.SceneManager;
 
 import java.util.List;
+import java.util.Set;
 
 public class WelcomeSceneController {
 
@@ -27,7 +30,7 @@ public class WelcomeSceneController {
     public void initialize() {
         sceneManager = Main.getSceneManager();
         // Setting the client-object in WelcomeSceneController
-        loggedInUser = (User) Main.getPrimaryStage().getUserData();
+        loggedInUser = Main.getLoggedInUser();
         this.welcomeLabel.setText(String.format("Welcome %s!", loggedInUser.getFirstName().toUpperCase()));
         this.lnameLabel.setText(loggedInUser.getLastName());
         this.uidLabel.setText(String.valueOf(loggedInUser.getUserId()));
@@ -42,6 +45,12 @@ public class WelcomeSceneController {
     }
 
 
+    private void handleHeader(Node tabHeaderSkin) {
+        // implementation detail: skin keeps reference to associated Tab
+        Tab tab = (Tab) tabHeaderSkin.getProperties().get(Tab.class);
+        System.out.println("do stuff for tab: " + tab.getText());
+    }
+
     /**
      * @author M.J. Moshiri
      * <p>
@@ -50,6 +59,7 @@ public class WelcomeSceneController {
      * and for each role it will add the appripriate tab based on their role to the TabPane
      */
     private void setPane() {
+
         List<Role> roles = this.loggedInUser.getRoles();
         if (roles.size() == 0) {
             new Alert(Alert.AlertType.INFORMATION, "No role has been dedicated to you.").show();

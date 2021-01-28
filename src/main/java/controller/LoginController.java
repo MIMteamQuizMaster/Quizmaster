@@ -1,12 +1,11 @@
 package controller;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import database.mysql.DomainClass;
 import database.mysql.GenericDAO;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -23,7 +22,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 
 public class LoginController implements Initializable {
@@ -78,31 +79,43 @@ public class LoginController implements Initializable {
     }
 
     /**
+     * @param id that been used to login
      * @author M.J. Moshiri
      * Every logging attempt of the user to store its data in the NoSql
-     * @param id that been used to login
      */
     private void logLoginAttempt(int id) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date date = new Date();
-        String ip = "";
+        String ip = getUserIP();
+        try {
+            LoginAttempt la = new LoginAttempt(id, ip, formatter.format(date));
+            dbClient.save(la);
+        } catch (Exception e) {
+            System.out.println("couldnt sync with db loggingattempt in NoSQL");
+        }
+
+//        List<LoginAttempt> docs =  dbClient.view("_all_docs").includeDocs(true);
+    }
+
+    /**
+     * @author M.J. Moshiri
+     * take the ip adress of user
+     * @return return the Ip aadress  and if it was unsuccesfull it will return NUll
+     */
+    private String getUserIP() {
+        String ip;
         try {
             URL whatismyip = new URL("http://checkip.amazonaws.com");
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     whatismyip.openStream()));
             ip = in.readLine();
-
+            return ip;
         } catch (Exception e) {
-            ip = "could not retrieve ip.";
+            System.out.println("could not retrieve ip.");
         }
-        try {
-            LoginAttempt la = new LoginAttempt(id, ip, formatter.format(date));
-            dbClient.save(la);
-        } catch (Exception e) {
-            System.out.println("couldnt syncWithdb logging attemp in NoSQL");
-        }
-//        List<LoginAttempt> docs =  dbClient.view("_all_docs").includeDocs(true);
+        return null;
     }
+
 
     /**
      * @author M.J. Moshiri
@@ -116,12 +129,13 @@ public class LoginController implements Initializable {
             String password = loginMaskedPassword.getText();
             logLoginAttempt(userid);
             boolean result = genericDao.isValidUser(userid, password);
-
+            if (read() > 5) {
+                new Alert(Alert.AlertType.ERROR," yo yo yo yo !!! \n slow down buddy!!! \n wacht tot het toetsenbord is afgekoeld").show();
+                return;
+            }
             if (result) {
-                System.out.println("login permission: " + result);
-
+                System.out.println("login permission: " + true);
                 // set logedin user data to use in different pane with appropriate permision!
-                Main.getPrimaryStage().setUserData(passUser(userid));
                 Main.setLoggedInUser(passUser(userid));
                 //
                 Main.getSceneManager().showWelcome();
@@ -133,6 +147,7 @@ public class LoginController implements Initializable {
                 warningLabel.setVisible(true);
 
             }
+
 
         } catch (Exception e) {
             warningLabel.setVisible(true);
@@ -147,13 +162,14 @@ public class LoginController implements Initializable {
      */
     public void loginCancel() {
         Main.getPrimaryStage().close();
-
     }
 
     /**
+     * @author M.J. Moshiri
      * Passes a User object appropriate with the given User ID
+     *
      * @param userId that its User objcet has been asked
-     * @return
+     * @return User Object
      */
     public User passUser(int userId) {
         // get appropriate user object
@@ -172,9 +188,12 @@ public class LoginController implements Initializable {
     }
 
     /**
+     * @param keyEvent the key that hass been pressed
      * @author M.J. Moshiri
      * it forces the User Id field to only accept Integers
-     * @param keyEvent
+     * if checks if the Key that has been press is a key from Integer group
+     * also it can be tricked by holding shift and using number keys but
+     * on more step of validation will be done on exit focus of the textfield
      */
     public void onlyIntegerAcceptable(KeyEvent keyEvent) {
 //        System.out.println(keyEvent.getCode());
@@ -186,4 +205,30 @@ public class LoginController implements Initializable {
     }
 
 
+    /**
+     * @author M.J. Moshiri
+     * Count the login attempts of the user base on the Ip since 10 seconds ago
+     * @return the number of attemps
+     */
+    private int read() {
+        Gson gson = new Gson();
+        LoginAttempt attempt;
+        Date targetTime = new Date(); // now
+        int count = 0;
+        String ip = getUserIP();
+        List<JsonObject> all = dbClient.view("_all_docs").includeDocs(true).query(JsonObject.class);
+        for (JsonObject json : all) {
+            attempt = gson.fromJson(json, LoginAttempt.class);
+            try {
+                Date pogingDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(attempt.getDate());
+                long diff = targetTime.getTime() - pogingDate.getTime();
+                if (TimeUnit.MILLISECONDS.toSeconds(diff) < 10 && attempt.getIp().equals(ip)) {
+                    count++;
+                }
+            } catch (Exception e) {
+                System.out.println("Could not convert poging date");
+            }
+        }
+        return count;
+    }
 }

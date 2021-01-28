@@ -81,7 +81,7 @@ public class TeacherController implements Initializable {
         this.dBaccess = Main.getDBaccess();
         this.groupDAO = new GroupDAO(this.dBaccess);
         this.gradeDAO = new GradeDAO(this.dBaccess);
-        loggedInUser = (User) Main.getPrimaryStage().getUserData();
+        loggedInUser = Main.getLoggedInUser();
         fillGroupTable();
         selectGroup();
     }

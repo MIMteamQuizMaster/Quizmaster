@@ -75,7 +75,6 @@ public class TechnicalAdministratorController {
         refreshTable(); // add data to table
         glyphFont = GlyphFontRegistry.font("FontAwesome");
         rootPane.widthProperty().addListener(data -> bindSizeProperty());
-
     }
 
 
