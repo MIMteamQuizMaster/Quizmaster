@@ -86,7 +86,7 @@ public class WelcomeSceneController {
                     tab2.setOnSelectionChanged(event -> {
                         tab2.setContent(null);
                         tab2.setContent(sceneManager.getPage("selectQuizForStudent"));
-                        System.out.println("Tab is veranderd");
+
                     });
                     tabPanel.getTabs().add(tab2);
 

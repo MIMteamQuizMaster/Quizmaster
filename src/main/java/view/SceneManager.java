@@ -58,38 +58,22 @@ public class SceneManager {
 
     public void showLoginScene() {
         primaryStage.setFullScreen(false);
-//        primaryStage.setMinWidth(380);
-//        primaryStage.setMinHeight(200);
+        primaryStage.setMinWidth(380);
+        primaryStage.setMinHeight(200);
         primaryStage.setWidth(400);
         primaryStage.setHeight(200);
-//        primaryStage.setMaxWidth(380);
-//        primaryStage.setMaxHeight(200);
+        primaryStage.setMaxWidth(380);
+        primaryStage.setMaxHeight(200);
         primaryStage.setResizable(false);
         getScene("/view/fxml/login.fxml");
 
-//        Scene scene;
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/fxml/login.fxml"));
-//            Parent root = loader.load();
-//            LoginController loginController = new LoginController();
-//            loginController.passGenericDao(genericDAO);
-//            loader.setController(loginController);
-//
-//            scene = new Scene(root);
-//            primaryStage.setScene(scene);
-//            primaryStage.centerOnScreen();
-//            return loader;
-//        } catch (IOException ioException) {
-//            ioException.printStackTrace();
-//            return null;
-//        }
     }
 
 
     public void showWelcome() {
         primaryStage.setResizable(true);
-        primaryStage.setMinWidth(200);
-        primaryStage.setMinHeight(100);
+        primaryStage.setMinWidth(1100);
+        primaryStage.setMinHeight(800);
         primaryStage.setMaxHeight(2560);
         primaryStage.setMaxWidth(1440);
         getScene("/view/fxml/welcomeScene.fxml");
