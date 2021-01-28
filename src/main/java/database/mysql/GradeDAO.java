@@ -27,7 +27,7 @@ public class GradeDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public List<Grade> getAllGrades(User student) {
-        String sql = "SELECT g.quiz_id, q.name, g.grade FROM grade g, quiz q WHERE g.quiz_id = q.id AND g.student_user_id = " + student.getUserId();
+        String sql = "SELECT g.quiz_id, q.name, g.grade FROM user_quiz_log g, quiz q WHERE g.quiz_id = q.id AND g.student_user_id = " + student.getUserId();
         List<Grade> rList = new ArrayList<>();
         try {
             PreparedStatement ps = getStatement(sql);
@@ -55,7 +55,7 @@ public class GradeDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public List<Grade> getAllGradesPerQuiz(int student_id, int quiz_id) {
-        String sql = "SELECT quiz_id, grade FROM grade WHERE student_user_id = " + student_id + " AND quiz_id = " + quiz_id;
+        String sql = "SELECT quiz_id, grade FROM user_quiz_log WHERE student_user_id = " + student_id + " AND quiz_id = " + quiz_id;
         List<Grade> rList = new ArrayList<>();
         try {
             PreparedStatement ps = getStatement(sql);
@@ -80,7 +80,7 @@ public class GradeDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public int storeGrade(Grade grade) {
-        String sql = "INSERT INTO grade (student_user_id, quiz_id, grade) VALUES(?,?,?);";
+        String sql = "INSERT INTO user_quiz_log (student_user_id, quiz_id, grade) VALUES(?,?,?);";
         int grade_id = 0;
         try {
             PreparedStatement preparedStatement = getStatementWithKey(sql);
@@ -102,7 +102,7 @@ public class GradeDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      **/
     public void updateGrade(Grade grade, int dbId) {
-        String sql = "UPDATE grade SET grade = ? WHERE id = ? ;";
+        String sql = "UPDATE user_quiz_log SET grade = ? WHERE id = ? ;";
         try {
             PreparedStatement preparedStatement = getStatementWithKey(sql);
             preparedStatement.setDouble(1,grade.getGrade());
@@ -120,7 +120,7 @@ public class GradeDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public void deleteGrade(int dbId) {
-        String sql = "DELETE FROM grade WHERE id = ? ;";
+        String sql = "DELETE FROM user_quiz_log WHERE id = ? ;";
         try {
             PreparedStatement preparedStatement = getStatementWithKey(sql);
             preparedStatement.setDouble(1,dbId);
@@ -137,7 +137,7 @@ public class GradeDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public Map<Integer, String> getDbIdsPerQuizAttempt(Grade grade) {
-        String sql = "SELECT id, stamp_created FROM grade WHERE student_user_id = " + grade.getStudentId() + " AND quiz_id = " + grade.getQuizId();
+        String sql = "SELECT id, stamp_created FROM user_quiz_log WHERE student_user_id = " + grade.getStudentId() + " AND quiz_id = " + grade.getQuizId();
         Map<Integer, String> result = new HashMap<>();
         try {
             PreparedStatement ps = getStatement(sql);

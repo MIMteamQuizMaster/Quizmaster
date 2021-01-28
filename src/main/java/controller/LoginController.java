@@ -196,7 +196,6 @@ public class LoginController implements Initializable {
      * on more step of validation will be done on exit focus of the textfield
      */
     public void onlyIntegerAcceptable(KeyEvent keyEvent) {
-//        System.out.println(keyEvent.getCode());
         loginUsername.setEditable(keyEvent.getCode() == KeyCode.BACK_SPACE ||
                 keyEvent.getCode().isDigitKey() ||
                 keyEvent.getCode().isKeypadKey() ||
