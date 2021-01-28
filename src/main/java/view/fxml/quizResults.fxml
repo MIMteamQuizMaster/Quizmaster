@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="600" prefWidth="1024" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.quizResults">
    <children>
-      <FlowPane prefHeight="200.0" prefWidth="200.0">
+      <FlowPane prefHeight="200.0" prefWidth="200.0" />
+      <TableView fx:id="resultTable" layoutX="196.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+        <columns>
+          <TableColumn fx:id="questionNumber" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="Vraag" />
+          <TableColumn fx:id="userAnswer" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="400.0" text="Jouw antwoord" />
+            <TableColumn fx:id="correctBoolean" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Correct" />
+            <TableColumn fx:id="correctAnswer" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="400.0" text="Juiste antwoord" />
+        </columns>
+      </TableView>
+      <HBox prefHeight="100.0" prefWidth="1104.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TableView fx:id="resultTable" prefHeight="200.0" prefWidth="366.0">
-              <columns>
-                <TableColumn fx:id="questionNumber" prefWidth="75.0" text="Vraag" />
-                <TableColumn fx:id="userAnswer" prefWidth="113.0" text="Jouw antwoord" />
-                  <TableColumn fx:id="correctBoolean" prefWidth="70.0" text="Correct" />
-                  <TableColumn fx:id="correctAnswer" prefWidth="107.0" text="Juiste antwoord" />
-              </columns>
-            </TableView>
-         </children></FlowPane>
+            <Label prefHeight="100.0" text="My grade for Quiz ... is:" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="200.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="210.0" layoutY="10.0" prefHeight="100.0" text="My grade for Quiz ... is:">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+         </children></HBox>
    </children>
 </AnchorPane>
