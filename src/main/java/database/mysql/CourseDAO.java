@@ -116,6 +116,10 @@ public class CourseDAO extends AbstractDAO {
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Returns a list of ids belonging to courses the student is allready assigned to.
+     */
     public List<String> courseIdsToRegisterForEachStudent(User student) {
         List<String> courseIdsList = new ArrayList<>();
         String sql = String.format("SELECT course_id FROM student_has_course " +
@@ -347,6 +351,10 @@ public class CourseDAO extends AbstractDAO {
     }
 
 
+    /**
+     * @author Ismael Ben Cherif
+     * Ads a student to a course.
+     */
     public void createStudentHasCourse(User student, Course course) {
         String sql = "Insert student_has_course(student_user_id, course_id) values(?,?) ;";
         try {
@@ -359,6 +367,11 @@ public class CourseDAO extends AbstractDAO {
         }
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Returns the number of groups that already excists for a course.
+     * Information is used to generate a group name.
+     */
     public int returnNumberOfGroupsPerCourse(Course course) {
         int returnValue = 0;
         int course_id = course.getDbId();
@@ -382,6 +395,10 @@ public class CourseDAO extends AbstractDAO {
         return returnValue;
     }
 
+    /**
+     * @author Ismael Ben Cherif
+     * Selects the group that belongs to the course the student is signed up for.
+     */
     public int getGroupThatBelongToStudentAndCourse(User student, Course course)
     {
         int returnValue = 0;
@@ -410,7 +427,10 @@ public class CourseDAO extends AbstractDAO {
         return returnValue;
     }
 
-
+    /**
+     * @author Ismael Ben Cherif
+     *Deletes the student from the course and group.
+     */
     public boolean deleteStudentFromCourseAndGroup(Course course,User student)
     {
         boolean returnValue = true;
