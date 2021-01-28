@@ -318,6 +318,7 @@ public class FillOutFormMultipleAnswersController {
         }
         else
         {
+            this.nextButton.setText("Inleveren.");
             this.nextButton.isDisabled();
 
         }

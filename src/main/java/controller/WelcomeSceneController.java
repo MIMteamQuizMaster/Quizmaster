@@ -83,7 +83,13 @@ public class WelcomeSceneController {
                     Tab tab2 = new Tab();
                     tab2.setText("Uw Quizen");
                     tab2.setContent(view);
+                    tab2.setOnSelectionChanged(event -> {
+                        tab2.setContent(null);
+                        tab2.setContent(sceneManager.getPage("selectQuizForStudent"));
+                        System.out.println("Tab is veranderd");
+                    });
                     tabPanel.getTabs().add(tab2);
+
                 } else if (r == Role.COORDINATOR) {
                     view = sceneManager.getPage("coordinatorPanel");
                     Tab tab = new Tab();

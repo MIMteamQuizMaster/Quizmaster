@@ -15,9 +15,7 @@ public class RetriveQuizFromDatabase {
 
     private DBAccess dbAccess = Main.getDBaccess();
     private QuestionDAO questionDAO = new QuestionDAO(dbAccess);
-    private AnswerDAO answerDAO = new AnswerDAO(dbAccess);
     private List<Question> questions = new ArrayList<>();
-    private List<Answer> answers = new ArrayList<>();
 
     /**
      * @author Ismael Ben Cherif

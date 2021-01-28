@@ -53,7 +53,7 @@ public class studentSignInOutController{
     {
         this.dbAccess = Main.getDBaccess();
         extraInfoBehaviour();
-        this.student = (User) Main.getPrimaryStage().getUserData();//Gets the user that's signed in.
+        this.student = Main.getLoggedInUser();//Gets the user that's signed in.
         this.myInterface = new StudentSignInOutInterface(this.dbAccess, this.student);
         this.studentSignInOutDAO = new StudentSignInOutDAO(this.dbAccess);
         this.studentSignInOutDAO.setStudent(this.student);
