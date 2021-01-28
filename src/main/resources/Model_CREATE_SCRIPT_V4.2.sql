@@ -203,9 +203,12 @@ CREATE TABLE `user_answer_log` (
   `answer_id` int NOT NULL,
   `stamp_created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `stamp_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `grade_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_user_answer_log_user1_idx` (`user_id`),
   KEY `fk_user_answer_log_answer1_idx` (`answer_id`),
+  KEY `fk_grade_id_idx` (`grade_id`),
+  CONSTRAINT `fk_grade_id` FOREIGN KEY (`grade_id`) REFERENCES `grade` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_user_answer_log_answer1` FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_user_answer_log_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
