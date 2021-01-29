@@ -90,6 +90,12 @@ public class WelcomeSceneController {
                     });
                     tabPanel.getTabs().add(tab2);
 
+                    view = sceneManager.getPage("studentQuizResults");
+                    Tab tab3 = new Tab();
+                    tab3.setText("Uw resultaten");
+                    tab3.setContent(view);
+                    tabPanel.getTabs().add(tab3);
+
                 } else if (r == Role.COORDINATOR) {
                     view = sceneManager.getPage("coordinatorPanel");
                     Tab tab = new Tab();
