@@ -1,7 +1,5 @@
 package database.mysql;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import model.Grade;
 import model.User;
 
@@ -9,10 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class GradeDAO extends AbstractDAO {
@@ -28,17 +23,21 @@ public class GradeDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public List<Grade> getAllGrades(User student) {
-        String sql = "SELECT g.quiz_id, q.name, g.grade FROM user_quiz_log g, quiz q WHERE g.quiz_id = q.id AND g.student_user_id = " + student.getUserId();
+        String sql = "SELECT g.id, g.quiz_id, q.name, g.grade, g.stamp_created FROM user_quiz_log g, quiz q WHERE g.quiz_id = q.id AND g.student_user_id = " + student.getUserId();
         List<Grade> rList = new ArrayList<>();
         try {
             PreparedStatement ps = getStatement(sql);
             ResultSet resultSet = executeSelectPreparedStatement(ps);
             while (resultSet.next()) {
+                int id = resultSet.getInt("id");
                 int quizId = resultSet.getInt("quiz_id");
                 double grade = resultSet.getDouble("grade");
                 String quizName = resultSet.getString("name");
+                LocalDate date = resultSet.getTimestamp(5).toLocalDateTime().toLocalDate();
                 Grade rGrade = new Grade(quizId,grade, student.getUserId());
                 rGrade.setQuizName(quizName);
+                rGrade.setDate(date);
+                rGrade.setId(id);
                 rList.add(rGrade);
             }
         } catch (SQLException throwables) {
@@ -56,7 +55,7 @@ public class GradeDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public List<Grade> getAllGradesPerQuiz(int student_id, int quiz_id) {
-        String sql = "SELECT quiz_id, grade FROM user_quiz_log WHERE student_user_id = " + student_id + " AND quiz_id = " + quiz_id;
+        String sql = "SELECT quiz_id, grade FROM user_quiz_log WHERE id = " + student_id + " AND quiz_id = " + quiz_id;
         List<Grade> rList = new ArrayList<>();
         try {
             PreparedStatement ps = getStatement(sql);

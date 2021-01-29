@@ -18,9 +18,14 @@
       </TableView>
       <HBox prefHeight="100.0" prefWidth="1104.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
+            <Button fx:id="menuBtn" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Hoofdmenu">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="15.0" top="20.0" />
+               </HBox.margin>
+            </Button>
             <Label prefHeight="100.0" text="Het behaalde cijfer voor " HBox.hgrow="ALWAYS">
                <HBox.margin>
-                  <Insets left="200.0" />
+                  <Insets left="150.0" />
                </HBox.margin>
                <font>
                   <Font name="System Bold" size="18.0" />

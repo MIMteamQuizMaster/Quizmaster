@@ -6,11 +6,9 @@ import database.mysql.CourseDAO;
 import database.mysql.DBAccess;
 import database.mysql.GradeDAO;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import launcher.Main;
 import model.Answer;
 import model.User;
@@ -25,6 +23,7 @@ public class quizResultsController {
 
 
     public static List<List<AnswerFormFX>> answersFXListPerQuestion = new ArrayList<List<AnswerFormFX>>();
+    public Button menuBtn;
 
     public static List<List<AnswerFormFX>> getAnswersFXListPerQuestion() {
         return answersFXListPerQuestion;
@@ -54,6 +53,7 @@ public class quizResultsController {
     @FXML
     private Label quizGrade;
 
+
     private ObservableList<AnswerFX> answerList;
 
     private List<Answer> givenAnswers = new ArrayList<>();
@@ -76,8 +76,10 @@ public class quizResultsController {
         fillTable();
 
         loggedInUser = Main.getLoggedInUser();
+        quizName.setText(gradeDAO.selectLastGradeForUser(loggedInUser).getQuizName());
+        quizGrade.setText(String.valueOf(gradeDAO.selectLastGradeForUser(loggedInUser).getGrade()));
 
-        System.out.println(gradeDAO.selectLastGradeForUser(loggedInUser).getGrade());
+        menuBtn.setOnAction(event -> menuButtonAction());
     }
 
     /**
@@ -129,6 +131,14 @@ public class quizResultsController {
         correctAnswer.setCellValueFactory(cellData -> cellData.getValue().correctAnswerProperty());
         resultTable.getItems().addAll(answerList);
     }
+
+    public void menuButtonAction() {
+        if(AlertHelper.confirmationDialog("Terug naar het hoofdmenu?")) {
+            Main.getPrimaryStage().setUserData(Main.getLoggedInUser());
+            Main.getSceneManager().showWelcome();
+        }
+    }
+
 }
 
 

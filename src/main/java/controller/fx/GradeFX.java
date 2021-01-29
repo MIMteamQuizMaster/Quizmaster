@@ -10,6 +10,7 @@ public class GradeFX {
 
     private Grade grade;
 
+
     public GradeFX(Grade grade) {
         this.grade = grade;
     }
@@ -22,8 +23,15 @@ public class GradeFX {
         return new SimpleStringProperty(this.grade.getQuizName()).get();
     }
 
+
+
+
     public StringProperty quizNameProperty() {
         return new SimpleStringProperty(this.grade.getQuizName());
+    }
+
+    public StringProperty dateProperty() {
+        return new SimpleStringProperty(this.grade.getDate().toString());
     }
 
     public int getQuizId() {
