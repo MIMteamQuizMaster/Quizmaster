@@ -6,6 +6,9 @@ import javafx.beans.property.SimpleStringProperty;
 import model.Answer;
 
 public class AnswerFX {
+
+
+    private SimpleIntegerProperty questionNumberUI;
     private SimpleIntegerProperty id;
     private SimpleIntegerProperty questionId;
     private SimpleBooleanProperty isCorrect;
@@ -13,7 +16,17 @@ public class AnswerFX {
     private Answer answerObject;
     private Answer correctAnswerObject;
 
+    public int getQuestionNumberUI() {
+        return questionNumberUI.get();
+    }
 
+    public SimpleIntegerProperty questionNumberUIProperty() {
+        return questionNumberUI;
+    }
+
+    public void setQuestionNumberUI(int questionNumberUI) {
+        this.questionNumberUI.set(questionNumberUI);
+    }
 
 
     public AnswerFX(Answer a) {
