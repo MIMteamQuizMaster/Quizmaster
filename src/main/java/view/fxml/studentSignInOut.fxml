@@ -35,7 +35,7 @@
             </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="extraInfoLabel" layoutX="14.0" layoutY="11.0" prefWidth="364.0" text="Hou Ctrl vast om meerdere curssen te selecteren of Shift voor een rij." />
+                  <Label fx:id="extraInfoLabel" layoutX="14.0" layoutY="11.0" prefWidth="364.0" text="Houd Ctrl vast om meerdere curssen te selecteren of Shift voor een rij." />
                </children>
             </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />

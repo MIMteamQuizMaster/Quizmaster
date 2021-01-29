@@ -70,13 +70,13 @@ public class WelcomeSceneController {
                 } else if (r == Role.STUDENT) {
                     view = sceneManager.getPage("studentSignInOut");
                     Tab tab = new Tab();
-                    tab.setText("Uw cursus");
+                    tab.setText("Cursussen");
                     tab.setContent(view);
                     tabPanel.getTabs().add(tab);
 
                     view = sceneManager.getPage("selectQuizForStudent");
                     Tab tab2 = new Tab();
-                    tab2.setText("Uw Quizen");
+                    tab2.setText("Quizzen");
                     tab2.setContent(view);
                     tab2.setOnSelectionChanged(event -> {
                         tab2.setContent(null);
@@ -87,7 +87,7 @@ public class WelcomeSceneController {
 
                     view = sceneManager.getPage("studentQuizResults");
                     Tab tab3 = new Tab();
-                    tab3.setText("Uw resultaten");
+                    tab3.setText("Resultaten");
                     tab3.setContent(view);
                     tabPanel.getTabs().add(tab3);
 
