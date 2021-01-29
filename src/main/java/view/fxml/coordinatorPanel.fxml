@@ -25,7 +25,7 @@
                   </columnResizePolicy>
                   </TableView>
                      <HBox fx:id="quizPaneHbox" alignment="CENTER" maxHeight="25.0" minHeight="25.0" prefHeight="25.0" prefWidth="270.0">
-                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0" text="Quizen" HBox.hgrow="ALWAYS" />
+                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0" text="Quizzen" HBox.hgrow="ALWAYS" />
                          <Button fx:id="btnNewQuiz" mnemonicParsing="false" onAction="#btnNewQuizAction" style="-fx-background-color: green;" text="Nieuw" textFill="WHITE" />
                   <padding>
                      <Insets left="5.0" />
