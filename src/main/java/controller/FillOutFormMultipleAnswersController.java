@@ -331,7 +331,7 @@ public class FillOutFormMultipleAnswersController {
                         Main.getLoggedInUser(),this.answersFXListPerQuestion,
                         Main.getDBaccess());
                 fillOutFormInterface.storeAnswers();
-                quizResults.setAnswersFXListPerQuestion(answersFXListPerQuestion);
+                quizResultsController.setAnswersFXListPerQuestion(answersFXListPerQuestion);
                 Main.getSceneManager().showResults();
             }
 
