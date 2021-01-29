@@ -101,9 +101,9 @@ public class LoginController implements Initializable {
     }
 
     /**
+     * @return return the Ip aadress  and if it was unsuccesfull it will return NUll
      * @author M.J. Moshiri
      * take the ip adress of user
-     * @return return the Ip aadress  and if it was unsuccesfull it will return NUll
      */
     private String getUserIP() {
         String ip;
@@ -130,12 +130,13 @@ public class LoginController implements Initializable {
         try {
             userid = Integer.parseInt(loginUsername.getText());
             String password = loginMaskedPassword.getText();
-            //logLoginAttempt(userid);
+
             boolean result = genericDao.isValidUser(userid, password);
-         /*   if (read() > 5) {
-                new Alert(Alert.AlertType.ERROR," yo yo yo yo !!! \n slow down buddy!!! \n wacht tot het toetsenbord is afgekoeld").show();
-                return;*/
-            /*}*/
+            logLoginAttempt(userid);
+            if (read() > 5) {
+                new Alert(Alert.AlertType.ERROR, " yo yo yo yo !!! \n slow down buddy!!! \n wacht tot het toetsenbord is afgekoeld").show();
+                return;
+            }
             if (result) {
                 System.out.println("login permission: " + true);
                 // set logedin user data to use in different pane with appropriate permision!
@@ -168,11 +169,10 @@ public class LoginController implements Initializable {
     }
 
     /**
-     * @author M.J. Moshiri
-     * Passes a User object appropriate with the given User ID
-     *
      * @param userId that its User objcet has been asked
      * @return User Object
+     * @author M.J. Moshiri
+     * Passes a User object appropriate with the given User ID
      */
     public User passUser(int userId) {
         // get appropriate user object
@@ -208,9 +208,9 @@ public class LoginController implements Initializable {
 
 
     /**
+     * @return the number of attemps
      * @author M.J. Moshiri
      * Count the login attempts of the user base on the Ip since 10 seconds ago
-     * @return the number of attemps
      */
     private int read() {
         Gson gson = new Gson();

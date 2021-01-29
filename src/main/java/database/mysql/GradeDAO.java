@@ -77,7 +77,7 @@ public class GradeDAO extends AbstractDAO {
      * (C)
      * Store the Grade object into the database
      * @param grade
-     * @return integer grade_id, database ID for the grade.
+     * @return integer user_quiz_log_id, database ID for the grade.
      * @author M.J. Alden-Montague
      */
     public int storeGrade(Grade grade) {
