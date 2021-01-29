@@ -128,7 +128,7 @@ public class selectQuizController {
         });
         startBtn.setOnAction((ActionEvent event) -> {
             if (selectedQuiz != null) {
-                boolean userConfirm = AlertHelper.confirmationDialog("Do you want to start: " + selectedQuiz.getName() + " ?");
+                boolean userConfirm = AlertHelper.confirmationDialog("Wil je de Quiz " + selectedQuiz.getName() + " starten ?");
                 if(userConfirm) {
                     Main.getPrimaryStage().setUserData(selectedQuiz);
                     Main.getSceneManager().showQuiz();
