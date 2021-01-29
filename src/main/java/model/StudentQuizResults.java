@@ -22,7 +22,7 @@ public class StudentQuizResults {
     public List<Grade> grades()
     {
         GradeDAO dao = new GradeDAO(this.dbAccess);
-        return dao.getAllGradesWithTimeStamp(this.student);
+        return dao.getAllGradesForResultScreen(this.student);
     }
 
     public ObservableList<GradeFX2> observableListGardes()
