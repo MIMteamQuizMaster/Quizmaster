@@ -9,11 +9,21 @@ public class Grade {
     private int studentId;
     private String quizName;
     private LocalDate date;
+    private double succesDefinition;
+    private int id;
+    private boolean studentFailed;
 
     public Grade(int quizId, double grade, int studentId) {
         this.quizId = quizId;
         this.grade = grade;
         this.studentId = studentId;
+    }
+
+    public Grade(int quizId, double grade, int studentId, double succesDefinition) {
+        this.quizId = quizId;
+        this.grade = grade;
+        this.studentId = studentId;
+        this.succesDefinition = succesDefinition;
     }
 
     public String getQuizName() {
@@ -55,4 +65,32 @@ public class Grade {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
+    public double getSuccesDefinition() {
+        return succesDefinition;
+    }
+
+    public void setSuccesDefinition(double succesDefinition) {
+        this.succesDefinition = succesDefinition;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean checkIfStudentFailed()
+    {
+        boolean returnValue = true;
+        if (this.grade>=this.succesDefinition)
+        {
+            returnValue = false;
+        }
+        this.studentFailed = returnValue;
+        return returnValue;
+    }
+
 }

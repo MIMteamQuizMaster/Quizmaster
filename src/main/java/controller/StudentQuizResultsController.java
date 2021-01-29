@@ -1,6 +1,7 @@
 package controller;
 
 import controller.fx.GradeFX2;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import launcher.Main;
@@ -15,6 +16,8 @@ public class StudentQuizResultsController {
     public TableColumn<GradeFX2, String> QuizColumn;
     public TableColumn<GradeFX2, Number> gradeColumn;
     public TableColumn extraInfoColumn;
+    public TableColumn<GradeFX2, Number> gradeRequiredColumn;
+    public TableColumn<GradeFX2, Label> passedFailedColumn;
     private User student;
     private StudentQuizResults studentQuizResults;
 
@@ -31,6 +34,8 @@ public class StudentQuizResultsController {
         dateColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
         QuizColumn.setCellValueFactory(cellData -> cellData.getValue().quizNameProperty());
         gradeColumn.setCellValueFactory(cellData -> cellData.getValue().gradeProperty());
+        gradeRequiredColumn.setCellValueFactory(cellData->cellData.getValue().succesDefinitionProperty());
+        passedFailedColumn.setCellValueFactory(cellData -> cellData.getValue().failesPassedLabelProperty());
 
         tableVieuw.setItems(this.studentQuizResults.observableListGardes());
     }

@@ -2,12 +2,18 @@ package controller;
 
 import controller.fx.AnswerFX;
 import controller.fx.AnswerFormFX;
+import database.mysql.CourseDAO;
+import database.mysql.DBAccess;
+import database.mysql.GradeDAO;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import launcher.Main;
 import model.Answer;
+import model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,17 +48,36 @@ public class quizResultsController {
     @FXML
     private TableColumn<AnswerFX, String> correctAnswer;
 
+    @FXML
+    private Label quizName;
+
+    @FXML
+    private Label quizGrade;
+
     private ObservableList<AnswerFX> answerList;
 
     private List<Answer> givenAnswers = new ArrayList<>();
     private List<Answer> correctAnswers = new ArrayList<>();
+
+    private DBAccess dbAccess;
+
+    private GradeDAO gradeDAO;
+    private User loggedInUser;
+
 
     /**
      * fill the table
      * @author M.J Alden-Montague
      */
     public void initialize() {
+        this.dbAccess = Main.getDBaccess();
+        this.gradeDAO = new GradeDAO(this.dbAccess);
+
         fillTable();
+
+        loggedInUser = Main.getLoggedInUser();
+
+        System.out.println(gradeDAO.selectLastGradeForUser(loggedInUser).getGrade());
     }
 
     /**

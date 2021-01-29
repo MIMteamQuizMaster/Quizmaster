@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StudentQuizResultsController">
    <children>
       <GridPane layoutX="178.0" layoutY="123.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -21,10 +20,12 @@
          <children>
             <TableView fx:id="tableVieuw" prefHeight="200.0" prefWidth="200.0">
               <columns>
-                <TableColumn fx:id="dateColumn" prefWidth="126.00000250339508" text="Datum" />
-                <TableColumn fx:id="QuizColumn" prefWidth="122.0000228881836" text="Quiz" />
-                  <TableColumn fx:id="gradeColumn" prefWidth="130.0000762939453" text="Cijfer" />
-                  <TableColumn fx:id="extraInfoColumn" prefWidth="75.0" text="Extra Info" visible="false" />
+                <TableColumn fx:id="dateColumn" prefWidth="73.33334600925446" text="Datum" />
+                <TableColumn fx:id="QuizColumn" prefWidth="80.6666488647461" text="Quiz" />
+                  <TableColumn fx:id="gradeColumn" prefWidth="52.000030517578125" text="Cijfer" />
+                  <TableColumn fx:id="gradeRequiredColumn" prefWidth="72.66670227050781" text="Benodigd cijfer" />
+                  <TableColumn fx:id="passedFailedColumn" prefWidth="111.33331298828125" text="Geslaagd/Gezakt" />
+                  <TableColumn fx:id="extraInfoColumn" prefWidth="78.0" text="Extra Info" visible="false" />
               </columns>
             </TableView>
          </children>

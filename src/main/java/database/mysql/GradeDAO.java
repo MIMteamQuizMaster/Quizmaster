@@ -155,8 +155,10 @@ public class GradeDAO extends AbstractDAO {
         return result;
     }
 
-    public List<Grade> getAllGradesWithTimeStamp(User student) {
-        String sql = "SELECT g.quiz_id, q.name, g.grade, g.stamp_created FROM user_quiz_log g, quiz q WHERE g.quiz_id = q.id AND g.student_user_id = " + student.getUserId();
+    public List<Grade> getAllGradesForResultScreen(User student) {
+        String sql = String.format("SELECT uql.quiz_id, q.`name`, uql.grade, uql.stamp_created, q.successDefinition, uql.id  FROM user_quiz_log AS uql " +
+                "JOIN quiz AS q ON uql.quiz_id = q.id " +
+                "WHERE uql.student_user_id = %d;", student.getUserId());
         List<Grade> rList = new ArrayList<>();
         try {
             PreparedStatement ps = getStatement(sql);
@@ -166,9 +168,13 @@ public class GradeDAO extends AbstractDAO {
                 double grade = resultSet.getDouble("grade");
                 String quizName = resultSet.getString("name");
                 LocalDate date = resultSet.getTimestamp(4).toLocalDateTime().toLocalDate();
+                double succesdefinition = resultSet.getInt(5);
+                int id = resultSet.getInt(6);
                 Grade rGrade = new Grade(quizId,grade, student.getUserId());
                 rGrade.setQuizName(quizName);
                 rGrade.setDate(date);
+                rGrade.setSuccesDefinition(succesdefinition);
+                rGrade.setId(id);
                 rList.add(rGrade);
             }
         } catch (SQLException throwables) {
@@ -177,4 +183,28 @@ public class GradeDAO extends AbstractDAO {
         }
         return rList;
     }
+
+    public Grade selectLastGradeForUser(User student) {
+        String sql = "SELECT g.quiz_id, q.name, g.grade, g.stamp_created FROM user_quiz_log g, quiz q WHERE g.quiz_id = q.id AND g.student_user_id = " + student.getUserId() + " ORDER BY g.id DESC LIMIT 1";
+        Grade rGrade = null;
+        try {
+            PreparedStatement ps = getStatement(sql);
+            ResultSet resultSet = executeSelectPreparedStatement(ps);
+            while (resultSet.next()) {
+                int quizId = resultSet.getInt("quiz_id");
+                double grade = resultSet.getDouble("grade");
+                String quizName = resultSet.getString("name");
+                LocalDate date = resultSet.getTimestamp(4).toLocalDateTime().toLocalDate();
+                rGrade = new Grade(quizId,grade, student.getUserId());
+                rGrade.setQuizName(quizName);
+                rGrade.setDate(date);
+            }
+        } catch (SQLException throwables) {
+            System.out.println(throwables.getMessage() + "Unable to retrieve grades for the selected student");
+            System.out.println(throwables.getMessage());
+        }
+        return rGrade;
+    }
+
+
 }
