@@ -47,22 +47,22 @@ public class quizResultsController {
     private List<Answer> givenAnswers = new ArrayList<>();
     private List<Answer> correctAnswers = new ArrayList<>();
 
-
+    /**
+     * fill the table
+     * @author M.J Alden-Montague
+     */
     public void initialize() {
-
-
         fillTable();
-
     }
 
-
+    /**
+     * Go through list of list answerFXListPerQuestion and extract user GivenAnswer to new list givenAnswers
+     * Do the same but for the correctAnswers list for isCorrect answers (answers which are marked as being correct)
+     * Setup table and tablecolumns, use a custom CellFactory for display the boolean isCorrect as Juist or Onjuist.
+     * @author M.J Alden-Montague
+     */
     public void fillTable() {
-
-        int count = 0;
-
         for (int i = 0; i < answersFXListPerQuestion.size(); i++) {
-            //boolean runOnce = false;
-
             for (int j = 0; j < answersFXListPerQuestion.get(i).size(); j++) {
                 if (answersFXListPerQuestion.get(i).get(j).getAnswer().getIsGivenAnswer()) {
                     givenAnswers.add(answersFXListPerQuestion.get(i).get(j).getAnswer());
@@ -70,13 +70,9 @@ public class quizResultsController {
                 }
                 if (answersFXListPerQuestion.get(i).get(j).getAnswer().isCorrect()) {
                     correctAnswers.add(answersFXListPerQuestion.get(i).get(j).getAnswer());
-                    System.out.println(count++);
-
                 }
-
             }
         }
-
 
         for (int i = 0; i < givenAnswers.size(); i++) {
             AnswerFX answerFX = answerList.get(i);
@@ -88,20 +84,8 @@ public class quizResultsController {
             if (answerFX.getCorrectAnswerObject() == null) {
                 answerFX.setCorrectAnswerObject(new Answer(true, ""));
             }
-
-//            if(answerFX.getQuestionId() == correctAnswers.get(i).getQuestionId()) {
-//                answerFX.setCorrectAnswerObject(correctAnswers.get(i));
-//            }
-//
-//            answerFX.setQuestionId(i+1);
-//            if(i < correctAnswers.size()) {
-//                answerFX.setCorrectAnswerObject(correctAnswers.get(i));
-//            } else {
-//                answerFX.setCorrectAnswerObject(new Answer(true,""));
-//            }
             answerList.set(i,answerFX);
         }
-
 
         questionNumber.setCellValueFactory(cellData -> cellData.getValue().questionIdProperty().asObject());
         userAnswer.setCellValueFactory(cellData -> cellData.getValue().answerProperty());
@@ -116,13 +100,9 @@ public class quizResultsController {
             }
         });
 
-
         correctAnswer.setCellValueFactory(cellData -> cellData.getValue().correctAnswerProperty());
         resultTable.getItems().addAll(answerList);
     }
-
-
-
 }
 
 
