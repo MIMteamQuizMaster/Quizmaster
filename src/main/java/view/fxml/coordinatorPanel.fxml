@@ -13,7 +13,7 @@
                   <TableView fx:id="courseTable" fixedCellSize="0.0" onMouseClicked="#courseTableOnClick" prefHeight="278.0" prefWidth="290.0" VBox.vgrow="SOMETIMES">
                       <columns>
                           <TableColumn fx:id="col_course_name" editable="false" maxWidth="-1.0" minWidth="120.0" prefWidth="-1.0" resizable="false" text="Cursus" />
-                          <TableColumn editable="false" maxWidth="170.0" minWidth="170.0" prefWidth="170.0" resizable="false" text="Period">
+                          <TableColumn editable="false" maxWidth="170.0" minWidth="170.0" prefWidth="170.0" resizable="false" text="Periode">
                               <columns>
                                   <TableColumn fx:id="col_sdate" editable="false" minWidth="75.0" prefWidth="-1.0" resizable="false" text="Startdatum" />
                                   <TableColumn fx:id="col_edate" editable="false" minWidth="75.0" prefWidth="-1.0" resizable="false" text="Einddatum" />
@@ -34,7 +34,7 @@
                    <TableView fx:id="quizzesTable" onMouseClicked="#quizTableOnClick" prefHeight="208.0" prefWidth="323.0" VBox.vgrow="SOMETIMES">
                        <columns>
                            <TableColumn fx:id="col_NameQuiz" editable="false" maxWidth="-1.0" minWidth="120.0" prefWidth="-1.0" resizable="false" text="Naam" />
-                           <TableColumn fx:id="colSuccessQuizTable" editable="false" maxWidth="-1.0" minWidth="120.0" prefWidth="-1.0" resizable="false" text="Success Definitie" />
+                           <TableColumn fx:id="colSuccessQuizTable" editable="false" maxWidth="-1.0" minWidth="120.0" prefWidth="-1.0" resizable="false" text="Succesdefinitie" />
                            <TableColumn fx:id="colTimeLimitQuizTable" prefWidth="94.0" text="Time Limit" visible="false" />
                            <TableColumn fx:id="col_Action_Quiz" editable="false" maxWidth="65.0" minWidth="65.0" prefWidth="65.0" resizable="false" sortable="false" text="Actie" />
                        </columns>

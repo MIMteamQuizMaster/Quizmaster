@@ -130,19 +130,20 @@ public class User_has_groupDAO extends AbstractDAO {
     {
         if (999%number == 0)
         {
-            AlertHelper.confirmationDialog("Verwijder oudere groepen " +
+            if (AlertHelper.confirmationDialog("Verwijder oudere groepen " +
                     "De benaming begint weer vanaf 1 en dubbele " +
                     "namen kunnen gaan voorkomen als oude groepen " +
-                    "niet verwijderd worden.");
-            int maxNumber = 999;
-            int multiplacation = number/maxNumber;
-            int newNumber = 1+(number-(multiplacation*maxNumber));
-            StringBuilder groupName = new StringBuilder();
-            String firstPart = course.getName() + " ";
-            groupName.append(firstPart);
-            String secondPart = String.format("%03d",newNumber);
-            groupName.append(secondPart);
-            return groupName.toString();
+                    "niet verwijderd worden.")) {
+                int maxNumber = 999;
+                int multiplacation = number / maxNumber;
+                int newNumber = 1 + (number - (multiplacation * maxNumber));
+                StringBuilder groupName = new StringBuilder();
+                String firstPart = course.getName() + " ";
+                groupName.append(firstPart);
+                String secondPart = String.format("%03d", newNumber);
+                groupName.append(secondPart);
+                return groupName.toString();
+            }
         }
         else
         {
@@ -156,5 +157,6 @@ public class User_has_groupDAO extends AbstractDAO {
             groupName.append(secondPart);
             return groupName.toString();
         }
+        return "nameless";
     }
 }
