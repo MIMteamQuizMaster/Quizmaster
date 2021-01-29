@@ -18,7 +18,7 @@
       </TableView>
       <HBox prefHeight="100.0" prefWidth="1104.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label prefHeight="100.0" text="My grade for Quiz ... is:" HBox.hgrow="ALWAYS">
+            <Label prefHeight="100.0" text="Het behaalde cijfer voor " HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets left="200.0" />
                </HBox.margin>
@@ -26,7 +26,17 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label layoutX="210.0" layoutY="10.0" prefHeight="100.0" text="My grade for Quiz ... is:">
+            <Label fx:id="quizName" layoutX="210.0" layoutY="10.0" prefHeight="100.0" text="QuizName">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="420.0" layoutY="10.0" prefHeight="100.0" text=" is ">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="quizGrade" layoutX="509.0" layoutY="10.0" prefHeight="100.0" text="InsertCijfer">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
