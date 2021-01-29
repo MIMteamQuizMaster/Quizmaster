@@ -1,21 +1,37 @@
 package controller.fx;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import model.Answer;
 
-public class AnswerFx {
+public class AnswerFX {
+
+
     private SimpleIntegerProperty id;
     private SimpleIntegerProperty questionId;
     private SimpleBooleanProperty isCorrect;
     private SimpleStringProperty answer;
     private Answer answerObject;
+    private Answer correctAnswerObject;
 
 
-    public AnswerFx(Answer a) {
+
+    public AnswerFX(Answer a) {
         this.answerObject = a;
+    }
+
+    public SimpleBooleanProperty isGivenProperty() {
+        return new SimpleBooleanProperty(answerObject.getIsGivenAnswer());
+    }
+
+
+    public SimpleIntegerProperty getNumber() {
+        return new SimpleIntegerProperty(answerObject.getQuizQuestionNumber());
+    }
+
+    public void setNumber(int number) {
+        this.answerObject.setQuizQuestionNumber(number);
     }
 
     public int getId() {
@@ -25,6 +41,15 @@ public class AnswerFx {
     public Answer getAnswerObject() {
         return answerObject;
     }
+
+    public Answer getCorrectAnswerObject() {
+        return correctAnswerObject;
+    }
+
+    public void setCorrectAnswerObject(Answer correctAnswer) {
+        this.correctAnswerObject = correctAnswer;
+    }
+
 
     public SimpleIntegerProperty idProperty() {
         return new SimpleIntegerProperty(answerObject.getId());
@@ -65,6 +90,11 @@ public class AnswerFx {
     public SimpleStringProperty answerProperty() {
         return new SimpleStringProperty(answerObject.getAnswer());
     }
+
+    public SimpleStringProperty correctAnswerProperty() {
+        return new SimpleStringProperty(correctAnswerObject.getAnswer());
+    }
+
 
     public void setAnswer(String answer) {
         this.answerObject.setAnswer(answer);

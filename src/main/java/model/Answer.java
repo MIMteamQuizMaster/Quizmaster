@@ -5,6 +5,8 @@ public class Answer {
 
     private int id;
     private int questionId;
+
+    private int quizQuestionNumber;
     private boolean isCorrect;
     private String answer;
 
@@ -14,6 +16,13 @@ public class Answer {
     public Answer(boolean isCorrect, String answer) {
         this.isCorrect = isCorrect;
         this.answer = answer;
+    }
+    public int getQuizQuestionNumber() {
+        return quizQuestionNumber;
+    }
+
+    public void setQuizQuestionNumber(int quizQuestionNumber) {
+        this.quizQuestionNumber = quizQuestionNumber;
     }
 
     public Answer(int i) {
@@ -60,8 +69,7 @@ public class Answer {
         isGivenAnswer = givenAnswer;
     }
 
-
-        @Override
+    @Override
     public String toString() {
         if (isCorrect)
         {

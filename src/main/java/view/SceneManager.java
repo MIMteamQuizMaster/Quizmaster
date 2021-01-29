@@ -83,5 +83,8 @@ public class SceneManager {
         getScene("/view/fxml/fillOutFormMultipleAnswers.fxml");
     }
 
+    public void showResults() {
+        getScene("/view/fxml/quizResults.fxml");
+    }
 
 }

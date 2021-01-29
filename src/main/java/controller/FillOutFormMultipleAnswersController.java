@@ -1,5 +1,6 @@
 package controller;
 
+import controller.Interface.FillOutFormInterface;
 import controller.fx.AnswerFormFX;
 import controller.fx.QuizFx;
 import database.mysql.RetriveQuizFromDatabase;
@@ -37,7 +38,7 @@ public class FillOutFormMultipleAnswersController {
     private Quiz quiz;
     private List<Question> questions = new ArrayList<>();
     private List<List<Answer>> answersListPerQuestion = new ArrayList<List<Answer>>();
-    private List<List<AnswerFormFX>> answersFXListPerQuestion = new ArrayList<List<AnswerFormFX>>();
+    private List<List<AnswerFormFX>> answersFXListPerQuestion = new ArrayList<List<AnswerFormFX>>(); //need to get this to quizResults
     private List<Integer> countPossibleAnswers = new ArrayList<>();
     private List<Integer> countGivenAnswers = new ArrayList<>();
     private QuizFx selectedQuiz;
@@ -63,6 +64,7 @@ public class FillOutFormMultipleAnswersController {
         initiateTextAreaProperty();
         initiateCheckBoxPropertie();
         setActionToButton();
+        setCharacterToButton();
         setUpTableView();
         fillPossibleAndGivenAnswers();
         this.questionTextAres.setText(this.questions.get(questionNumber-1).getQuestion());
@@ -165,6 +167,23 @@ public class FillOutFormMultipleAnswersController {
                     }
                 });
             }
+        }
+    }
+
+    /**
+     * author Ismael Ben Cherif
+     * Adds characters to the button.
+     */
+    public void setCharacterToButton()
+    {
+        for (int i = 0; i < this.answersFXListPerQuestion.size(); i++) {
+            for (int j = 0; j < this.answersFXListPerQuestion.get(i).size(); j++) {
+                char buttonCharacter = (char) (64 + (j+1));
+                String buttonString = Character.toString(buttonCharacter);
+                this.answersFXListPerQuestion.get(i).get(j).getButton().setText(buttonString);
+
+            }
+
         }
     }
 
@@ -296,6 +315,7 @@ public class FillOutFormMultipleAnswersController {
         if (this.questionNumber!=1)
         {
             questionNumber--;
+            this.nextButton.setText("Volgende");
             onNextscreenUpdate();
         }
         else
@@ -311,16 +331,28 @@ public class FillOutFormMultipleAnswersController {
      * @param actionEvent
      */
     public void nextButtonAction(ActionEvent actionEvent) {
-        if (questionNumber<questions.size())
-        {
+        if (questionNumber<questions.size()) {
             questionNumber++;
             onNextscreenUpdate();
+            if (questionNumber == questions.size()) {
+                this.nextButton.setText("Inleveren.");
+
+            }
         }
         else
         {
-            this.nextButton.setText("Inleveren.");
-            this.nextButton.isDisabled();
+            if (AlertHelper.confirmationDialog("Weet je zeker dat je de antwoorden wilt " +
+                    "opslaan?"))
+            {
+                FillOutFormInterface fillOutFormInterface = new FillOutFormInterface(this.quiz,
+                        Main.getLoggedInUser(),this.answersFXListPerQuestion,
+                        Main.getDBaccess());
+                fillOutFormInterface.storeAnswers();
+                quizResultsController.setAnswersFXListPerQuestion(answersFXListPerQuestion);
+                Main.getSceneManager().showResults();
+            }
 
+            // transfer answersFXListPerQuestion to quizResults
         }
     }
 }

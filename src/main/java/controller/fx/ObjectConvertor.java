@@ -75,10 +75,10 @@ public class ObjectConvertor {
      * <p>
      * Convert Answer objects to AnswerFX objects
      */
-    public static ObservableList<AnswerFx> convertAnswerToAnswerFX(List<Answer> list) {
-        ObservableList<AnswerFx> listedAnswer = FXCollections.observableArrayList();
+    public static ObservableList<AnswerFX> convertAnswerToAnswerFX(List<Answer> list) {
+        ObservableList<AnswerFX> listedAnswer = FXCollections.observableArrayList();
         for (Answer a : list) {
-            listedAnswer.add(new AnswerFx(a));
+            listedAnswer.add(new AnswerFX(a));
         }
         return listedAnswer;
     }
@@ -107,6 +107,16 @@ public class ObjectConvertor {
         ObservableList<GradeFX> listedClasses = FXCollections.observableArrayList();
         for (Grade g:list) {
             listedClasses.add(new GradeFX(g));
+        }
+        return listedClasses;
+    }
+
+    public static ObservableList<GradeFX2> convertGradeToGradeFX2(List<Grade> list)
+    {
+        ObservableList<GradeFX2> listedClasses = FXCollections.observableArrayList();
+        for (Grade g: list)
+        {
+            listedClasses.add(new GradeFX2(g));
         }
         return listedClasses;
     }

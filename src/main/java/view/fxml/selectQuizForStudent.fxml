@@ -3,7 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import javafx.scene.text.*?>
 
 <GridPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.selectQuizController">
    <columnConstraints>
@@ -17,20 +17,36 @@
       <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <ListView fx:id="selectCourse" prefHeight="200.0" prefWidth="200.0">
+      <ListView fx:id="selectCourse" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+            <Insets left="20.0" right="20.0" />
          </GridPane.margin>
       </ListView>
-      <ListView fx:id="selectQuiz" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+      <ListView fx:id="selectQuiz" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+            <Insets left="20.0" right="20.0" />
          </GridPane.margin>
       </ListView>
-      <Button fx:id="startBtn" mnemonicParsing="false" text="Start Quiz!" GridPane.columnIndex="2">
+      <Button fx:id="startBtn" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Start Quiz!" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets bottom="50.0" right="50.0" top="50.0" />
+            <Insets />
          </GridPane.margin>
       </Button>
+      <Label alignment="CENTER" contentDisplay="CENTER" text="Jouw Cursussen" GridPane.halignment="CENTER">
+         <GridPane.margin>
+            <Insets bottom="10.0" top="20.0" />
+         </GridPane.margin>
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="110.0" layoutY="20.0" text="Quizzen" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font>
+         <padding>
+            <Insets bottom="10.0" top="20.0" />
+         </padding>
+      </Label>
    </children>
 </GridPane>

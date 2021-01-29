@@ -29,7 +29,7 @@
             </Pane>
             <Pane prefHeight="412.0" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <ListView fx:id="courseListRemove" layoutX="50.0" layoutY="45.0" prefHeight="215.0" prefWidth="200.0" />
+                  <ListView fx:id="courseListRemove" layoutX="50.0" layoutY="27.0" prefHeight="215.0" prefWidth="200.0" />
                   <Button fx:id="removeCourse" layoutX="100.0" layoutY="301.0" mnemonicParsing="false" onAction="#removeCoursesFromList" text="Uitschrijven" />
                </children>
             </Pane>

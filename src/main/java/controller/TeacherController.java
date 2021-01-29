@@ -82,6 +82,8 @@ public class TeacherController implements Initializable {
         this.groupDAO = new GroupDAO(this.dBaccess);
         this.gradeDAO = new GradeDAO(this.dBaccess);
         loggedInUser = Main.getLoggedInUser();
+        classTable.setSelectionModel(null);
+
         fillGroupTable();
         selectGroup();
     }
@@ -104,7 +106,6 @@ public class TeacherController implements Initializable {
                     grades = convertGradeToGradeFX(gradeDAO.getAllGrades(selectedItems.get(0).getUserObject()));
                     quizColumn.setCellValueFactory(cellData -> cellData.getValue().quizNameProperty());
                     quizTable.getItems().addAll(grades);
-                    double total = 0;
                     int count = 0;
                     for(GradeFX grade: grades) {
                         count++;

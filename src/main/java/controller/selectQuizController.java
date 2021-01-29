@@ -56,7 +56,9 @@ public class selectQuizController {
         populateCourseTable();
         populateQuizTable();
         initializeListeners();
+
     }
+
 
     /**
      * Fill the Courses table with data from the database
