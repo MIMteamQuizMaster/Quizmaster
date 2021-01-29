@@ -31,7 +31,7 @@ public class WelcomeSceneController {
         sceneManager = Main.getSceneManager();
         // Setting the client-object in WelcomeSceneController
         loggedInUser = Main.getLoggedInUser();
-        this.welcomeLabel.setText(String.format("Welcome %s!", loggedInUser.getFirstName().toUpperCase()));
+        this.welcomeLabel.setText(String.format("Welkom %s!", loggedInUser.getFirstName().toUpperCase()));
         this.lnameLabel.setText(loggedInUser.getLastName());
         this.uidLabel.setText(String.valueOf(loggedInUser.getUserId()));
         this.richtingLabel.setText(loggedInUser.getStudieRichting());

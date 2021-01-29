@@ -3,6 +3,7 @@ package database.mysql;
 
 import model.*;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,24 +46,24 @@ public class CoordinatorDAO extends AbstractDAO {
     public List<Course> getMyCourses(Boolean archive) {
 
         List<Course> courseList = new ArrayList<>();
-        String query = "SELECT * FROM course WHERE coordinator_user_id=? and (endDate > ? or endDate is null ) and archive = ?";
+        String query = "SELECT * FROM course WHERE coordinator_user_id=? and (endDate > CURRENT_DATE() or endDate is null ) and archive = ?";
         try {
             PreparedStatement ps = getStatement(query);
             ps.setInt(1, this.coordinator.getUserId());
-            ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
-            ps.setBoolean(3, archive);
+//            ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            ps.setBoolean(2, archive);
             ResultSet rs = executeSelectPreparedStatement(ps);
             while (rs.next()) {
                 String name = rs.getString("name");
                 int courseDbid = rs.getInt("id");
-                String startDate = rs.getDate("startDate").toString();
-                String endDate = rs.getDate("endDate").toString();
+                Date startDate = rs.getDate("startDate");
+                Date endDate = rs.getDate("endDate");
 
                 // maak Course Object
                 Course course = new Course(name, this.coordinator);
                 course.setDbId(courseDbid);
-                course.setStartDate(startDate);
-                course.setEndDate(endDate);
+                course.setStartDate(startDate==null?"":startDate.toString());
+                course.setEndDate(endDate==null?"":endDate.toString());
 
                 course.setQuizzes(quizDAO.getQuizOfCourse(course, archive)); // add quizes to Course object
 

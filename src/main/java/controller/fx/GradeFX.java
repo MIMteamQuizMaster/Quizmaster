@@ -1,6 +1,7 @@
 package controller.fx;
 
 import javafx.beans.property.*;
+import javafx.scene.control.Label;
 import model.Grade;
 
 import java.time.LocalDate;
@@ -9,10 +10,17 @@ import java.time.LocalDate;
 public class GradeFX {
 
     private Grade grade;
+    private SimpleObjectProperty<Label> failesPassedLabel;
+    private boolean failedPassed;
+
 
 
     public GradeFX(Grade grade) {
         this.grade = grade;
+        this.failesPassedLabel = new SimpleObjectProperty<Label>(new Label());
+        this.failedPassed = this.grade.checkIfStudentFailed();
+        setTextToLabel();
+
     }
 
     public Grade getClassObject(){
@@ -71,4 +79,40 @@ public class GradeFX {
     }
 
 
+    public double getSuccesDefinition() {
+        return new SimpleDoubleProperty(this.grade.getSuccesDefinition()).get();
+    }
+
+    public SimpleDoubleProperty succesDefinitionProperty() {
+        return new SimpleDoubleProperty(this.grade.getSuccesDefinition());
+    }
+
+    public void setSuccesDefinition(double succesDefinition) {
+         new SimpleDoubleProperty(this.grade.getSuccesDefinition()).set(succesDefinition);
+    }
+
+
+    public Label getFailesPassedLabel() {
+        return failesPassedLabel.get();
+    }
+
+    public SimpleObjectProperty<Label> failesPassedLabelProperty() {
+        return failesPassedLabel;
+    }
+
+    public void setFailesPassedLabel(Label failesPassedLabel) {
+        this.failesPassedLabel.set(failesPassedLabel);
+    }
+
+    public void setTextToLabel()
+    {
+        if (failedPassed)
+        {
+            getFailesPassedLabel().setText("Niet gehaald");
+        }
+        else
+        {
+            getFailesPassedLabel().setText("Geslaagd");
+        }
+    }
 }
