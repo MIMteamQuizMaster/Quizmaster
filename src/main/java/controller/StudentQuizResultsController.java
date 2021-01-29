@@ -1,8 +1,6 @@
 package controller;
 
-import controller.fx.GradeFX;
 import controller.fx.GradeFX2;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import launcher.Main;

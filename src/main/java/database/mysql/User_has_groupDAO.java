@@ -42,7 +42,7 @@ public class User_has_groupDAO extends AbstractDAO {
                     "INNER JOIN `group` AS g ON g.id = u.group_id " +
                     "WHERE g.course_id = %d " +
                     "GROUP BY u.group_id " +
-                    "ORDER BY count(u.group_id) " +
+                    "ORDER BY u.group_id DESC " +
                     "LIMIT 1;", course_id);
             try {
                 PreparedStatement preparedStatement = getStatement(sql);
