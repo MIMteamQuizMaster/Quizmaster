@@ -29,7 +29,7 @@ public class GroupDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public ObservableList<Group> getAllGroups(User teacher) {
-        String sql = "SELECT uhg.group_id, g.name, g.docent FROM student_has_group uhg INNER JOIN quizmaster.group g ON uhg.group_id = g.id WHERE g.docent = " + teacher.getUserId();
+        String sql = "SELECT DISTINCT uhg.group_id, g.name, g.docent FROM student_has_group uhg INNER JOIN `group` g ON uhg.group_id = g.id WHERE g.docent = " + teacher.getUserId();
         ObservableList<Group> rList = FXCollections.observableArrayList();
         try {
             PreparedStatement ps = getStatement(sql);

@@ -8,7 +8,6 @@ import model.Answer;
 public class AnswerFX {
 
 
-    private SimpleIntegerProperty questionNumberUI;
     private SimpleIntegerProperty id;
     private SimpleIntegerProperty questionId;
     private SimpleBooleanProperty isCorrect;
@@ -16,17 +15,6 @@ public class AnswerFX {
     private Answer answerObject;
     private Answer correctAnswerObject;
 
-    public int getQuestionNumberUI() {
-        return questionNumberUI.get();
-    }
-
-    public SimpleIntegerProperty questionNumberUIProperty() {
-        return questionNumberUI;
-    }
-
-    public void setQuestionNumberUI(int questionNumberUI) {
-        this.questionNumberUI.set(questionNumberUI);
-    }
 
 
     public AnswerFX(Answer a) {
@@ -35,6 +23,15 @@ public class AnswerFX {
 
     public SimpleBooleanProperty isGivenProperty() {
         return new SimpleBooleanProperty(answerObject.getIsGivenAnswer());
+    }
+
+
+    public SimpleIntegerProperty getNumber() {
+        return new SimpleIntegerProperty(answerObject.getQuizQuestionNumber());
+    }
+
+    public void setNumber(int number) {
+        this.answerObject.setQuizQuestionNumber(number);
     }
 
     public int getId() {

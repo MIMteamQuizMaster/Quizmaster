@@ -28,7 +28,7 @@ public class GradeDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public List<Grade> getAllGrades(User student) {
-        String sql = "SELECT g.quiz_id, q.name, g.grade, FROM user_quiz_log g, quiz q WHERE g.quiz_id = q.id AND g.student_user_id = " + student.getUserId();
+        String sql = "SELECT g.quiz_id, q.name, g.grade FROM user_quiz_log g, quiz q WHERE g.quiz_id = q.id AND g.student_user_id = " + student.getUserId();
         List<Grade> rList = new ArrayList<>();
         try {
             PreparedStatement ps = getStatement(sql);

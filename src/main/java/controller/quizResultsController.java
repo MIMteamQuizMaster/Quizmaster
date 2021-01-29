@@ -76,6 +76,7 @@ public class quizResultsController {
 
         for (int i = 0; i < givenAnswers.size(); i++) {
             AnswerFX answerFX = answerList.get(i);
+            answerFX.setNumber(i+1);
             for (int j = 0; j < correctAnswers.size(); j++) {
                 if(answerFX.getQuestionId() == correctAnswers.get(j).getQuestionId()) {
                     answerFX.setCorrectAnswerObject(correctAnswers.get(j));
@@ -87,7 +88,7 @@ public class quizResultsController {
             answerList.set(i,answerFX);
         }
 
-        questionNumber.setCellValueFactory(cellData -> cellData.getValue().questionIdProperty().asObject());
+        questionNumber.setCellValueFactory(cellData -> cellData.getValue().getNumber().asObject());
         userAnswer.setCellValueFactory(cellData -> cellData.getValue().answerProperty());
         correctBoolean.setCellValueFactory(cellData -> cellData.getValue().isCorrectProperty());
 
