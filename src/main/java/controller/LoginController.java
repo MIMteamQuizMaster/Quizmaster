@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import launcher.Main;
 import model.LoginAttempt;
@@ -36,6 +37,7 @@ public class LoginController implements Initializable {
     public Button passShowBtn;
     public Button loginbtn;
     public Button cancelBtn;
+    public AnchorPane rootPane;
     private CouchDbClient dbClient;
     private GenericDAO genericDao;
     private GlyphFont glyphFont;
@@ -53,6 +55,7 @@ public class LoginController implements Initializable {
         GlyphFont glyphFont = GlyphFontRegistry.font("FontAwesome");
         passShowBtn.setGraphic(glyphFont.create(FontAwesome.Glyph.EYE).color(Color.BROWN));
         passShowBtn.setText("");
+        rootPane.setMaxWidth(380);
     }
 
     /**

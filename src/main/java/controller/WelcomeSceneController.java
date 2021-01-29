@@ -45,11 +45,6 @@ public class WelcomeSceneController {
     }
 
 
-    private void handleHeader(Node tabHeaderSkin) {
-        // implementation detail: skin keeps reference to associated Tab
-        Tab tab = (Tab) tabHeaderSkin.getProperties().get(Tab.class);
-        System.out.println("do stuff for tab: " + tab.getText());
-    }
 
     /**
      * @author M.J. Moshiri
