@@ -38,8 +38,7 @@ public class TeacherController implements Initializable {
     public TableView studentTable;
     @FXML
     public TableView quizTable;
-    @FXML
-    public TableView gradeTable;
+
 
     @FXML
     public TableColumn<GroupFX, String> groupColumnName;
@@ -54,7 +53,10 @@ public class TeacherController implements Initializable {
     @FXML
     public TableColumn<GradeFX, String> quizColumn;
     @FXML
-    public TableColumn<GradeFX, Double> gradeColumn;
+    public TableColumn<GradeFX, String> quizColumnDate;
+    @FXML
+    public TableColumn<GradeFX, Double> quizColumnGrade;
+
 
     @FXML
     public TextField averageGrade;
@@ -104,16 +106,21 @@ public class TeacherController implements Initializable {
                 System.out.println("Selection changed: " + change.getList());
                 if(!selectedItems.isEmpty()) {
                     quizTable.getItems().clear();
-                    gradeTable.getItems().clear();
                     grades = convertGradeToGradeFX(gradeDAO.getAllGrades(selectedItems.get(0).getUserObject()));
                     quizColumn.setCellValueFactory(cellData -> cellData.getValue().quizNameProperty());
+                    quizColumnDate.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
+
+                    quizColumnGrade.setCellValueFactory(cellData -> cellData.getValue().gradeProperty().asObject());
+
                     quizTable.getItems().addAll(grades);
                     int count = 0;
+                    double total = 0;
                     for(GradeFX grade: grades) {
+                        total = total + grade.getGrade();
                         count++;
                     }
                     quizTotal.setText("Totaal: " + String.valueOf(count));
-                    fillGradeTable();
+                    averageGrade.setText("Gemiddelde: " + total / count);
                 } else {
                     quizTotal.clear();
                 }
@@ -121,36 +128,7 @@ public class TeacherController implements Initializable {
         });
     }
 
-    /**
-     * Fill grade table with grade items, depending on selected quiz from quizTable
-     * @author M.J Alden-Montague
-     */
-    public void fillGradeTable() {
-        TableView.TableViewSelectionModel<GradeFX> selectionModel = quizTable.getSelectionModel();
-        selectionModel.setSelectionMode(SelectionMode.SINGLE);
-        ObservableList<GradeFX> selectedItems = selectionModel.getSelectedItems();
-        selectedItems.addListener(new ListChangeListener<GradeFX>() {
-            @Override
-            public void onChanged(ListChangeListener.Change<? extends GradeFX> change) {
-                System.out.println("Selection changed: " + change.getList());
-                if(!selectedItems.isEmpty()) {
-                    gradeTable.getItems().clear();
-                    grades = convertGradeToGradeFX(gradeDAO.getAllGradesPerQuiz(selectedItems.get(0).getStudentId(),selectedItems.get(0).getQuizId()));
-                    gradeColumn.setCellValueFactory(cellData -> cellData.getValue().gradeProperty().asObject());
-                    gradeTable.getItems().addAll(grades);
-                    double total = 0;
-                    int count = 0;
-                    for(GradeFX grade: grades) {
-                        total = total + grade.getGrade();
-                        count++;
-                    }
-                    averageGrade.setText("Gemiddelde: " + total / count);
-                } else {
-                    averageGrade.clear();
-                }
-            }
-        });
-    }
+
 
     /**
      * Fill group table with respective objects in TableColumn
