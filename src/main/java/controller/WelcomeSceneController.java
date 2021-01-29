@@ -96,6 +96,11 @@ public class WelcomeSceneController {
                     Tab tab = new Tab();
                     tab.setText("Coordinator");
                     tab.setContent(view);
+                    tab.setOnSelectionChanged(event -> {
+                        tab.setContent(null);
+                        tab.setContent(sceneManager.getPage("coordinatorPanel"));
+
+                    });
                     tabPanel.getTabs().add(tab);
 
                 } else if (r == Role.ADMINISTRATOR) {
@@ -103,6 +108,11 @@ public class WelcomeSceneController {
                     Tab tab = new Tab();
                     tab.setText("Administrator");
                     tab.setContent(view);
+                    tab.setOnSelectionChanged(event -> {
+                        tab.setContent(null);
+                        tab.setContent(sceneManager.getPage("Administrator"));
+
+                    });
                     tabPanel.getTabs().add(tab);
 
                 } else if (r == Role.TEACHER) {

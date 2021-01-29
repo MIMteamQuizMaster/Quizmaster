@@ -1,8 +1,5 @@
 package model;
 
-import javafx.beans.property.*;
-import javafx.collections.ObservableList;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +7,8 @@ public class Quiz {
     private List<Question> questions;
     private double succsesDefinition;
     private String name;
-    private int idquiz;
-    private int idcourse;
+    private int quizId;
+    private int courseId;
     private int timeLimit;
 
     public Quiz(String name,double succsesDefinition) {
@@ -20,16 +17,16 @@ public class Quiz {
         questions = new ArrayList<>();
     }
 
-    public Quiz(String name,double succsesDefinition,  int idquiz, int idcourse, int timeLimit) {
+    public Quiz(String name, double succsesDefinition, int quizId, int courseId, int timeLimit) {
         this.succsesDefinition = succsesDefinition;
         this.name = name;
-        this.idquiz = idquiz;
-        this.idcourse = idcourse;
+        this.quizId = quizId;
+        this.courseId = courseId;
         this.timeLimit = timeLimit;
     }
 
-    public Quiz(String name,double succsesDefinition,  int idquiz, int idcourse) {
-        this(name,succsesDefinition,idquiz,idcourse,0);
+    public Quiz(String name, double succsesDefinition, int quizId, int idcourse) {
+        this(name,succsesDefinition, quizId,idcourse,0);
 
     }
 
@@ -67,20 +64,20 @@ public class Quiz {
         this.name = name;
     }
 
-    public int getIdquiz() {
-        return idquiz;
+    public int getQuizId() {
+        return quizId;
     }
 
-    public void setIdquiz(int idquiz) {
-        this.idquiz = idquiz;
+    public void setQuizId(int quizId) {
+        this.quizId = quizId;
     }
 
-    public int getIdcourse() {
-        return idcourse;
+    public int getCourseId() {
+        return courseId;
     }
 
-    public void setIdcourse(int idcourse) {
-        this.idcourse = idcourse;
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 
     public int getTimeLimit() {

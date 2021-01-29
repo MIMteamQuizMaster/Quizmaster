@@ -1,7 +1,5 @@
 package database.mysql;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import model.Course;
 import model.Quiz;
 
@@ -30,7 +28,7 @@ public class QuizDAO extends AbstractDAO {
     public List<Quiz> getQuizOfCourse(Course course, boolean archive) {
         List<Quiz> quizList = new ArrayList<>();
         String query = "SELECT * FROM quiz WHERE course_id =? and archive = ?";
-        int courseId = course.getDbId();
+        int courseId = course.getCourseId();
         try {
             PreparedStatement ps = getStatement(query);
             ps.setInt(1, courseId);
@@ -43,8 +41,8 @@ public class QuizDAO extends AbstractDAO {
                 double successDefinition = rs.getDouble("successDefinition");
                 Quiz quiz = new Quiz(name, successDefinition);
                 quiz.setTimeLimit(timelimit);
-                quiz.setIdquiz(quizID);
-                quiz.setIdcourse(courseId);
+                quiz.setQuizId(quizID);
+                quiz.setCourseId(courseId);
                 quiz.setQuestions(questionDAO.getQuestions(quiz)); // find questions of the quiz and add to its object
                 quizList.add(quiz);
             }
@@ -71,10 +69,10 @@ public class QuizDAO extends AbstractDAO {
         String query;
 
         String name = quiz.getName();
-        int course_idcourse = quiz.getIdcourse();
+        int course_idcourse = quiz.getCourseId();
         double successDefinition = quiz.getSuccsesDefinition();
         int timelimit = quiz.getTimeLimit();
-        int id = quiz.getIdquiz();
+        int id = quiz.getQuizId();
 
         if (id == 0) { // then its a new Question
             query = "INSERT INTO quiz (name, course_id, successDefinition, timelimit ,id) VALUES (?, ?,?,?,?)";
@@ -90,7 +88,7 @@ public class QuizDAO extends AbstractDAO {
             ps.setInt(5, id);
             int key = executeInsertPreparedStatement(ps);
             if (id == 0) {
-                quiz.setIdquiz(key);
+                quiz.setQuizId(key);
             }
             return quiz;
         } catch (SQLException throwables) {

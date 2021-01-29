@@ -17,15 +17,15 @@ public class GroupFX {
     }
 
     public int getDbId() {
-        return new SimpleIntegerProperty(this.group.getDbId()).get();
+        return new SimpleIntegerProperty(this.group.getGroupId()).get();
     }
 
     public IntegerProperty dbIdProperty() {
-        return new SimpleIntegerProperty(this.group.getDbId());
+        return new SimpleIntegerProperty(this.group.getGroupId());
     }
 
     public void setDbId(int dbId) {
-        this.group.setDbId(dbId);
+        this.group.setGroupId(dbId);
     }
 
     public String getName() {

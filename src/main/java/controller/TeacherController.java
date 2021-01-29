@@ -120,7 +120,7 @@ public class TeacherController implements Initializable {
                         count++;
                     }
                     quizTotal.setText("Totaal: " + String.valueOf(count));
-                    averageGrade.setText("Gemiddelde: " + total / count);
+                    averageGrade.setText(String.format("Gemiddelde: %.2f", total / count));
                 } else {
                     quizTotal.clear();
                 }

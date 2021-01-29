@@ -1,7 +1,5 @@
 package database.mysql;
 
-import javafx.collections.FXCollections;
-import model.Answer;
 import model.Question;
 import model.Quiz;
 
@@ -31,7 +29,7 @@ public class QuestionDAO extends AbstractDAO {
      */
     public List<Question> getQuestions(Quiz quiz) {
         List<Question> questionsList = new ArrayList<>();
-        int quizId = quiz.getIdquiz();
+        int quizId = quiz.getQuizId();
         String query = "SELECT * FROM question WHERE quiz_id=?";
         try {
             PreparedStatement ps = getStatement(query);

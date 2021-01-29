@@ -6,7 +6,6 @@ import model.Course;
 import model.Group;
 import model.User;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,7 +52,7 @@ public class GroupDAO extends AbstractDAO {
      * @author M.J. Alden-Montague
      */
     public ObservableList<User> getStudentsPerGroup(Group group) {
-        String sql = "SELECT ug.student_user_id, u.firstname, u.lastname FROM student_has_group ug INNER JOIN user u ON ug.student_user_id = u.user_id WHERE ug.group_id = " + group.getDbId();
+        String sql = "SELECT ug.student_user_id, u.firstname, u.lastname FROM student_has_group ug INNER JOIN user u ON ug.student_user_id = u.user_id WHERE ug.group_id = " + group.getGroupId();
         ObservableList<User> rList = FXCollections.observableArrayList();
         try {
             PreparedStatement ps = getStatement(sql);
@@ -80,7 +79,7 @@ public class GroupDAO extends AbstractDAO {
         String sql = "Insert into `group`(course_id, name, docent) values(?,?, ?) ;";
         try {
             PreparedStatement preparedStatement = getStatementWithKey(sql);
-            preparedStatement.setInt(1,course.getDbId());
+            preparedStatement.setInt(1,course.getCourseId());
             preparedStatement.setString(2,name);
             preparedStatement.setInt(3, teacher.getUserId());
             int key = executeInsertPreparedStatement(preparedStatement);
@@ -114,12 +113,12 @@ public class GroupDAO extends AbstractDAO {
      */
     public Group saveGroupDedicatedToCourse(Course course, Group group) {
 
-        if (group.getDbId() == 0) {
+        if (group.getGroupId() == 0) {
             //new group and add all students
             saveGroup(course, group);
-            System.out.println(group.getDbId());
+            System.out.println(group.getGroupId());
             for (User student : group.getStudents()) {
-                createUserHasGroup(group.getDbId(),student);
+                createUserHasGroup(group.getGroupId(),student);
             }
         } else {
             //update = group.getStudents(); = getStudentsOfGroup(group);
@@ -136,7 +135,7 @@ public class GroupDAO extends AbstractDAO {
             for (Integer i : newList) {
                 if (!oldList.contains(i)) {
                     // there is a new user that isnt in the old list then add him
-                    createUserHasGroup(group.getDbId(), new User(i));
+                    createUserHasGroup(group.getGroupId(), new User(i));
                 }
             }
         }
@@ -153,7 +152,7 @@ public class GroupDAO extends AbstractDAO {
         try {
             PreparedStatement ps = getStatement(query);
             ps.setInt(1,user.getUserId());
-            ps.setInt(2,group.getDbId());
+            ps.setInt(2,group.getGroupId());
             executeManipulatePreparedStatement(ps);
             return true;
         } catch (SQLException throwables) {
@@ -168,12 +167,12 @@ public class GroupDAO extends AbstractDAO {
         try {
             query = "DELETE FROM student_has_group WHERE group_id = ?";
             ps = getStatement(query);
-            ps.setInt(1,group.getDbId());
+            ps.setInt(1,group.getGroupId());
             executeManipulatePreparedStatement(ps);
             try {
                 query = "DELETE FROM `group` WHERE id = ?";
                 ps = getStatement(query);
-                ps.setInt(1,group.getDbId());
+                ps.setInt(1,group.getGroupId());
                 executeManipulatePreparedStatement(ps);
                 return true;
             } catch (SQLException throwables) {
@@ -193,7 +192,7 @@ public class GroupDAO extends AbstractDAO {
      */
     public Group saveGroup(Course course, Group group){
         String query;
-        if(group.getDbId()==0){
+        if(group.getGroupId()==0){
             // new
             query = "Insert into `group` (course_id, name, docent,id) values(?,?,?,?)";
         } else {
@@ -202,16 +201,16 @@ public class GroupDAO extends AbstractDAO {
         }
         try {
             PreparedStatement ps = getStatementWithKey(query);
-            ps.setInt(1,course.getDbId());
+            ps.setInt(1,course.getCourseId());
             ps.setString(2,group.getName());
             if (group.getTeacher() == null) {
                 ps.setNull(3, java.sql.Types.NULL);
             } else {
                 ps.setInt(3,group.getTeacher().getUserId());
             }
-            ps.setInt(4,group.getDbId());
+            ps.setInt(4,group.getGroupId());
             int key = executeInsertPreparedStatement(ps);
-            if (group.getDbId()==0)group.setDbId(key);
+            if (group.getGroupId()==0)group.setGroupId(key);
 
             return group;
         } catch (SQLException throwables) {

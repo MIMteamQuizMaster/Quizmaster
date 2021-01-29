@@ -1,7 +1,6 @@
 package database.mysql;
 
 import controller.fx.AnswerFormFX;
-import model.Answer;
 import model.User;
 
 import java.sql.PreparedStatement;
@@ -21,7 +20,7 @@ public class UserAnswerLogDAO extends AbstractDAO {
             try {
                 PreparedStatement preparedStatement = getStatementWithKey(sql);
                 preparedStatement.setInt(1,student.getUserId());
-                preparedStatement.setInt(2, answerFormFX.getAnswer().getId());
+                preparedStatement.setInt(2, answerFormFX.getAnswer().getAnswerId());
                 preparedStatement.setInt(3, quizLogKey);
                 executeInsertPreparedStatement(preparedStatement);
             } catch (SQLException throwables) {

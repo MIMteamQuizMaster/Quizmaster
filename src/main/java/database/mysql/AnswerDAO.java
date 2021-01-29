@@ -35,7 +35,7 @@ public class AnswerDAO extends AbstractDAO {
                 boolean isCorrect = rs.getBoolean("isCorrect");
                 Answer answer = new Answer(isCorrect, answerString);
                 answer.setQuestionId(question.getQuestionId());
-                answer.setId(answerdbId);
+                answer.setAnswerId(answerdbId);
                 possibleAnswers.add(answer);
             }
             return possibleAnswers;
@@ -55,7 +55,7 @@ public class AnswerDAO extends AbstractDAO {
      */
     public Answer saveAnswer(Answer answer) {
         String query;
-        int id = answer.getId();
+        int id = answer.getAnswerId();
         int questionId = answer.getQuestionId();
         boolean isCorrect = answer.isCorrect();
         String answerString = answer.getAnswer();
@@ -73,7 +73,7 @@ public class AnswerDAO extends AbstractDAO {
             ps.setInt(4, id);
             int key = executeInsertPreparedStatement(ps);
             if (id == 0) {
-                answer.setId(key);
+                answer.setAnswerId(key);
             }
             return answer;
         } catch (SQLException throwables) {

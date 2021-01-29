@@ -37,7 +37,7 @@ public class User_has_groupDAO extends AbstractDAO {
         int student_id = this.student.getUserId();
         for (Course course: courseList)
         {
-            int course_id = course.getDbId();
+            int course_id = course.getCourseId();
             String sql = String.format("SELECT u.group_id, g.course_id, count(u.group_id) AS group_count FROM student_has_group AS u " +
                     "INNER JOIN `group` AS g ON g.id = u.group_id " +
                     "WHERE g.course_id = %d " +

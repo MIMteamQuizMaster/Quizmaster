@@ -10,7 +10,7 @@ public class Grade {
     private String quizName;
     private LocalDate date;
     private double succesDefinition;
-    private int id;
+    private int gradeId;
     private boolean studentFailed;
 
     public Grade(int quizId, double grade, int studentId) {
@@ -74,12 +74,12 @@ public class Grade {
         this.succesDefinition = succesDefinition;
     }
 
-    public int getId() {
-        return id;
+    public int getGradeId() {
+        return gradeId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setGradeId(int gradeId) {
+        this.gradeId = gradeId;
     }
 
     public boolean checkIfStudentFailed()
