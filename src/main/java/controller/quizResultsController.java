@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import model.Answer;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.List;
 
 import static controller.fx.ObjectConvertor.*;
 
-public class quizResults {
+public class quizResultsController {
 
 
 
@@ -26,7 +25,7 @@ public class quizResults {
     }
 
     public static void setAnswersFXListPerQuestion(List<List<AnswerFormFX>> answersFXListPerQuestion) {
-        quizResults.answersFXListPerQuestion = answersFXListPerQuestion;
+        quizResultsController.answersFXListPerQuestion = answersFXListPerQuestion;
     }
     @FXML
     private TableView resultTable;

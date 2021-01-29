@@ -12,7 +12,6 @@ import launcher.Main;
 import model.Answer;
 import model.Question;
 import model.Quiz;
-import model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -321,7 +320,7 @@ public class FillOutFormMultipleAnswersController {
             this.nextButton.setText("Inleveren.");
             this.nextButton.isDisabled();
 
-            quizResults.setAnswersFXListPerQuestion(answersFXListPerQuestion);
+            quizResultsController.setAnswersFXListPerQuestion(answersFXListPerQuestion);
             Main.getSceneManager().showResults();
 
             // transfer answersFXListPerQuestion to quizResults
