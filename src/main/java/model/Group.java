@@ -5,31 +5,31 @@ import java.util.List;
 
 public class Group {
 
-    private int dbId;
+    private int groupId;
     private String name;
     private User teacher;
     private List<User> students;
 
-    public Group(int dbId, String name, User teacher, List<User> students) {
-        this.dbId = dbId;
+    public Group(int groupId, String name, User teacher, List<User> students) {
+        this.groupId = groupId;
         this.name = name;
         this.teacher = teacher;
         this.students = students;
     }
-    public Group(int dbId, String name, User teacher) {
-        this(dbId,name,teacher,new ArrayList<>());
+    public Group(int groupId, String name, User teacher) {
+        this(groupId,name,teacher,new ArrayList<>());
     }
 
-    public Group(int dbId) {
-        this(dbId,"",null,new ArrayList<>());
+    public Group(int groupId) {
+        this(groupId,"",null,new ArrayList<>());
     }
 
-    public int getDbId() {
-        return dbId;
+    public int getGroupId() {
+        return groupId;
     }
 
-    public void setDbId(int dbId) {
-        this.dbId = dbId;
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 
     public String getName() {

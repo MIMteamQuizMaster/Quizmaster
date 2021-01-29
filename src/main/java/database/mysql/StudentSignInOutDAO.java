@@ -121,7 +121,7 @@ public class StudentSignInOutDAO extends AbstractDAO {
                 int coordinator_id = resultSet.getInt(2);
                 String name = resultSet.getString(3);
                 newCourse = new Course(name, this.userDAO.getUser(coordinator_id));
-                newCourse.setDbId(courseId);
+                newCourse.setCourseId(courseId);
                 courses.add(newCourse);
             }
         } catch (SQLException throwables) {
@@ -175,7 +175,7 @@ public class StudentSignInOutDAO extends AbstractDAO {
                 int coordinator_id = resultSet.getInt(2);
                 String name = resultSet.getString(3);
                 newCourse = new Course(name, this.userDAO.getUser(coordinator_id));
-                newCourse.setDbId(courseId);
+                newCourse.setCourseId(courseId);
                 courses.add(newCourse);
             }
         } catch (SQLException throwables) {

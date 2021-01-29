@@ -3,11 +3,8 @@ package controller.fx;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
 import model.Question;
 import model.Quiz;
-
-import java.util.List;
 
 public class QuizFx {
     private final Quiz quiz;
@@ -69,15 +66,15 @@ public class QuizFx {
     }
 
     public int getIdquiz() {
-        return new SimpleIntegerProperty(this.quiz.getIdquiz()).get();
+        return new SimpleIntegerProperty(this.quiz.getQuizId()).get();
     }
 
     public IntegerProperty idquizProperty() {
-        return new SimpleIntegerProperty(this.quiz.getIdquiz());
+        return new SimpleIntegerProperty(this.quiz.getQuizId());
     }
 
     public void setIdquiz(int idquiz) {
-        this.quiz.setIdquiz(idquiz);
+        this.quiz.setQuizId(idquiz);
     }
 
     public int getIdcourse() {

@@ -3,7 +3,7 @@ package model;
 
 public class Answer {
 
-    private int id;
+    private int answerId;
     private int questionId;
 
     private int quizQuestionNumber;
@@ -26,11 +26,11 @@ public class Answer {
     }
 
     public Answer(int i) {
-        this.id = 0;
+        this.answerId = 0;
     }
 
-    public int getId() {
-        return id;
+    public int getAnswerId() {
+        return answerId;
     }
 
     public int getQuestionId() {
@@ -53,8 +53,8 @@ public class Answer {
         return answer;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setAnswerId(int answerId) {
+        this.answerId = answerId;
     }
 
     public void setQuestionId(int questionId) {

@@ -167,7 +167,7 @@ public class GradeDAO extends AbstractDAO {
                 double grade = resultSet.getDouble("grade");
                 String quizName = resultSet.getString("name");
                 LocalDate date = resultSet.getTimestamp(4).toLocalDateTime().toLocalDate();
-                double succesdefinition = resultSet.getInt(5);
+                double succesdefinition = resultSet.getDouble(5);
                 int id = resultSet.getInt(6);
                 Grade rGrade = new Grade(quizId,grade, student.getUserId());
                 rGrade.setQuizName(quizName);

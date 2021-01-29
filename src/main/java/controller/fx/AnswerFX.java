@@ -35,7 +35,7 @@ public class AnswerFX {
     }
 
     public int getId() {
-        return new SimpleIntegerProperty(answerObject.getId()).get();
+        return new SimpleIntegerProperty(answerObject.getAnswerId()).get();
     }
 
     public Answer getAnswerObject() {
@@ -52,11 +52,11 @@ public class AnswerFX {
 
 
     public SimpleIntegerProperty idProperty() {
-        return new SimpleIntegerProperty(answerObject.getId());
+        return new SimpleIntegerProperty(answerObject.getAnswerId());
     }
 
     public void setId(int id) {
-        this.answerObject.setId(id);
+        this.answerObject.setAnswerId(id);
     }
 
     public int getQuestionId() {

@@ -1,14 +1,12 @@
 package model;
 import database.mysql.DomainClass;
 import database.mysql.GenericDAO;
-import javafx.beans.property.*;
-import javafx.collections.ObservableList;
-import java.sql.Date;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Course {
-    private int dbId;
+    private int courseId;
     private String name;
     private User coordinator;
     private String startDate;
@@ -23,8 +21,8 @@ public class Course {
     public Course(String name, User coordinator) {
         this(0,name,coordinator,"","");
     }
-    public Course(int dbId, String name, User coordinator, String startDate, String endDate) {
-        this.dbId = dbId;
+    public Course(int courseId, String name, User coordinator, String startDate, String endDate) {
+        this.courseId = courseId;
         this.name = name;
         this.coordinator = coordinator;
         this.startDate = startDate;
@@ -35,12 +33,12 @@ public class Course {
     }
 
 
-    public int getDbId() {
-        return dbId;
+    public int getCourseId() {
+        return courseId;
     }
 
-    public void setDbId(int dbId) {
-        this.dbId = dbId;
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 
     public String getName() {

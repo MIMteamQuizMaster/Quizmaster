@@ -535,7 +535,7 @@ public class AdministratorController {
             courseInHand.setStartDate(startdate == null ? null : startdate.toString());
             courseInHand.setEndDate(enddate == null ? null : enddate.toString());
             boolean newEntry;
-            newEntry = courseInHand.getDbId() == 0;
+            newEntry = courseInHand.getCourseId() == 0;
             courseTableView.refresh();
             boolean result = courseInHand.saveToDB();
             if (result) {

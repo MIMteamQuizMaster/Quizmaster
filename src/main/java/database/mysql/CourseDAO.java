@@ -52,7 +52,7 @@ public class CourseDAO extends AbstractDAO {
 
             User coordinator = new User(coordinatorId, firstName, lastName);
             course = new Course(courseName, coordinator);
-            course.setDbId(course_id);
+            course.setCourseId(course_id);
             course.setStartDate(startDate);
             course.setEndDate(endDate);
 
@@ -85,7 +85,7 @@ public class CourseDAO extends AbstractDAO {
                 coordinatorId = rsCourse.getInt(3);
                 User coordinator = new User(coordinatorId,"first","last");
                 Course course = new Course(courseName,coordinator);
-                course.setDbId(courseId);
+                course.setCourseId(courseId);
                 resultList.add(course);
             }
 
@@ -185,7 +185,7 @@ public class CourseDAO extends AbstractDAO {
         String query = "SELECT * FROM `group` WHERE course_id=?";
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setInt(1, course.getDbId());
+            ps.setInt(1, course.getCourseId());
             ResultSet rs = executeSelectPreparedStatement(ps);
             while (rs.next()) {
                 int db = rs.getInt("id");
@@ -216,7 +216,7 @@ public class CourseDAO extends AbstractDAO {
         String query = "SELECT * FROM student_has_group WHERE group_id = ?";
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setInt(1, g.getDbId());
+            ps.setInt(1, g.getGroupId());
             ResultSet rs = executeSelectPreparedStatement(ps);
             while (rs.next()) {
                 int student_id = rs.getInt("student_user_id");
@@ -273,8 +273,8 @@ public class CourseDAO extends AbstractDAO {
                 "(select student_user_id from student_has_group where group_id in (SELECT id FROM `group` where course_id = ?))";
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setInt(1, course.getDbId());
-            ps.setInt(2, course.getDbId());
+            ps.setInt(1, course.getCourseId());
+            ps.setInt(2, course.getCourseId());
             ResultSet rs = executeSelectPreparedStatement(ps);
             while (rs.next()) {
                 int student_id = rs.getInt("student_user_id");
@@ -297,7 +297,7 @@ public class CourseDAO extends AbstractDAO {
      */
     public boolean saveCourse(Course c) {
         String query;
-        if (c.getDbId() == 0) {// INSERT
+        if (c.getCourseId() == 0) {// INSERT
             query = "INSERT INTO course (coordinator_user_id,name,startDate,endDate,id) values (?,?,?,?,?)";
         } else { // UPDATE
             query = "UPDATE course SET coordinator_user_id = ? , name =? ,startDate = ? ,endDate = ? WHERE id = ?";
@@ -321,9 +321,9 @@ public class CourseDAO extends AbstractDAO {
             } else {
                 ps.setDate(4, Date.valueOf(c.getEndDate()));
             }
-            ps.setInt(5, c.getDbId());
+            ps.setInt(5, c.getCourseId());
             int key = executeInsertPreparedStatement(ps);
-            if (c.getDbId() == 0) c.setDbId(key);
+            if (c.getCourseId() == 0) c.setCourseId(key);
             return true;
         } catch (SQLException throwables) {
             System.out.println(throwables.getMessage() + " Somthing went wrong while saving course object");
@@ -340,7 +340,7 @@ public class CourseDAO extends AbstractDAO {
         String query = "UPDATE course SET archive=1 where id = ?";
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setInt(1, course.getDbId());
+            ps.setInt(1, course.getCourseId());
             executeManipulatePreparedStatement(ps);
             return true;
         } catch (SQLException throwables) {
@@ -360,7 +360,7 @@ public class CourseDAO extends AbstractDAO {
         try {
             PreparedStatement preparedStatement = getStatementWithKey(sql);
             preparedStatement.setInt(1, student.getUserId());
-            preparedStatement.setInt(2, course.getDbId());
+            preparedStatement.setInt(2, course.getCourseId());
             int key = executeInsertPreparedStatement(preparedStatement);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -374,7 +374,7 @@ public class CourseDAO extends AbstractDAO {
      */
     public int returnNumberOfGroupsPerCourse(Course course) {
         int returnValue = 0;
-        int course_id = course.getDbId();
+        int course_id = course.getCourseId();
         String sql = String.format("SELECT course_id, count(course_id) AS number_of_groups " +
                 "FROM `group` " +
                 "group by course_id " +
@@ -407,7 +407,7 @@ public class CourseDAO extends AbstractDAO {
                 "JOIN `group` AS g " +
                 "ON u.group_id = g.id " +
                 "WHERE u.student_user_id = %d " +
-                "AND g.course_id = %d", student.getUserId(), course.getDbId());
+                "AND g.course_id = %d", student.getUserId(), course.getCourseId());
         try {
             PreparedStatement preparedStatement = getStatement(sql);
             ResultSet resultSet = executeSelectPreparedStatement(preparedStatement);
@@ -434,7 +434,7 @@ public class CourseDAO extends AbstractDAO {
     public boolean deleteStudentFromCourseAndGroup(Course course,User student)
     {
         boolean returnValue = true;
-        int course_id = course.getDbId();
+        int course_id = course.getCourseId();
         int student_id = student.getUserId();
         int group_id = getGroupThatBelongToStudentAndCourse(student, course);
         String sql1 = String.format("DELETE FROM student_has_course WHERE " +

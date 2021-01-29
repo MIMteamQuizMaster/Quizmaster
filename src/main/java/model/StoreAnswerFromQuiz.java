@@ -1,6 +1,5 @@
 package model;
 
-import controller.FillOutFormMultipleAnswersController;
 import controller.fx.AnswerFormFX;
 import database.mysql.DBAccess;
 import database.mysql.GradeDAO;
@@ -8,7 +7,6 @@ import database.mysql.UserAnswerLogDAO;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +59,7 @@ public class StoreAnswerFromQuiz {
     public Grade createAGradeObject()
     {
         Grade returnValue = null;
-        returnValue = new Grade(this.quizFromStudent.getIdquiz(),
+        returnValue = new Grade(this.quizFromStudent.getQuizId(),
                 calculateGrade(), student.getUserId());
 
         return returnValue;
@@ -90,7 +88,7 @@ public class StoreAnswerFromQuiz {
     public Grade returnGradeObject()
     {
         Grade returnValue = null;
-        returnValue = new Grade(this.quizFromStudent.getIdquiz(), calculateGrade(),
+        returnValue = new Grade(this.quizFromStudent.getQuizId(), calculateGrade(),
                 this.student.getUserId());
 
         return returnValue;

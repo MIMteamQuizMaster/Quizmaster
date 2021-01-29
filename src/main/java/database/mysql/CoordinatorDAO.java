@@ -61,7 +61,7 @@ public class CoordinatorDAO extends AbstractDAO {
 
                 // maak Course Object
                 Course course = new Course(name, this.coordinator);
-                course.setDbId(courseDbid);
+                course.setCourseId(courseDbid);
                 course.setStartDate(startDate==null?"":startDate.toString());
                 course.setEndDate(endDate==null?"":endDate.toString());
 
@@ -88,7 +88,7 @@ public class CoordinatorDAO extends AbstractDAO {
         String query = "UPDATE QUIZ SET archive=1 where id = ?";
         try {
             PreparedStatement ps = getStatement(query);
-            ps.setInt(1, quiz.getIdquiz());
+            ps.setInt(1, quiz.getQuizId());
             executeManipulatePreparedStatement(ps);
             return true;
         } catch (SQLException throwables) {
@@ -123,7 +123,7 @@ public class CoordinatorDAO extends AbstractDAO {
      */
     public Boolean deleteAnswer(Answer answer) {
         String query = "DELETE FROM answer WHERE id= ?";
-        int answerid = answer.getId();
+        int answerid = answer.getAnswerId();
         return deleteQuery(query, answerid);
     }
 
@@ -136,7 +136,7 @@ public class CoordinatorDAO extends AbstractDAO {
      */
     public Boolean deleteQuiz(Quiz quiz) {
         String query = "DELETE FROM quiz WHERE id= ?";
-        int quizId = quiz.getIdquiz();
+        int quizId = quiz.getQuizId();
         return deleteQuery(query, quizId);
     }
 

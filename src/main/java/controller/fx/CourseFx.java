@@ -1,10 +1,8 @@
 package controller.fx;
 
-import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.util.Callback;
 import model.*;
 
 public class CourseFx {
@@ -19,15 +17,15 @@ public class CourseFx {
     }
 
     public int getDbId() {
-        return new SimpleIntegerProperty(this.course.getDbId()).get();
+        return new SimpleIntegerProperty(this.course.getCourseId()).get();
     }
 
     public IntegerProperty dbIdProperty() {
-        return new SimpleIntegerProperty(this.course.getDbId());
+        return new SimpleIntegerProperty(this.course.getCourseId());
     }
 
     public void setDbId(int dbId) {
-        this.course.setDbId(dbId);
+        this.course.setCourseId(dbId);
     }
 
     public String getName() {

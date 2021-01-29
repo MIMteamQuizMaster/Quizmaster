@@ -85,7 +85,6 @@ public class CoordinatorPanelController {
         this.questionDAO = new QuestionDAO(dBaccess);
         this.answerDAO = new AnswerDAO(dBaccess);
         this.coordinatorDAO.setCoordinator(loggedInUser);
-        System.out.println("initialize");
         fillCoursesTable();
         clearAll();
         glyphFont = GlyphFontRegistry.font("FontAwesome");
@@ -623,7 +622,7 @@ public class CoordinatorPanelController {
 
         TextField successDefinitieText = TextFields.createClearableTextField();
         successDefinitieText.setPromptText("Success definitie");
-        if (quiz.getIdquiz() != 0) {
+        if (quiz.getQuizId() != 0) {
             successDefinitieText.setText(String.valueOf(quiz.getSuccsesDefinition()));
             quiznameText.setText(quiz.getName());
         }
@@ -641,7 +640,7 @@ public class CoordinatorPanelController {
             String sd = successDefinitieText.getText();
 
             if (!sd.equals("") && !finalquizName.equals("")) {
-                quiz.setIdcourse(course.getDbId());
+                quiz.setIdcourse(course.getCourseId());
                 double finalsuccesDefinite = Double.parseDouble(sd);
                 quiz.setName(finalquizName);
                 quiz.setSuccsesDefinition(finalsuccesDefinite);
@@ -686,7 +685,7 @@ public class CoordinatorPanelController {
 
         saveBtn.setOnAction(actionEvent -> {
             question.setQuestion(textArea.getText());
-            question.setQuizId(quiz.getIdquiz());
+            question.setQuizId(quiz.getQuizId());
             if (questionDAO.saveQuestion(question) != null) popOver.hide();
             refreshQuestionTable();
         });
@@ -719,7 +718,7 @@ public class CoordinatorPanelController {
         gridPane.add(isCorrect, 1, 0);
         gridPane.add(savebtn, 1, 1);
 
-        if (answerInhand.getId() != 0) answerText.setText(answerInhand.getAnswer());
+        if (answerInhand.getAnswerId() != 0) answerText.setText(answerInhand.getAnswer());
 
         savebtn.setOnAction(actionEvent -> {
             boolean newCorrectValue = isCorrect.isSelected();
