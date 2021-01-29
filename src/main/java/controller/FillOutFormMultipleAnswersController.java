@@ -1,5 +1,6 @@
 package controller;
 
+import controller.Interface.FillOutFormInterface;
 import controller.fx.AnswerFormFX;
 import controller.fx.QuizFx;
 import database.mysql.RetriveQuizFromDatabase;
@@ -297,6 +298,7 @@ public class FillOutFormMultipleAnswersController {
         {
             questionNumber--;
             onNextscreenUpdate();
+            this.nextButton.setText("Volgende");
         }
         else
         {
@@ -315,14 +317,23 @@ public class FillOutFormMultipleAnswersController {
         {
             questionNumber++;
             onNextscreenUpdate();
+            if (questionNumber==questions.size())
+            {
+                this.nextButton.setText("Inleveren.");
+            }
         }
         else
         {
-            this.nextButton.setText("Inleveren.");
-            this.nextButton.isDisabled();
-
-            quizResults.setAnswersFXListPerQuestion(answersFXListPerQuestion);
-            Main.getSceneManager().showResults();
+            if (AlertHelper.confirmationDialog("Weet je zeker dat je de antwoorden wilt " +
+                    "opslaan?"))
+            {
+                FillOutFormInterface fillOutFormInterface = new FillOutFormInterface(this.quiz,
+                        Main.getLoggedInUser(),this.answersFXListPerQuestion,
+                        Main.getDBaccess());
+                fillOutFormInterface.storeAnswers();
+                quizResults.setAnswersFXListPerQuestion(answersFXListPerQuestion);
+                Main.getSceneManager().showResults();
+            }
 
             // transfer answersFXListPerQuestion to quizResults
         }

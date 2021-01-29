@@ -60,8 +60,7 @@ public class Answer {
         isGivenAnswer = givenAnswer;
     }
 
-
-        @Override
+    @Override
     public String toString() {
         if (isCorrect)
         {
