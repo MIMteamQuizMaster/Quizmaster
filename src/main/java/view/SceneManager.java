@@ -74,8 +74,8 @@ public class SceneManager {
         primaryStage.setResizable(true);
         primaryStage.setMinWidth(1100);
         primaryStage.setMinHeight(800);
-        primaryStage.setMaxHeight(2560);
-        primaryStage.setMaxWidth(1440);
+        primaryStage.setMaxHeight(Double.MAX_VALUE);
+        primaryStage.setMaxWidth(Double.MAX_VALUE);
         getScene("/view/fxml/welcomeScene.fxml");
     }
 
