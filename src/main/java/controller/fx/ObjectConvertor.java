@@ -110,4 +110,14 @@ public class ObjectConvertor {
         }
         return listedClasses;
     }
+
+    public static ObservableList<GradeFX2> convertGradeToGradeFX2(List<Grade> list)
+    {
+        ObservableList<GradeFX2> listedClasses = FXCollections.observableArrayList();
+        for (Grade g: list)
+        {
+            listedClasses.add(new GradeFX2(g));
+        }
+        return listedClasses;
+    }
 }

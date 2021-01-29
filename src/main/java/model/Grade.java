@@ -1,11 +1,14 @@
 package model;
 
+import java.time.LocalDate;
+
 public class Grade {
 
     private int quizId;
     private double grade;
     private int studentId;
     private String quizName;
+    private LocalDate date;
 
     public Grade(int quizId, double grade, int studentId) {
         this.quizId = quizId;
@@ -43,5 +46,13 @@ public class Grade {
 
     public void setStudentId(int studentId) {
         this.studentId = studentId;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

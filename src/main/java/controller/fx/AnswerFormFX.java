@@ -1,6 +1,7 @@
 package controller.fx;
 
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
@@ -12,7 +13,20 @@ public class AnswerFormFX {
     private SimpleObjectProperty<Button> button;
     private SimpleObjectProperty<TextArea> textArea;
     private Answer answer;
+    private SimpleStringProperty answerString;
 
+
+    public String getAnswerString() {
+        return answerString.get();
+    }
+
+    public SimpleStringProperty answerStringProperty() {
+        return answerString;
+    }
+
+    public void setAnswerString(String answerString) {
+        this.answerString.set(answerString);
+    }
 
     /**
      * @author Ismael Ben Cherif
@@ -29,6 +43,7 @@ public class AnswerFormFX {
         this.checkBox = new SimpleObjectProperty<CheckBox>(alfaCheckBox);
         this.button = new SimpleObjectProperty<Button>(alfaButton);
         this.textArea = new SimpleObjectProperty<TextArea>(alfaTextArea);
+        this.answerString = new SimpleStringProperty(answer.getAnswer());
     }
 
     public CheckBox getCheckBox() {
