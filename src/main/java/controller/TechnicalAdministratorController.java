@@ -4,7 +4,6 @@ import database.mysql.DBAccess;
 import database.mysql.TechnischBeheerderDAO;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -113,7 +112,7 @@ public class TechnicalAdministratorController {
     public void refreshTable() {
         table_users.refresh();
         table_users.getItems().clear();
-        ObservableList<UserFx> tableListUsers = convertUserToUserFX(dao.getAllusers());
+        ObservableList<UserFx> tableListUsers = convertUserToUserFX(dao.getAllUsers());
         col_id.setCellValueFactory(cellData -> cellData.getValue().userIdProperty().asObject());
         col_fname.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         col_lname.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());

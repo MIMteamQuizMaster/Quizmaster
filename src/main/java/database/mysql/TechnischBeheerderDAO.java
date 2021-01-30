@@ -32,7 +32,7 @@ public class TechnischBeheerderDAO extends AbstractDAO {
      * the key will be used further for Ending their role
      * @should return null if it wasnt successful in retrieving data from DB
      */
-    public List<User> getAllusers() {
+    public List<User> getAllUsers() {
         String sql = "SELECT DISTINCT u.user_id , u.firstname, u.lastname,u.studierichting FROM user u where deletionDate > ? or deletionDate is null";
 
         List<User> rList = new ArrayList<>();
@@ -136,7 +136,7 @@ public class TechnischBeheerderDAO extends AbstractDAO {
      * Get ID of a role
      * @should return 0 if it wasnt successful in retrieving data from DB
      */
-    public int getRoleId(String roleString) {
+    private int getRoleId(String roleString) {
         String query = "SELECT id FROM role where name = ?";
         try {
             PreparedStatement ps = getStatement(query);
@@ -173,15 +173,13 @@ public class TechnischBeheerderDAO extends AbstractDAO {
 
     /**
      * @param u     User object with valid user id and the roles that it already have
-     * @param roles a list of new roles which doesnt mean only new roles but all the roles the user must have included
-     *              new or old
      * @author M.J. Moshiri
      * <p>
      * Update ,Add , Or delete user roles
      * at first it take the roles that user already have and compare it with the new roles
      * so if a role needs to be ended or be assignt the method will do that
      */
-    public void setRoleToUser(User u) {
+    private void setRoleToUser(User u) {
         HashMap<Integer, Role> userAlreadyHaveRoles = getUserRoles(u);
         List<Role> userNewRoles = u.getRoles();
         // TODO checl fun
